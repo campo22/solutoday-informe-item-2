@@ -1,12 +1,1984 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=./portal/item-02-informe-empresarial.html" />
-  <title>Solutoday — Informe empresarial del ítem 2</title>
-  <link rel="canonical" href="./portal/item-02-informe-empresarial.html" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Solutoday — Informe Empresarial · Ítem 2 (Seguridad Web, Base de Datos y Backend Unificado)</title>
+  <link rel="stylesheet" href="./portal/portal.css?v=20261120-3" />
+  <style>
+    .sol-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-top: 0.15rem;
+    }
+    .sol-why {
+      font-size: 0.85rem;
+      color: var(--muted-foreground);
+      line-height: 1.55;
+    }
+    .solution-card {
+      padding: 1.35rem 1.4rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      border-inline-start: 4px solid var(--accent-teal);
+      background: var(--card);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .solution-card[data-cat="ciber"] { border-inline-start-color: var(--accent-rose); }
+    .solution-card[data-cat="identidad"] { border-inline-start-color: var(--accent-indigo); }
+    .solution-card[data-cat="finanzas"] { border-inline-start-color: var(--accent-emerald); }
+
+    .ba-visual-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+    @media (min-width: 960px) {
+      .ba-visual-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .ba-visual-panel {
+      border-radius: 0.85rem;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .ba-visual-before {
+      background: color-mix(in oklab, var(--accent-rose) 5%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-rose) 28%, var(--border));
+      border-top: 3px solid var(--accent-rose);
+    }
+    .ba-visual-after {
+      background: color-mix(in oklab, var(--accent-emerald) 5%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-emerald) 28%, var(--border));
+      border-top: 3px solid var(--accent-emerald);
+    }
+    .ba-visual-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ba-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+    .ba-badge-before {
+      color: var(--accent-rose);
+      background: color-mix(in oklab, var(--accent-rose) 14%, var(--card));
+    }
+    .ba-badge-after {
+      color: var(--accent-emerald);
+      background: color-mix(in oklab, var(--accent-emerald) 14%, var(--card));
+    }
+    .ba-svg-wrap {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 0.65rem;
+      padding: 0.45rem;
+      overflow-x: auto;
+    }
+    .ba-visual-text {
+      font-size: 0.81rem;
+      line-height: 1.52;
+      color: var(--foreground);
+      margin: 0;
+    }
+
+    .flow-steps-box {
+      padding: 0.85rem 1.05rem;
+      border-radius: 0.75rem;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      font-size: 0.81rem;
+    }
+    .flow-steps-title {
+      font-size: 0.71rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-indigo);
+      margin-bottom: 0.4rem;
+    }
+    .flow-steps-list {
+      margin: 0;
+      padding-left: 1.2rem;
+      list-style: decimal;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      color: var(--muted-foreground);
+    }
+    .flow-steps-list strong { color: var(--foreground); }
+
+    .archify-open-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.36rem 0.82rem;
+      border-radius: 0.5rem;
+      color: #ffffff;
+      background: linear-gradient(135deg var(--in-oklch), #0f766e, #4338ca);
+      border: 1px solid #0f766e;
+    }
+    .archify-open-pill:hover { opacity: 0.92; }
+
+    .pr-link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.28rem 0.68rem;
+      border-radius: 999px;
+      color: var(--accent-indigo);
+      background: color-mix(in oklab, var(--accent-indigo) 11%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-indigo) 26%, transparent);
+    }
+    .pr-link-pill:hover {
+      background: color-mix(in oklab, var(--accent-indigo) 18%, var(--card));
+      border-color: var(--accent-indigo);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .status-ok {
+      color: var(--accent-emerald);
+      background: color-mix(in oklab, var(--accent-emerald) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-emerald) 28%, transparent);
+    }
+    .status-warn {
+      color: var(--accent-amber);
+      background: color-mix(in oklab, var(--accent-amber) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-amber) 28%, transparent);
+    }
+    .status-req {
+      color: var(--accent-rose);
+      background: color-mix(in oklab, var(--accent-rose) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-rose) 28%, transparent);
+    }
+
+    .math-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .math-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+    .math-box {
+      padding: 0.95rem;
+      border-radius: 0.8rem;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      text-align: center;
+    }
+    .math-box.math-total {
+      background: color-mix(in oklab, var(--accent-teal) 12%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-teal) 38%, var(--border));
+    }
+    .math-val { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--foreground); }
+    .math-box.math-total .math-val { color: var(--primary); }
+    .math-lbl { font-size: 0.73rem; color: var(--muted-foreground); margin-top: 0.2rem; font-weight: 600; }
+
+    .db-pipeline {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .db-pipeline { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+    .db-step {
+      padding: 1rem 0.95rem;
+      border-radius: 0.85rem;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent-teal);
+      background: color-mix(in oklab, var(--accent-teal) 4%, var(--card));
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .db-step:nth-child(2) { border-top-color: var(--accent-indigo); background: color-mix(in oklab, var(--accent-indigo) 4%, var(--card)); }
+    .db-step:nth-child(3) { border-top-color: var(--accent-violet); background: color-mix(in oklab, var(--accent-violet) 4%, var(--card)); }
+    .db-step:nth-child(4) { border-top-color: var(--accent-emerald); background: color-mix(in oklab, var(--accent-emerald) 4%, var(--card)); }
+    .db-step:nth-child(5) { border-top-color: var(--accent-amber); background: color-mix(in oklab, var(--accent-amber) 4%, var(--card)); }
+    .db-step-num {
+      font-size: 0.69rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-indigo);
+    }
+    .db-step-title { font-size: 0.86rem; font-weight: 800; color: var(--foreground); }
+    .db-step-desc { font-size: 0.76rem; color: var(--muted-foreground); line-height: 1.45; }
+
+    .cmd-block {
+      background: #0b1220;
+      color: #e2e8f0;
+      border: 1px solid #1e293b;
+      border-radius: 0.8rem;
+      padding: 1rem 1.15rem;
+      font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.79rem;
+      line-height: 1.65;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .cmd-comment { color: #94a3b8; }
+    .cmd-kw { color: #5eead4; font-weight: 600; }
+
+    .qa-bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+    .qa-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg var(--in-oklch), var(--accent-teal), var(--accent-indigo));
+    }
+
+    .notice-banner {
+      padding: 1rem 1.15rem;
+      border-radius: 0.85rem;
+      border: 1px solid color-mix(in oklab, var(--accent-amber) 34%, var(--border));
+      border-inline-start: 4px solid var(--accent-amber);
+      background: color-mix(in oklab, var(--accent-amber) 7%, var(--card));
+      font-size: 0.83rem;
+      color: var(--foreground);
+    }
+    .notice-banner-teal {
+      border-color: color-mix(in oklab, var(--accent-teal) 32%, var(--border));
+      border-inline-start-color: var(--accent-teal);
+      background: color-mix(in oklab, var(--accent-teal) 7%, var(--card));
+    }
+    .notice-banner-rose {
+      border-color: color-mix(in oklab, var(--accent-rose) 32%, var(--border));
+      border-inline-start-color: var(--accent-rose);
+      background: color-mix(in oklab, var(--accent-rose) 6%, var(--card));
+    }
+
+    .table-pr { --label-2: "Corte"; --label-3: "Qué resuelve para Solutoday"; --label-4: "Diagrama / Commit"; }
+    .table-db { --label-2: "PR"; --label-3: "Propósito en la operación"; --label-4: "Tipo"; }
+    .table-apps { --label-2: "Estado actual"; --label-3: "Qué necesita actualizar la app"; }
+
+    @container (width < 600px) {
+      .table-pr td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-pr td:nth-child(3)::before { content: var(--label-3) ": "; }
+      .table-pr td:nth-child(4)::before { content: var(--label-4) ": "; }
+      .table-db td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-db td:nth-child(3)::before { content: var(--label-3) ": "; }
+      .table-db td:nth-child(4)::before { content: var(--label-4) ": "; }
+      .table-apps td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-apps td:nth-child(3)::before { content: var(--label-3) ": "; }
+    }
+
+    .grid-1 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.15rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
+    @media (min-width: 768px) {
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .section-kicker {
+      font-size: 0.73rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent-teal);
+    }
+    .section-title {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-top: 0.18rem;
+    }
+    .section-lead {
+      font-size: 0.88rem;
+      color: var(--muted-foreground);
+      margin-top: 0.35rem;
+      max-width: 62rem;
+    }
+    .stack-sm { display: flex; flex-direction: column; gap: 0.65rem; }
+    .stack-md { display: flex; flex-direction: column; gap: 1.1rem; }
+    .stack-lg { display: flex; flex-direction: column; gap: 1.5rem; }
+    .row-between { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+    .row-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff !important; }
+      .section-card, .hero-section, .kpi-strip, .solution-card { break-inside: avoid; box-shadow: none !important; }
+    }
+  </style>
 </head>
-<body>
-  <p><a href="./portal/item-02-informe-empresarial.html">Abrir el informe empresarial del ítem 2</a></p>
+<body class="min-h-screen">
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="./index.html" class="portal-brand">
+        <span class="portal-brand-mark" aria-hidden="true">S</span>
+        <span class="portal-brand-title">Solutoday</span>
+        <span class="portal-brand-ver">Ítem 2 · develop@cd7cf7d</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Navegación principal">
+        <button class="menu-button" type="button" popovertarget="portal-menu" popovertargetaction="toggle" aria-controls="portal-menu">
+          Menú
+        </button>
+        <ul id="portal-menu" class="site-menu" popover="auto">
+          <li><a href="./portal/index.html" class="portal-link">Acta Base</a></li>
+          <li><a href="./index.html" class="portal-link" aria-current="page">Informe Ítem 2</a></li>
+          <li><a href="#soluciones" class="portal-link">Soluciones y Diagramas (9)</a></li>
+          <li><a href="#control-db" class="portal-link">Migración y Control BD</a></li>
+          <li><a href="#diagramas-archify" class="portal-link archify-nav-badge">Visores Archify (10)</a></li>
+          <li><a href="#prs" class="portal-link">PRs (8)</a></li>
+          <li><a href="#calidad" class="portal-link">Calidad y Tests</a></li>
+          <li><a href="#apps-moviles" class="portal-link">Apps Móviles</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" onclick="toggleColorScheme()" class="portal-action-btn" aria-label="Cambiar tema de color">
+          <span class="theme-label-dark">Oscuro</span>
+          <span class="theme-label-light">Claro</span>
+        </button>
+        <button type="button" onclick="window.print()" class="portal-action-btn portal-action-primary">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 stack-lg" style="padding: 1.5rem;">
+    <!-- PORTADA EJECUTIVA -->
+    <header class="hero-section">
+      <div class="eyebrow">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Informe Empresarial de Entrega · Ítem 2 · Seguridad Web, Base de Datos y Backend Unificado</span>
+      </div>
+      <h1 class="hero-title">Seguridad Web, Gobierno de Base de Datos MySQL y <span class="hero-highlight">Blindaje Financiero</span></h1>
+      <p class="hero-subtitle">
+        Informe corporativo de las soluciones implementadas en <strong>Solutoday (<code>web-v2</code>)</strong>: cierre de rutas críticas y archivos expuestos, protocolo de migración y control de base de datos, verificación de identidad y permisos por rol, cálculo oficial de reservas en servidor, pagos transaccionales sin dobles cobros, pruebas automatizadas de calidad y requisitos de actualización para las aplicaciones móviles.
+      </p>
+
+      <div class="meta-strip">
+        <div>
+          <div class="meta-label">Alcance Contratado (Ítem 2)</div>
+          <div class="meta-value">Web, Panel y Backend API (<code>web-v2</code>)</div>
+        </div>
+        <div>
+          <div class="meta-label">Rama y Commit Integrado</div>
+          <div class="meta-value" style="color: var(--accent-emerald);"><code>origin/develop @ cd7cf7d</code></div>
+        </div>
+        <div>
+          <div class="meta-label">Estado de Despliegue</div>
+          <div class="meta-value" style="color: var(--accent-amber);">Integrado en <code>develop</code> · aún sin desplegar</div>
+        </div>
+        <div>
+          <div class="meta-label">Fecha de Emisión</div>
+          <div class="meta-value">20 de noviembre de 2026</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI STRIP -->
+    <section class="kpi-strip print-card" aria-label="Indicadores clave del Ítem 2">
+      <div class="kpi-cell">
+        <div class="kpi-num">8 PRs</div>
+        <div class="kpi-desc">Fusionados en <code>develop</code> (<code>#1</code> al <code>#8</code>, 121 archivos auditados)</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">123 / 703</div>
+        <div class="kpi-desc">Pruebas automatizadas y aserciones aprobadas (0 fallos, 0 errores)</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">5 Migraciones</div>
+        <div class="kpi-desc">Cambios incrementales de MySQL bajo control estricto por CLI</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">1 Débito</div>
+        <div class="kpi-desc">Cobro único de <strong>$85.250</strong> comprobado tras reintento por caída de red</div>
+      </div>
+    </section>
+
+    <!-- 01 · RESUMEN EJECUTIVO -->
+    <section class="section-card stack-md print-card" aria-label="Resumen ejecutivo">
+      <div>
+        <div class="section-kicker">01 · Resumen Ejecutivo</div>
+        <h2 class="section-title">¿Cuál era la situación inicial y cómo se transformó la seguridad del sistema?</h2>
+        <p class="section-lead">
+          La auditoría de la línea base identificó debilidades estructurales en el código fuente (riesgos potenciales en código, sin afirmar incidentes en producción): rutas capaces de reiniciar la base de datos, entrega de credenciales privadas hacia los teléfonos, validación insuficiente de roles y pertenencia, y precios o pagos expuestos a manipulación o duplicidad. Con el Ítem 2, el servidor Laravel asume el control exclusivo de cada operación sensible.
+        </p>
+      </div>
+      <div class="grid-3">
+        <div class="phase-card phase-0">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">ANTES · RIESGOS EN CÓDIGO BASE</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Rutas de instalación y reinicio abiertas, claves de Firebase e IA enviadas al cliente, registro público que aceptaba roles sin filtro, acceso cruzado a reservas ajenas y pagos sin protección ante reintentos.
+          </p>
+        </div>
+        <div class="phase-card phase-1">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">AHORA · SOLUCIÓN EN EL SERVIDOR</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Rutas destructivas eliminadas, migraciones MySQL controladas únicamente por CLI, secretos resguardados en backend, permisos verificados por dueño y pagos atómicos e idempotentes en MySQL.
+          </p>
+        </div>
+        <div class="phase-card phase-2">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">GARANTÍA · PRUEBAS Y EVIDENCIA</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Respaldado por <strong>123 pruebas automatizadas y 703 aserciones sin fallos</strong> en MySQL aislado, pruebas reales en navegador Chrome y emulador Android, y <strong>10 diagramas interactivos Archify</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · LAS 9 SOLUCIONES CON DIAGRAMAS SEPARADOS ANTES VS DESPUÉS -->
+    <section id="soluciones" class="section-card stack-md print-card" aria-label="Soluciones implementadas con diagramas Antes y Después">
+      <div class="row-between">
+        <div>
+          <div class="section-kicker">02 · Soluciones Implementadas y Diagramas de Flujo (Antes vs. Después)</div>
+          <h2 class="section-title">Explicación detallada de cada solución con diagramas separados del Antes y el Después</h2>
+          <p class="section-lead">
+            En cada tarjeta se presenta a la izquierda el diagrama del <strong>Antes (riesgo crítico)</strong> y a la derecha el diagrama del <strong>Después (solución integrada)</strong> completamente separados para evitar cualquier cruce visual, seguidos del flujo paso a paso, el visor interactivo Archify a pantalla completa y el Pull Request de evidencia.
+          </p>
+        </div>
+        <div class="row-wrap no-print" role="group" aria-label="Filtrar soluciones">
+          <button type="button" onclick="filterSolutions('all')" data-sf="all" class="sf-btn portal-action-btn portal-action-primary">Todas (9)</button>
+          <button type="button" onclick="filterSolutions('ciber')" data-sf="ciber" class="sf-btn portal-action-btn">Ciberseguridad (4)</button>
+          <button type="button" onclick="filterSolutions('identidad')" data-sf="identidad" class="sf-btn portal-action-btn">Identidad y Permisos (3)</button>
+          <button type="button" onclick="filterSolutions('finanzas')" data-sf="finanzas" class="sf-btn portal-action-btn">Reservas y Pagos (2)</button>
+        </div>
+      </div>
+
+      <div id="solutions-grid" class="grid-1">
+        
+      <article id="sol-1" class="solution-card" data-cat="ciber">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-sec">PR #1 · BG-02.01 · Ciberseguridad y Mantenimiento</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./portal/archify/item-02/pr-01-rutas-mantenimiento.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/1" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #1 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">1. Cierre del instalador web, rutas de reinicio y tarea programada</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Proteger la continuidad del negocio evitando que una ruta expuesta en internet o una tarea automática reiniciara las tablas y borrara datos operativos.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. ENTRADA ABIERTA</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Petición Web / Cron</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">GET /install o scheduler</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="148" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. EJECUCIÓN SIN FRENO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Instalador / Reset</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Ejecuta migrate:fresh</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. IMPACTO CRÍTICO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">MySQL Reiniciada</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Pérdida de tablas y datos</text>
+</svg></div>
+            <p class="ba-visual-text">El código exponía rutas públicas del instalador (/install/*), endpoints de reinicialización (migrate:refresh / migrate:fresh) y una tarea programada en Console/Kernel capaz de reconstruir la base.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #1)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. INTENTO EXTERNO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Solicitud a /install</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Petición HTTP a ruta vieja</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. BLOQUEO LARAVEL</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Rutas Eliminadas</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Responde HTTP 404 inmediato</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. SCHEDULER LIMPIO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Sin Cron de Reset</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Tarea retirada de Kernel</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. DATOS PROTEGIDOS</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">MySQL Intacta</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Solo migraciones por CLI</text>
+</svg></div>
+            <p class="ba-visual-text">Se eliminaron del código todas las rutas del instalador, las rutas de reinicio y el comando del programador. En laboratorio, las 4 rutas devuelven HTTP 404 y MySQL queda protegida.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Bloqueo en el enrutador:</strong> las rutas de instalación y reinicialización ya no existen en Laravel; cualquier intento recibe HTTP 404.</li><li><strong>Retiro del reinicio automático:</strong> se eliminó del programador (Console/Kernel) la tarea que ejecutaba el comando de reinicio.</li><li><strong>Gobierno exclusivo por consola:</strong> la estructura de MySQL solo puede modificarse mediante migraciones incrementales por CLI.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-2" class="solution-card" data-cat="ciber">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-sec">PR #2 · BG-02.01 · Seguridad en Notificaciones Firebase</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./portal/archify/item-02/pr-02-avisos-chat-firebase.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #2 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">2. Avisos de chat enviados desde el servidor sin exponer credenciales</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Impedir que terceros obtuvieran un token de servicio de Firebase para enviar notificaciones push falsas o abusar de la cuenta de Solutoday.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="106" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. RUTA PÚBLICA</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">GET firebaseDetails</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Sin exigir sesión válida</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. FUGA DE SECRETO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Entrega Token OAuth2</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Credencial viaja al móvil</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. RIESGO DE ABUSO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">FCM Directo</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Envío push sin control</text>
+</svg></div>
+            <p class="ba-visual-text">Una ruta pública entregaba directamente al teléfono un token OAuth2 de Firebase para que la propia app disparara las notificaciones push.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #2)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. SESIÓN SANCTUM</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">App Solicita Aviso</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Token usuario · máx 30/min</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="112" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. VERIFICA CHAT</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Consulta Firestore</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Confirma autor y receptor</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="142" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. FILTRA Y DEDUPLICA</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Revisa MySQL</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Bloqueos e intento único</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="100" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. PUSH SEGURO</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Laravel -> FCM</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Clave privada en servidor</text>
+</svg></div>
+            <p class="ba-visual-text">La ruta antigua quedó apagada por defecto. Ahora la app solicita el aviso con su sesión Sanctum y Laravel valida el chat en Firestore antes de enviar el push.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Autenticación y límite:</strong> el usuario solicita el aviso autenticado con Sanctum bajo un límite de 30 envíos por minuto.</li><li><strong>Verificación cruzada:</strong> Laravel comprueba en Firestore que el mensaje exista entre esos participantes y verifica en MySQL que no haya bloqueo mutuo.</li><li><strong>Deduplicación y envío interno:</strong> registra el intento en la nueva tabla de control y dispara la notificación FCM sin que la credencial salga jamás del servidor.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-3" class="solution-card" data-cat="ciber">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-sec">PR #3 · BG-02.01 · Protección de Claves de Inteligencia Artificial</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/3" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #3 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">3. Proxy autenticado en Laravel para generación de texto con IA</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Evitar que la clave privada de OpenAI/ChatGPT viajara en la configuración móvil y pudiera ser extraída para consumir saldo de la empresa.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="136" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. CONFIGURACIÓN API</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Respuesta JSON</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Incluía chat_gpt_key</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. CLAVE EN CLIENTE</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">App Lee Secreto</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Expuesta en tráfico/memoria</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. RIESGO ECONÓMICO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">OpenAI Directo</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Consumo externo sin cuota</text>
+</svg></div>
+            <p class="ba-visual-text">El endpoint de configuración podía incluir la clave privada chat_gpt_key en la respuesta JSON para que las apps llamaran directamente a OpenAI.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #3)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. USUARIO ACTIVO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">POST /api/ai/text</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Sesión Sanctum verificada</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. FILTRO Y CUOTA</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Valida Prompt</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Cuenta activa y límite</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="148" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. SECRETO EN SERVIDOR</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Laravel -> OpenAI</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Usa OPENAI_API_KEY interna</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. RESPUESTA LIMPIA</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Devuelve Texto</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Cero claves expuestas</text>
+</svg></div>
+            <p class="ba-visual-text">Se eliminó chat_gpt_key de las respuestas API y del panel. Laravel expone POST /api/ai/text para usuarios activos autenticados, con validación y límite de cuota.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Eliminación del secreto en API:</strong> tanto las consultas públicas como las autenticadas de configuración dejaron de entregar la clave de IA.</li><li><strong>Control de cuenta activa y prompt:</strong> el servidor verifica que el usuario esté activo antes de procesar el texto o consumir cuota.</li><li><strong>Llamada centralizada:</strong> Laravel realiza la petición al proveedor de IA con su variable de entorno privada y devuelve solo el texto resultante.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-4" class="solution-card" data-cat="identidad">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-tech">PR #4 · BG-02.02 · Identidad, Privilegios y Alta de Técnicos</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #4 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">4. Roles fijados en servidor, verificación Firebase/correo y alta de técnicos</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Impedir que un atacante creara cuentas con rol administrador, suplantara correos en login social o registrara técnicos activos bajo otro prestador.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="136" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. DATOS DEL CLIENTE</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">POST /api/register</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Enviaba user_type y status</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="148" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. SIN VERIFICAR FIRMA</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">API Confiaba</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Aceptaba rol o social sin token</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. RIESGO DE ACCESO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Cuenta Privilegiada</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Escalada o técnico ajeno</text>
+</svg></div>
+            <p class="ba-visual-text">El registro público aceptaba rol y estado enviados por el cliente, el login social confiaba en datos sin firma, /verify/{id} no exigía firma y los técnicos se creaban en ruta pública.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #4)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. PRUEBA FIRMADA</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Token Firebase / Sesión</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Valida firma o Sanctum</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="142" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. REGLAS EN SERVIDOR</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Fija Rol y Dueño</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Bloquea cupo con lock MySQL</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. ESTADO PENDIENTE</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Técnico status=0</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Oculto hasta aprobación</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. PANEL AUTORIZADO</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">POST Aprobar + CSRF</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Pasa a activo (status=1)</text>
+</svg></div>
+            <p class="ba-visual-text">Laravel fija rol y estado en servidor, verifica criptográficamente el ID token de Firebase, firma y caduca enlaces de correo (30 min), bloquea cupos y exige aprobación en panel.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Registro público blindado:</strong> el servidor fuerza cliente activo o prestador pendiente y rechaza cualquier intento de enviar rol admin o handyman.</li><li><strong>Identidad social y OTP verificada:</strong> Google, Apple y teléfono exigen ID token firmado por Firebase; vincular una cuenta previa requiere confirmar un enlace único por correo.</li><li><strong>Ciclo completo de técnicos:</strong> el prestador activo crea el técnico bajo sesión Sanctum (queda en status=0 con cupo bloqueado en MySQL) y solo aparece activo tras aprobarse por POST en el panel.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-5" class="solution-card" data-cat="identidad">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-tech">PR #5 · BG-02.03 · Permisos por Rol, Pertenencia y Ofertas</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #5 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">5. Control estricto de titularidad en reservas, solicitudes, GPS y bancos</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Garantizar que ningún usuario pueda consultar ni modificar reservas, ofertas, ubicaciones GPS, evidencias o cuentas bancarias de otra persona.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. PETICIÓN CON ID</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Consulta Reserva / GPS</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Cualquier token autenticado</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. FALTA DE FILTRO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Sin Validar Dueño</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">O técnico ya reasignado</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="94" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. EXPOSICIÓN</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Acceso a Datos Ajenos</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Reserva, oferta o banco</text>
+</svg></div>
+            <p class="ba-visual-text">Diversas rutas de detalle y actualización de reservas, GPS, solicitudes (Post-Job), ofertas y bancos carecían de validación de dueño o mantenían acceso a técnicos ya reasignados.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #5)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="106" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. SESIÓN Y ROL</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Solicitud Autenticada</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Verifica permiso Spatie</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. CONTROL DE DUEÑO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Valida Titularidad</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Cliente, prestador o técnico actual</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="142" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. CORTE AL REASIGNAR</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Revoca Técnico Previo</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">403 si ya no está asignado</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="112" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. ACCESO SEGURO</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Datos y URL Temporal</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Evidencias con vencimiento</text>
+</svg></div>
+            <p class="ba-visual-text">Cada operación verifica rol, permiso Spatie y pertenencia del registro; al reasignar un técnico se corta su acceso anterior y las evidencias se entregan con enlaces temporales.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Autorización por operación:</strong> reservas, solicitudes, ofertas, billetera y bancos comprueban que el registro pertenezca al usuario o equipo autenticado.</li><li><strong>Revocación inmediata por reasignación:</strong> si un servicio cambia de técnico, el técnico anterior recibe HTTP 403 al intentar ver el detalle o reportar GPS.</li><li><strong>Evidencias protegidas:</strong> los archivos de evidencia de servicio concilian su autoría y se sirven mediante enlaces firmados con expiración.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-6" class="solution-card" data-cat="finanzas">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-tech">PR #6 · BG-02.04 · Integridad del Valor de la Reserva</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./portal/archify/item-02/pr-06-calculo-reservas.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #6 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">6. Cálculo oficial de precios, descuentos e impuestos en el servidor</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Asegurar que el valor de cada reserva se determine siempre con las tarifas oficiales de Solutoday y no pueda alterarse desde el navegador o la app.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. INTERFAZ CLIENTE</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Envía Total Calculado</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Precio y descuento en payload</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="142" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. API SIN RECALCULAR</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Guarda Monto Recibido</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">O suma duración repetida</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="136" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. RIESGO FINANCIERO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Total Alterado en BD</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Cobro inferior o inconsistente</text>
+</svg></div>
+            <p class="ba-visual-text">El backend podía aceptar importes y totales enviados desde la interfaz del cliente, y repetir una transición en servicios por tiempo podía sumar la duración dos veces.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #6)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. SELECCIÓN CLIENTE</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Envía Solo IDs</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Servicio, cupón y extras</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. VALIDA CATÁLOGO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Tarifa u Oferta Oficial</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Rechaza extras ajenos (422)</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. MOTOR EN SERVIDOR</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Calcula Total Exacto</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">$145k -$10k +$20k +$15.5k</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. RESERVA OFICIAL</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Persiste $170.500</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Base única para el pago</text>
+</svg></div>
+            <p class="ba-visual-text">Laravel ignora montos del cliente y calcula el total desde catálogo (o desde la oferta aprobada), validando cupones, complementos propios e impuestos ($170.500 comprobados).</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Ignora precios del cliente:</strong> el servidor toma únicamente los identificadores seleccionados y verifica que los complementos pertenezcan al servicio.</li><li><strong>Fórmula oficial en backend:</strong> aplica tarifa base (o monto de la oferta asignada), descuento de cupón vigente, complementos e impuestos ($170.500 exactos en pruebas reales).</li><li><strong>Control de duración:</strong> impide que transiciones repetidas vuelvan a sumar tiempo en servicios cobrados por hora.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-7" class="solution-card" data-cat="finanzas">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-tech">PR #6 · BG-02.04 · Transacciones MySQL e Idempotencia de Pagos</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #6 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">7. Pagos atómicos e idempotentes en MySQL sin cobros duplicados</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Garantizar que un corte de internet o un doble clic al pagar nunca duplique el débito al cliente ni deje saldos descuadrados en la base de datos.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="136" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. FALLO DE CONEXIÓN</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Usuario Reintenta Pago</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Doble clic o corte de red</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="142" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. ESCRITURAS SUELTAS</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Sin Referencia Única</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Procesa dos veces el cobro</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. IMPACTO CRÍTICO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Doble Débito / Descuadre</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Saldo alterado en billetera</text>
+</svg></div>
+            <p class="ba-visual-text">Un reintento de pago tras pérdida de red podía ejecutar un segundo débito, acreditar recargas externas aún no verificadas o dejar escrituras parciales si fallaba un paso.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #6)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="106" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. INICIA COBRO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Pago con Referencia</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Anticipo $85.250 (billetera $500k)</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. TRANSACCIÓN MYSQL</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Bloquea yVerifica Saldo</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Guarda pago + débito + historial</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. REINTENTO DE RED</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Detecta Referencia Previa</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">No vuelve a descontar saldo</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="106" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. SALDO EXACTO</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">1 Pago · 1 Débito</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Saldo final $414.750 intacto</text>
+</svg></div>
+            <p class="ba-visual-text">Reserva, pago, saldo e historial se guardan en una sola transacción MySQL con bloqueo de fila y control de referencia única (financial_operations).</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Atomicidad total:</strong> si ocurre cualquier fallo al registrar el historial o actualizar la reserva, MySQL revierte automáticamente toda la operación y conserva el saldo intacto.</li><li><strong>Idempotencia comprobada en Chrome:</strong> tras cortar la respuesta del primer pago de $85.250 y reintentar con la misma referencia, MySQL registró un solo pago y un solo débito.</li><li><strong>Protección de saldo y pasarelas:</strong> una cuenta con $50.000 fue rechazada limpiamente sin movimientos, y los cobros externos no confirmados permanecen en estado pendiente.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-8" class="solution-card" data-cat="ciber">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-sec">PR #7 · BG-02.05 · Seguridad de Transporte y Registros Operativos</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./portal/archify/item-02/pr-07-transporte-https-logs.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/7" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #7 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">8. Exigencia configurable de HTTPS detrás de proxy y logs saneados</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Proteger las sesiones en tránsito cuando el control HTTPS esté activo y evitar que los archivos de log almacenen tokens o datos sensibles de correos y avisos.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="142" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. TRÁFICO SIN FILTRO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Solicitud HTTP Abierta</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Sin exigencia TLS en backend</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. SESIÓN EXPUESTA</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Procesa sin Validar Proxy</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Riesgo en red intermedia</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="112" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. LOGS VERBOSOS</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Archivos de Registro</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Volcado de datos sensibles</text>
+</svg></div>
+            <p class="ba-visual-text">No existía un filtro configurable para rechazar tráfico HTTP inseguro detrás del proxy inverso, y los logs de notificaciones y correo podían volcar payloads sensibles.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #7)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. PROXY CONFIABLE</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Valida Encabezado TLS</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Revisa X-Forwarded-Proto</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="106" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. FILTRO HTTPS</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Bloquea HTTP Inseguro</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Rechaza sin iniciar sesión</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. ACCESO CIFRADO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Permite Solo HTTPS</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Panel y API protegidos</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="112" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. LOGS SANEADOS</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Registro Depurado</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Solo diagnóstico sin secretos</text>
+</svg></div>
+            <p class="ba-visual-text">Se incorporó un middleware configurable que valida HTTPS detrás de proxies autorizados (rechazando HTTP sin abrir sesión) y se limitaron los logs al estado operativo.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Control gradual por ambiente:</strong> permite activar la exigencia de HTTPS y proxies confiables por configuración sin afectar entornos locales de desarrollo.</li><li><strong>Verificado en laboratorio:</strong> con el control activo, las peticiones HTTP fueron rechazadas antes de abrir sesión y las peticiones HTTPS ingresaron con normalidad.</li><li><strong>Higiene de registros:</strong> los eventos de correo y notificaciones guardan únicamente metadatos seguros de diagnóstico.</li></ol>
+        </div>
+      </article>
+    
+
+      <article id="sol-9" class="solution-card" data-cat="identidad">
+        <div class="row-between">
+          <div class="row-wrap">
+            <span class="sev-pill sev-pill-tech">PR #8 · BG-02.02 · Unificación de Credenciales Firebase</span>
+          </div>
+          <div class="row-wrap no-print">
+            <a href="./portal/archify/item-02/pr-08-firebase-credenciales.html" target="_blank" rel="noopener" class="archify-open-pill">Abrir visor interactivo Archify →</a>
+            <a href="https://github.com/Solutoday/web-v2/pull/8" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR #8 en GitHub ↗</a>
+          </div>
+        </div>
+
+        <h3 class="sol-title">9. Resolución compartida y segura de credenciales Firebase</h3>
+        <p class="sol-why"><strong>Por qué se hizo:</strong> Garantizar que tanto el módulo de avisos de chat (PR #2) como el de identidad (PR #4) carguen la credencial privada de Firebase de forma uniforme y sin fallos por directorio.</p>
+
+        <!-- Diagramas visuales separados Antes vs Después -->
+        <div class="ba-visual-grid">
+          <div class="ba-visual-panel ba-visual-before">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-before">ANTES · RIESGO Y PROBLEMA CRÍTICO</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 694 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="118" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. CARGA SEPARADA</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Chat vs. Identidad</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Dos lógicas distintas de ruta</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="112" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. RUTA RELATIVA</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Depende del Directorio</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Diferencia entre web y worker</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. FALLO INESPERADO</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">Error no Unificado</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Comportamiento inconsistente</text>
+</svg></div>
+            <p class="ba-visual-text">Los servicios de chat e identidad resolvían la ubicación del archivo JSON de Firebase por separado, pudiendo fallar con rutas relativas según desde dónde arrancara el proceso.</p>
+          </div>
+
+          <div class="ba-visual-panel ba-visual-after">
+            <div class="ba-visual-header">
+              <span class="ba-badge ba-badge-after">DESPUÉS · SOLUCIÓN SEGURA INTEGRADA (PR #8)</span>
+            </div>
+            <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="142" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. MÓDULOS UNIFICADOS</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Chat (PR #2) + Auth (PR #4)</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Usan el mismo servicio</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="130" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. RESOLVEDOR ÚNICO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">FirebaseCredentialPath</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Anclado a base_path seguro</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. VALIDACIÓN PREVIA</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Comprueba Archivo JSON</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Fallo controlado si es inválido</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. OPERACIÓN ESTABLE</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Web, Worker y CLI</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Consistencia en todo Laravel</text>
+</svg></div>
+            <p class="ba-visual-text">La clase compartida FirebaseCredentialPath unifica la resolución desde la raíz del proyecto (base_path) y emite un error controlado si el archivo falta o es inválido.</p>
+          </div>
+        </div>
+
+        <div class="flow-steps-box">
+          <div class="flow-steps-title">Explicación detallada del flujo paso a paso</div>
+          <ol class="flow-steps-list"><li><strong>Fuente única de verdad:</strong> ambos módulos delegan la localización del archivo de cuenta de servicio en FirebaseCredentialPath.</li><li><strong>Independencia del directorio de arranque:</strong> funciona igual en peticiones HTTP (Nginx/FPM), colas en segundo plano (Supervisor) y comandos Artisan.</li><li><strong>Manejo seguro de errores:</strong> si el archivo no existe o su contenido es inválido, falla de forma controlada sin exponer rutas internas ni secretos.</li></ol>
+        </div>
+      </article>
+    
+      </div>
+    </section>
+
+    <!-- 03 · GOBIERNO, MIGRACIÓN Y CONTROL DE LA BASE DE DATOS (MYSQL) -->
+    <section id="control-db" class="section-card stack-md print-card" aria-label="Gobierno, migración y control de la base de datos">
+      <div class="row-between">
+        <div>
+          <div class="section-kicker">03 · Gobierno, Migración y Control de Base de Datos (MySQL)</div>
+          <h2 class="section-title">Cómo se controla y migra la base de datos ahora</h2>
+          <p class="section-lead">
+            Con el retiro definitivo del instalador web y los reinicios programados (PR #1), el esquema de MySQL pasa a gobernarse exclusivamente mediante <strong>migraciones incrementales versionadas en Git y ejecutadas de forma controlada por consola (CLI)</strong>.
+          </p>
+        </div>
+        <a href="./portal/archify/item-02/pr-db-migraciones-control.html" target="_blank" rel="noopener" class="archify-open-pill no-print">Abrir visor Archify de Control de BD →</a>
+      </div>
+
+      <!-- Diagramas separados Antes vs Después para Control de BD -->
+      <div class="ba-visual-grid">
+        <div class="ba-visual-panel ba-visual-before">
+          <div class="ba-visual-header">
+            <span class="ba-badge ba-badge-before">ANTES · RIESGO DE REINICIO WEB O AUTOMÁTICO</span>
+          </div>
+          <div class="ba-svg-wrap"><svg viewBox="0 0 928 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Antes" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-before" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#f43f5e" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ffe4e6" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#be123c">1. ACCESO EXPUESTO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#881337">Rutas /install y Reset</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#9f1239">Accesibles sin control CLI</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="262" y="25" width="130" height="17" rx="8" fill="#ffe4e6" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#be123c">2. TAREA AUTOMÁTICA</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#881337">Cron en Console/Kernel</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#9f1239">Programaba reinicio de base</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="496" y="25" width="142" height="17" rx="8" fill="#ffe4e6" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#be123c">3. ACCIÓN DESTRUCTIVA</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#881337">migrate:fresh / refresh</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#9f1239">Reconstruía todas las tablas</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#f43f5e" stroke-width="2.2" marker-end="url(#arr-before)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.8" />
+<rect x="730" y="25" width="118" height="17" rx="8" fill="#ffe4e6" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#be123c">4. RIESGO CRÍTICO</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#881337">Pérdida de Datos</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#9f1239">Sin respaldo ni simulación</text>
+</svg></div>
+          <p class="ba-visual-text">
+            Existían rutas públicas (<code>/install/*</code>), endpoints capaces de lanzar <code>migrate:fresh</code> / <code>migrate:refresh</code> y una tarea en <code>Console/Kernel.php</code> que podía reconstruir tablas y borrar datos operativos.
+          </p>
+        </div>
+
+        <div class="ba-visual-panel ba-visual-after">
+          <div class="ba-visual-header">
+            <span class="ba-badge ba-badge-after">DESPUÉS · PROTOCOLO INCREMENTAL CONTROLADO POR CLI</span>
+          </div>
+          <div class="ba-svg-wrap"><svg viewBox="0 0 1162 112" width="100%" height="auto" role="img" aria-label="Diagrama de flujo Después" style="display:block;max-width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr-after" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0d9488" />
+  </marker>
+</defs>
+<rect x="18" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="28" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="36" y="37" font-size="9.5" font-weight="800" fill="#0f766e">1. RESPALDO PREVIO</text>
+<text x="30" y="60" font-size="11.5" font-weight="800" fill="#134e4a">Backup mysqldump</text>
+<text x="30" y="79" font-size="10" font-weight="500" fill="#115e59">Copia íntegra verificada</text>
+<line x1="212" y1="56" x2="246" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="252" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="262" y="25" width="100" height="17" rx="8" fill="#ccfbf1" />
+<text x="270" y="37" font-size="9.5" font-weight="800" fill="#0f766e">2. DIAGNÓSTICO</text>
+<text x="264" y="60" font-size="11.5" font-weight="800" fill="#134e4a">migrate:status</text>
+<text x="264" y="79" font-size="10" font-weight="500" fill="#115e59">Lista pendientes sin tocar BD</text>
+<line x1="446" y1="56" x2="480" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="486" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="496" y="25" width="118" height="17" rx="8" fill="#ccfbf1" />
+<text x="504" y="37" font-size="9.5" font-weight="800" fill="#0f766e">3. SIMULACIÓN SQL</text>
+<text x="498" y="60" font-size="11.5" font-weight="800" fill="#134e4a">migrate --pretend</text>
+<text x="498" y="79" font-size="10" font-weight="500" fill="#115e59">Valida consultas sin escribir</text>
+<line x1="680" y1="56" x2="714" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="720" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="730" y="25" width="136" height="17" rx="8" fill="#ccfbf1" />
+<text x="738" y="37" font-size="9.5" font-weight="800" fill="#0f766e">4. APLICACIÓN SEGURA</text>
+<text x="732" y="60" font-size="11.5" font-weight="800" fill="#134e4a">migrate --force</text>
+<text x="732" y="79" font-size="10" font-weight="500" fill="#115e59">Aplica solo las 5 aditivas</text>
+<line x1="914" y1="56" x2="948" y2="56" stroke="#0d9488" stroke-width="2.2" marker-end="url(#arr-after)" />
+<rect x="954" y="16" width="190" height="80" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.8" />
+<rect x="964" y="25" width="124" height="17" rx="8" fill="#ccfbf1" />
+<text x="972" y="37" font-size="9.5" font-weight="800" fill="#0f766e">5. PERMISOS AL DÍA</text>
+<text x="966" y="60" font-size="11.5" font-weight="800" fill="#134e4a">permission:cache-reset</text>
+<text x="966" y="79" font-size="10" font-weight="500" fill="#115e59">Refresca Spatie en memoria</text>
+</svg></div>
+          <p class="ba-visual-text">
+            Ninguna ruta web ni contenedor ejecuta reinicios. Todo cambio de esquema se aplica por CLI en 5 pasos: respaldo obligatorio, consulta de estado, simulación SQL sin escritura (<code>--pretend</code>), migración incremental y refresco de permisos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Los 5 pasos explicados -->
+      <div>
+        <h3 style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); margin-bottom: 0.65rem;">
+          Procedimiento operativo de 5 pasos en QA y Producción (nunca destructivo)
+        </h3>
+        <div class="db-pipeline">
+          <div class="db-step">
+            <div class="db-step-num">Paso 1 · Respaldo</div>
+            <div class="db-step-title">Backup obligatorio</div>
+            <div class="db-step-desc">Generar respaldo completo de MySQL (<code>mysqldump</code>) antes de intervenir y comprobar su integridad.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 2 · Estado</div>
+            <div class="db-step-title">Inspección en lectura</div>
+            <div class="db-step-desc">Ejecutar <code>php artisan migrate:status</code> para verificar exactamente qué migraciones están pendientes.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 3 · Simulación</div>
+            <div class="db-step-title">Verificación SQL</div>
+            <div class="db-step-desc">Ejecutar <code>php artisan migrate --pretend</code> para revisar las sentencias SQL exactas sin escribir en la base.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 4 · Ejecución</div>
+            <div class="db-step-title">Migración incremental</div>
+            <div class="db-step-desc">Ejecutar <code>php artisan migrate --force</code> aplicando solo los deltas nuevos (prohibido usar <code>fresh</code> o <code>refresh</code>).</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 5 · Permisos</div>
+            <div class="db-step-title">Refresco de caché</div>
+            <div class="db-step-desc">Ejecutar <code>php artisan permission:cache-reset</code> para activar permisos Spatie como <code>postjob assign</code>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comandos y notas de ambiente -->
+      <div class="grid-2">
+        <div class="stack-sm">
+          <h3 style="font-size: 0.86rem; font-weight: 800; color: var(--foreground);">Comandos oficiales de migración segura (CLI)</h3>
+          <pre class="cmd-block"><span class="cmd-comment"># 1. Respaldo previo obligatorio (mysqldump) antes de iniciar</span>
+<span class="cmd-comment"># 2. Consultar migraciones aplicadas y pendientes (solo lectura)</span>
+<span class="cmd-kw">php artisan migrate:status</span>
+
+<span class="cmd-comment"># 3. Simular el SQL que se ejecutará sin tocar la base de datos</span>
+<span class="cmd-kw">php artisan migrate --pretend</span>
+
+<span class="cmd-comment"># 4. Aplicar únicamente las migraciones incrementales pendientes</span>
+<span class="cmd-kw">php artisan migrate --force</span>
+
+<span class="cmd-comment"># 5. Limpiar y recargar caché de permisos Spatie</span>
+<span class="cmd-kw">php artisan permission:cache-reset</span></pre>
+        </div>
+
+        <div class="stack-sm">
+          <h3 style="font-size: 0.86rem; font-weight: 800; color: var(--foreground);">Manejo por ambiente y consideración de despliegue</h3>
+          <div class="phase-card phase-1" style="flex: 1;">
+            <div class="phase-kicker" style="font-size: 0.72rem; font-weight: 800;">DESARROLLO LOCAL AISLADO (LOCAL-DEV)</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground);">
+              En desarrollo y pruebas locales se trabaja contra contenedores MySQL 8.4 aislados y desechables, aplicando las migraciones de la rama y sembrando exclusivamente datos sintéticos (<code>local-dev/fixtures/dev-data.sql</code>), sin usar copias ni credenciales de producción.
+            </p>
+          </div>
+          <div class="phase-card phase-0" style="flex: 1;">
+            <div class="phase-kicker" style="font-size: 0.72rem; font-weight: 800;">CONTROL EN VENTANA DE DESPLIEGUE (DEPLOY-DEV.YML)</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground);">
+              Ni el <code>Dockerfile</code> ni el workflow actual (<code>.github/workflows/deploy-dev.yml</code>) ejecutan migraciones de forma automática al levantar contenedores. Cuando se autorice desplegar a QA o producción, el protocolo de respaldo y <code>php artisan migrate --force</code> debe ejecutarse explícitamente en esa ventana controlada.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de las 5 migraciones nuevas -->
+      <div tabindex="0" role="region" aria-labelledby="db-migrations-caption" class="table-wrapper">
+        <table class="doc-table table-db">
+          <caption id="db-migrations-caption">Inventario de las 5 migraciones nuevas del Ítem 2 en origin/develop (cd7cf7d). Todas son aditivas/incrementales y preservan los datos existentes.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Archivo de migración (<code>database/migrations/</code>)</th>
+              <th scope="col">PR</th>
+              <th scope="col">Qué estructura agrega o ajusta en MySQL</th>
+              <th scope="col">Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><code>2026_11_13_000001_create_firebase_chat_notification_attempts_table.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></td>
+              <td>Crea la tabla de control de intentos de aviso de chat para garantizar idempotencia, deduplicar reintentos y auditar envíos FCM.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_17_000001_create_firebase_identity_tables.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener">PR #4 ↗</a></td>
+              <td>Crea <code>firebase_identities</code> y <code>firebase_identity_link_challenges</code> con índices únicos para separar el login Firebase del UID de chat.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000001_reconcile_service_proof_author_type.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></td>
+              <td>Concilia el tipo de autor en evidencias de servicio existentes para asegurar la verificación de titularidad sin perder registros históricos.</td>
+              <td><span class="status-pill status-ok">Incremental</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000002_define_post_job_assignment_permission.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></td>
+              <td>Registra de manera idempotente el permiso <code>postjob assign</code> en las tablas de Spatie Permission para autorizar asignaciones de solicitudes.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000003_create_financial_operations_table.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener">PR #6 ↗</a></td>
+              <td>Crea la tabla <code>financial_operations</code> con llave de idempotencia para coordinar reservas, pagos y débitos sin cobros duplicados.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04 · DEMOSTRACIÓN FINANCIERA COMPROBADA -->
+    <section class="section-card stack-md print-card" aria-label="Demostración financiera comprobada">
+      <div>
+        <div class="section-kicker">04 · Demostración Financiera en Vivo (Chrome + MySQL)</div>
+        <h2 class="section-title">Cálculo de reserva en servidor ($170.500) y pago único tras corte de conexión ($85.250)</h2>
+        <p class="section-lead">
+          Sobre el commit integrado <code>cd7cf7d</code> se comprobó extremo a extremo en navegador Chrome y MySQL que el servidor determina el precio oficial y que la interrupción de red seguida de reintento produce un único cobro.
+        </p>
+      </div>
+
+      <div class="math-strip">
+        <div class="math-box">
+          <div class="math-val">$145.000</div>
+          <div class="math-lbl">Tarifa base del servicio</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val" style="color: var(--accent-rose);">−$10.000</div>
+          <div class="math-lbl">Cupón validado</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val">+$20.000</div>
+          <div class="math-lbl">Complemento válido</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val">+$15.500</div>
+          <div class="math-lbl">Impuestos aplicados</div>
+        </div>
+        <div class="math-box math-total">
+          <div class="math-val">$170.500</div>
+          <div class="math-lbl">Total oficial persistido</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="notice-banner notice-banner-teal">
+          <strong>Prueba 1 · Reintento con caída de red:</strong> Billetera inicial de <strong>$500.000</strong> paga el anticipo de <strong>$85.250</strong>. Se corta la respuesta HTTP después de que Laravel procesa el pago y el usuario vuelve a enviar la solicitud con la misma referencia. <strong>Resultado en MySQL:</strong> 1 solo pago, 1 solo movimiento y saldo final exacto de <strong>$414.750</strong>.
+        </div>
+        <div class="notice-banner">
+          <strong>Prueba 2 · Rechazo por saldo insuficiente:</strong> Una segunda cuenta con saldo de <strong>$50.000</strong> intenta pagar el mismo anticipo de <strong>$85.250</strong>. <strong>Resultado:</strong> el selector informa saldo insuficiente, no genera transacción parcial y la billetera conserva sus <strong>$50.000</strong> intactos.
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · CATÁLOGO DE LOS 10 VISORES INTERACTIVOS ARCHIFY -->
+    <section id="diagramas-archify" class="archify-showcase stack-md print-card no-print" aria-label="Catálogo de visores interactivos Archify">
+      <div class="row-between">
+        <div>
+          <span class="archify-chip">ARCHIFY 3.2 · 10 VISORES INTERACTIVOS A PANTALLA COMPLETA</span>
+          <h2 class="section-title" style="margin-top: 0.45rem;">Exploradores interactivos Archify con separación Antes / Después</h2>
+          <p class="section-lead">
+            Además de los diagramas comparativos integrados arriba en cada solución, puedes abrir cualquiera de los <strong>10 visores interactivos Archify</strong> para explorar cada flujo con vistas guiadas, animación en vivo, modo claro/oscuro y exportación SVG/PNG/WebM.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <a href="./portal/archify/item-02/pr-01-rutas-mantenimiento.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-rose">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 01 · PR #1</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Cierre de Instalador y Reinicio</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Banda superior con rutas/cron expuestos vs. banda inferior bloqueada con HTTP 404.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./portal/archify/item-02/pr-02-avisos-chat-firebase.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-teal">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 02 · PR #2</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Avisos de Chat desde Servidor</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Retiro del token OAuth2 público y validación de participantes, bloqueos y deduplicación.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-indigo">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 03 · PR #3</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Proxy Autenticado de IA</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Clave privada resguardada en el servidor y endpoint autenticado con control de cuota.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-violet">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 04 · PR #4</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Identidad, Roles y Técnicos</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Verificación Firebase, enlaces firmados de correo, cupo bloqueado y aprobación en panel.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-amber">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 05 · PR #5</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Permisos, Ofertas y Evidencias</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Aislamiento por titular en reservas, solicitudes, ofertas, GPS, bancos y enlaces temporales.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./portal/archify/item-02/pr-06-calculo-reservas.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-emerald">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 06 · PR #6</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Cálculo Oficial de Reservas</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Determinación del total en servidor ($170.500) desde catálogo u oferta asignada.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-teal">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 07 · PR #6</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Pagos y Reintento Seguro</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Transacción atómica MySQL: pago confirmado, reintento sin doble débito ($85.250) y reversión.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./portal/archify/item-02/pr-07-transporte-https-logs.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-indigo">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 08 · PR #7</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Transporte HTTPS y Logs</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Exigencia configurable de HTTPS detrás de proxy confiable y registros operativos limpios.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./portal/archify/item-02/pr-08-firebase-credenciales.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-violet">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 09 · PR #8</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Credenciales Firebase Unificadas</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Carga compartida entre Chat e Identidad independiente del directorio y error controlado.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+
+        <a href="./portal/archify/item-02/pr-db-migraciones-control.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-emerald">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">VISOR 10 · MYSQL CLI</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Migración y Control de BD</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Comparativo entre el antiguo reset web/cron y el protocolo incremental de 5 pasos por CLI.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor Archify</p>
+          </article>
+        </a>
+      </div>
+    </section>
+
+    <!-- 06 · EVIDENCIA TRAZABLE EN GITHUB (LOS 8 PULL REQUESTS) -->
+    <section id="prs" class="section-card stack-md print-card" aria-label="Evidencia por Pull Request">
+      <div>
+        <div class="section-kicker">06 · Evidencia Auditable en GitHub</div>
+        <h2 class="section-title">Los 8 Pull Requests fusionados en <code>develop</code></h2>
+        <p class="section-lead">
+          Todo el trabajo del Ítem 2 se encuentra integrado y verificado en <code>origin/develop</code> de <code>web-v2</code> bajo el commit final <a href="https://github.com/Solutoday/web-v2/commit/cd7cf7d08bffd91a9f06a3554b96fe24aafed4f7" target="_blank" rel="noopener" class="pr-link-pill"><code>cd7cf7d</code> ↗</a>.
+        </p>
+      </div>
+
+      <div tabindex="0" role="region" aria-labelledby="prs-table-caption" class="table-wrapper">
+        <table class="doc-table table-pr">
+          <caption id="prs-table-caption">Relación completa de los 8 Pull Requests integrados en origin/develop de web-v2 con enlace a su diagrama interactivo.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Pull Request</th>
+              <th scope="col">Corte</th>
+              <th scope="col">Qué resuelve y garantiza para Solutoday</th>
+              <th scope="col">Diagrama y Commit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/1" target="_blank" rel="noopener">PR #1 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Retira el instalador web, las rutas de reinicialización y la tarea programada de reinicio de tablas en MySQL.</td>
+              <td><code>e28d716</code> · <a class="pr-link-pill no-print" href="./portal/archify/item-02/pr-01-rutas-mantenimiento.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Centraliza los avisos de chat Firebase en Laravel bajo sesión verificada, sin entregar credenciales al cliente.</td>
+              <td><code>c4ba4f6</code> · <a class="pr-link-pill no-print" href="./portal/archify/item-02/pr-02-avisos-chat-firebase.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/3" target="_blank" rel="noopener">PR #3 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Elimina la clave privada de IA de respuestas públicas y habilita un proxy autenticado con límite de frecuencia.</td>
+              <td><code>d5a4c7e</code> · <a class="pr-link-pill no-print" href="./entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener">PR #4 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
+              <td>Fija roles y estados en servidor, verifica identidad Firebase, firma correos y blinda el alta/aprobación de técnicos.</td>
+              <td><code>ea7f822</code> · <a class="pr-link-pill no-print" href="./entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></th>
+              <td><span class="repo-chip repo-chip-violet">BG-02.03</span></td>
+              <td>Valida rol y titularidad en reservas, solicitudes, ofertas, GPS, evidencias temporales, bancos y billetera.</td>
+              <td><code>813f99d</code> · <a class="pr-link-pill no-print" href="./entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener">PR #6 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.04</span></td>
+              <td>Calcula precios de reservas desde catálogo/ofertas en servidor, blinda pagos con transacciones MySQL e idempotencia y corrige selector web.</td>
+              <td><code>a0c9f1e</code> · <a class="pr-link-pill no-print" href="./entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/7" target="_blank" rel="noopener">PR #7 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.05</span></td>
+              <td>Habilita exigencia configurable de HTTPS detrás de proxy confiable y sanea registros operativos de correo y avisos.</td>
+              <td><code>ae75eaf</code> · <a class="pr-link-pill no-print" href="./portal/archify/item-02/pr-07-transporte-https-logs.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/8" target="_blank" rel="noopener">PR #8 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
+              <td>Unifica la resolución segura de rutas de credenciales Firebase compartida entre chat e identidad.</td>
+              <td><code>cd7cf7d</code> · <a class="pr-link-pill no-print" href="./portal/archify/item-02/pr-08-firebase-credenciales.html" target="_blank" rel="noopener">Visor ↗</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 07 · GARANTÍA DE CALIDAD Y PRUEBAS AUTOMATIZADAS -->
+    <section id="calidad" class="section-card stack-md print-card" aria-label="Garantía de calidad y pruebas">
+      <div>
+        <div class="section-kicker">07 · Garantía de Calidad</div>
+        <h2 class="section-title">Pruebas automatizadas y verificaciones reales que garantizan el trabajo</h2>
+        <p class="section-lead">
+          Para respaldar la calidad técnica de la entrega, cada solución incluye suites de pruebas automatizadas sobre MySQL aislado y comprobaciones reales de extremo a extremo que impiden regresiones futuras.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="module-card card-teal">
+          <div>
+            <span class="module-index">SUITE GENERAL · MYSQL AISLADO</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-teal); margin-top: 0.45rem;">115 pruebas</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>652 aserciones</strong> aprobadas (0 fallos). Cubre rutas eliminadas, identidad, permisos, ofertas, precios, chat, IA y HTTPS.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">100 % en verde sobre commit cd7cf7d</p>
+          </div>
+        </div>
+
+        <div class="module-card card-indigo">
+          <div>
+            <span class="module-index">SUITE FINANCIERA · MYSQL AISLADO</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-indigo); margin-top: 0.45rem;">8 pruebas</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>51 aserciones</strong> aprobadas (0 fallos). Verifica transacciones atómicas, reintentos por referencia, saldo insuficiente y reversión.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">100 % en verde sobre commit cd7cf7d</p>
+          </div>
+        </div>
+
+        <div class="module-card card-emerald">
+          <div>
+            <span class="module-index">RECORRIDOS REALES · WEB &amp; ANDROID</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-emerald); margin-top: 0.45rem;">E2E Reales</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>Chrome + MySQL:</strong> anticipo con caída de red y 1 solo débito. <strong>Android + Panel:</strong> alta pendiente de técnico, aprobación y activación.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">Evidencias auditadas (JUnit, JSON, TSV y capturas)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice-banner notice-banner-teal">
+        <strong>Alcance de las pruebas realizadas:</strong> Las ejecuciones locales se realizaron con datos sintéticos sobre MySQL 8.4.13 aislado y servicios externos simulados (Firebase, OpenAI y pasarelas). Las pruebas con servicios reales y versiones móviles distribuidas se ejecutan en ambiente QA previo a cualquier despliegue a producción.
+      </div>
+    </section>
+
+    <!-- 08 · QUÉ NECESITAN LAS APPS MÓVILES (FUERA DEL ALCANCE DEL ÍTEM 2) -->
+    <section id="apps-moviles" class="section-card stack-md print-card" aria-label="Requisitos de actualización para aplicaciones móviles">
+      <div>
+        <div class="section-kicker" style="color: var(--accent-amber);">08 · Aplicaciones Móviles (Fuera del Alcance Cotizado del Ítem 2)</div>
+        <h2 class="section-title">Qué necesitan incorporar <code>clientes-v2</code> y <code>proveedor-v2</code> para adoptar estos cambios</h2>
+        <p class="section-lead">
+          El Ítem 2 abarca exclusivamente <strong>Seguridad web y backend unificado (<code>web-v2</code>)</strong>. Las modificaciones, compilaciones y despliegues en tiendas de las aplicaciones móviles (<code>clientes-v2</code> y <code>proveedor-v2</code>) <strong>no forman parte de este alcance cotizado</strong>. La siguiente matriz deja documentado qué flujos ya son compatibles y qué debe actualizarse en cada aplicación móvil:
+        </p>
+      </div>
+
+      <div tabindex="0" role="region" aria-labelledby="apps-table-caption" class="table-wrapper">
+        <table class="doc-table table-apps">
+          <caption id="apps-table-caption">Detalle por aplicación y flujo de las adaptaciones requeridas en clientes-v2 y proveedor-v2.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Aplicación y Flujo</th>
+              <th scope="col">¿Opera hoy sin actualizar la app?</th>
+              <th scope="col">Qué se debe hacer en la app para incorporar los cambios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Acceso Google, Apple y OTP</th>
+              <td><span class="status-pill status-req">Requiere actualizar app</span></td>
+              <td>Obtener y enviar <code>firebase_id_token</code> real por HTTPS en login/registro social y OTP, y mostrar en pantalla la instrucción de vinculación para cuentas previas.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Registro y login por correo</th>
+              <td><span class="status-pill status-ok">Compatible hoy</span></td>
+              <td>Conserva el contrato actual (<code>POST /api/register</code> y <code>/api/login</code>); el servidor fija rol y estado sin requerir cambios en la app.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Avisos de Chat</th>
+              <td><span class="status-pill status-req">Requiere actualizar app</span></td>
+              <td>Invocar el nuevo endpoint autenticado de avisos de chat en Laravel en lugar de consultar la ruta antigua que entregaba el token de servicio Firebase.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Generación IA</th>
+              <td><span class="status-pill status-req">Requiere actualizar app</span></td>
+              <td>Consumir el proxy autenticado <code>POST /api/ai/text</code> del backend (ya que la clave privada no se envía al dispositivo) y presentar mensajes de cuota o indisponibilidad.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-violet">Prestadores</span> · Alta y listado de técnicos</th>
+              <td><span class="status-pill status-ok">Compatible hoy</span></td>
+              <td>El backend mantiene compatibilidad con la llamada actual exigiendo token Sanctum del prestador activo. En una futura actualización móvil, apuntar a <code>POST /api/handymen</code>.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Reservas y pagos</th>
+              <td><span class="status-pill status-warn">Validar en piloto QA</span></td>
+              <td>Verificar con los binarios actuales la visualización del total calculado en servidor, anticipos, aviso de saldo insuficiente, cobros pendientes y reintentos.</td>
+            </tr>
+            <tr>
+              <th scope="row">Ambas aplicaciones · Transporte HTTPS y logs</th>
+              <td><span class="status-pill status-warn">Antes de exigir HTTPS</span></td>
+              <td>Configurar las URLs base exclusivamente en HTTPS válido, eliminar la aceptación de certificados inválidos en Soluexperto y suprimir tokens/contraseñas de los logs móviles.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="notice-banner">
+        <strong>Referencia técnica disponible:</strong> Como valor agregado, durante la intervención del backend se dejaron preparadas propuestas locales de compatibilidad en <code>clientes-v2</code> y <code>proveedor-v2</code> (sin fusionar en sus repositorios) que servirán de base directa cuando Solutoday decida abordar la actualización móvil.
+      </div>
+
+      <div class="signature-grid">
+        <div>
+          <div style="font-size: 0.78rem; font-weight: 700;">Informe de Entrega · Ítem 2 (<code>web-v2 @ cd7cf7d</code>)</div>
+          <div class="signature-line">Arquitectura e Ingeniería de Software — 20 de noviembre de 2026</div>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; font-weight: 700;">Recepción y Conformidad · Solutoday</div>
+          <div class="signature-line">Firma autorizada — Fecha: ____ / ____ / ______</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if (!Object.hasOwn(HTMLElement.prototype, "popover")) {
+      import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
+    }
+
+    function filterSolutions(cat) {
+      document.querySelectorAll('.sf-btn').forEach(btn => {
+        btn.className = btn.dataset.sf === cat ? 'sf-btn portal-action-btn portal-action-primary' : 'sf-btn portal-action-btn';
+      });
+      document.querySelectorAll('#solutions-grid .solution-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+      });
+    }
+
+    function getSystemScheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function toggleColorScheme() {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const current = meta.content === 'dark' || meta.content === 'light' ? meta.content : getSystemScheme();
+      const target = current === 'dark' ? 'light' : 'dark';
+      const system = getSystemScheme();
+      try {
+        if (target === system) {
+          localStorage.removeItem('color-scheme');
+          meta.content = 'light dark';
+        } else {
+          localStorage.setItem('color-scheme', target);
+          meta.content = target;
+        }
+      } catch (e) {
+        meta.content = target;
+      }
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme') {
+        document.querySelector('meta[name="color-scheme"]').content = e.newValue ?? 'light dark';
+      }
+    });
+  </script>
 </body>
 </html>
