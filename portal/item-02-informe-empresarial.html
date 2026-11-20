@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Solutoday — Informe Empresarial del Ítem 2 (Seguridad Web y Backend Unificado)</title>
+  <link rel="stylesheet" href="./portal.css" />
+  <style>
+    /* Extensiones específicas del Informe Empresarial Ítem 2 sobre el sistema de diseño portal.css */
+    .ba-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.45rem;
+    }
+    @media (min-width: 640px) {
+      .ba-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .ba-box {
+      padding: 0.72rem 0.85rem;
+      border-radius: 0.65rem;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .ba-before {
+      background: color-mix(in oklab, var(--accent-rose) 6%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-rose) 24%, var(--border));
+    }
+    .ba-after {
+      background: color-mix(in oklab, var(--accent-emerald) 6%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-emerald) 26%, var(--border));
+    }
+    .ba-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25rem;
+    }
+    .ba-before .ba-tag { color: var(--accent-rose); }
+    .ba-after .ba-tag { color: var(--accent-emerald); }
+
+    .solution-card {
+      padding: 1.15rem 1.2rem;
+      border-radius: 0.9rem;
+      border: 1px solid var(--border);
+      border-inline-start: 4px solid var(--accent-teal);
+      background: var(--card);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .solution-card[data-cat="ciber"] { border-inline-start-color: var(--accent-rose); }
+    .solution-card[data-cat="identidad"] { border-inline-start-color: var(--accent-indigo); }
+    .solution-card[data-cat="finanzas"] { border-inline-start-color: var(--accent-emerald); }
+    .solution-card:hover { box-shadow: var(--shadow-hover); }
+    @media (prefers-reduced-motion: no-preference) {
+      .solution-card { transition: border-color 0.16s ease, box-shadow 0.16s ease, translate 0.16s ease; }
+      .solution-card:hover { translate: 0 -2px; }
+    }
+
+    .pr-link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      color: var(--accent-indigo);
+      background: color-mix(in oklab, var(--accent-indigo) 11%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-indigo) 26%, transparent);
+    }
+    .pr-link-pill:hover {
+      background: color-mix(in oklab, var(--accent-indigo) 18%, var(--card));
+      border-color: var(--accent-indigo);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.16rem 0.58rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .status-ok {
+      color: var(--accent-emerald);
+      background: color-mix(in oklab, var(--accent-emerald) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-emerald) 28%, transparent);
+    }
+    .status-warn {
+      color: var(--accent-amber);
+      background: color-mix(in oklab, var(--accent-amber) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-amber) 28%, transparent);
+    }
+    .status-req {
+      color: var(--accent-rose);
+      background: color-mix(in oklab, var(--accent-rose) 12%, var(--card));
+      border: 1px solid color-mix(in oklab, var(--accent-rose) 28%, transparent);
+    }
+
+    /* Bloque demostración de cálculo y pago */
+    .math-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .math-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+    .math-box {
+      padding: 0.9rem;
+      border-radius: 0.8rem;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      text-align: center;
+    }
+    .math-box.math-total {
+      background: color-mix(in oklab, var(--accent-teal) 12%, var(--card));
+      border-color: color-mix(in oklab, var(--accent-teal) 38%, var(--border));
+    }
+    .math-val { font-size: 1.2rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--foreground); }
+    .math-box.math-total .math-val { color: var(--primary); }
+    .math-lbl { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 0.18rem; font-weight: 600; }
+
+    /* Barras de garantía de calidad */
+    .qa-bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+    .qa-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg var(--in-oklch), var(--accent-teal), var(--accent-indigo));
+    }
+
+    /* Galería de diagramas por PR */
+    .diagram-thumb-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.85rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+      text-align: left;
+      padding: 0;
+      width: 100%;
+    }
+    .diagram-thumb-card:hover {
+      border-color: var(--accent-indigo);
+      box-shadow: var(--shadow-hover);
+    }
+    .diagram-thumb-img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 0.4rem;
+      display: block;
+    }
+    .diagram-thumb-meta {
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    /* Banner informativo / aviso fuera de alcance */
+    .notice-banner {
+      padding: 1rem 1.15rem;
+      border-radius: 0.85rem;
+      border: 1px solid color-mix(in oklab, var(--accent-amber) 34%, var(--border));
+      border-inline-start: 4px solid var(--accent-amber);
+      background: color-mix(in oklab, var(--accent-amber) 7%, var(--card));
+      font-size: 0.82rem;
+      color: var(--foreground);
+    }
+    .notice-banner-teal {
+      border-color: color-mix(in oklab, var(--accent-teal) 32%, var(--border));
+      border-inline-start-color: var(--accent-teal);
+      background: color-mix(in oklab, var(--accent-teal) 7%, var(--card));
+    }
+
+    /* Etiquetas responsivas por tabla usando CSS variables (modern-web-guidance: responsive-table) */
+    .table-pr { --label-2: "Corte"; --label-3: "Qué resuelve para Solutoday"; --label-4: "Evidencia / Commit"; }
+    .table-apps { --label-2: "Estado actual"; --label-3: "Qué necesita actualizar la app"; }
+    .table-script { --label-2: "Qué explicar y mostrar"; }
+
+    @container (width < 600px) {
+      .table-pr td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-pr td:nth-child(3)::before { content: var(--label-3) ": "; }
+      .table-pr td:nth-child(4)::before { content: var(--label-4) ": "; }
+      .table-apps td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-apps td:nth-child(3)::before { content: var(--label-3) ": "; }
+      .table-script td:nth-child(2)::before { content: var(--label-2) ": "; }
+    }
+
+    /* Modal nativo <dialog> (modern-web-guidance: dialog) */
+    dialog.diagram-dialog {
+      max-inline-size: min(94dvw, 66rem);
+      max-block-size: 92dvh;
+      width: 100%;
+      padding: 0;
+      border-radius: 1rem;
+      border: 1px solid var(--border-strong);
+      background: var(--card);
+      color: var(--foreground);
+      box-shadow: var(--shadow-hover);
+      margin: auto;
+    }
+    dialog.diagram-dialog[open] {
+      display: flex;
+      flex-direction: column;
+    }
+    dialog.diagram-dialog:modal {
+      overscroll-behavior: contain;
+    }
+    dialog.diagram-dialog::backdrop {
+      background: rgba(7, 11, 20, 0.72);
+      backdrop-filter: blur(4px);
+      overflow: hidden;
+      overscroll-behavior: contain;
+    }
+    .dialog-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dialog-body {
+      padding: 1rem;
+      overflow: auto;
+      background: #ffffff;
+      text-align: center;
+    }
+    .dialog-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+    }
+    .dialog-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted-foreground);
+    }
+
+    /* Utilidades locales */
+    .grid-2 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
+    @media (min-width: 768px) {
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.4rem;
+      box-shadow: var(--shadow-card);
+    }
+    .section-kicker {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent-teal);
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-top: 0.15rem;
+    }
+    .section-lead {
+      font-size: 0.86rem;
+      color: var(--muted-foreground);
+      margin-top: 0.35rem;
+      max-width: 58rem;
+    }
+    .stack-sm { display: flex; flex-direction: column; gap: 0.65rem; }
+    .stack-md { display: flex; flex-direction: column; gap: 1rem; }
+    .stack-lg { display: flex; flex-direction: column; gap: 1.5rem; }
+    .row-between { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+    .row-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff !important; }
+      .section-card, .hero-section, .kpi-strip, .solution-card { break-inside: avoid; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="./index.html" class="portal-brand">
+        <span class="portal-brand-mark" aria-hidden="true">S</span>
+        <span class="portal-brand-title">Solutoday</span>
+        <span class="portal-brand-ver">Ítem 2 · develop@cd7cf7d</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Navegación principal">
+        <button class="menu-button" type="button" popovertarget="portal-menu" popovertargetaction="toggle" aria-controls="portal-menu">
+          Menú
+        </button>
+        <ul id="portal-menu" class="site-menu" popover="auto">
+          <li><a href="./index.html" class="portal-link">Acta Base</a></li>
+          <li><a href="./item-02-informe-empresarial.html" class="portal-link" aria-current="page">Informe Ítem 2</a></li>
+          <li><a href="#soluciones" class="portal-link">Antes vs. Después</a></li>
+          <li><a href="#diagramas-archify" class="portal-link archify-nav-badge">Diagramas</a></li>
+          <li><a href="#prs" class="portal-link">PRs (8)</a></li>
+          <li><a href="#apps-moviles" class="portal-link">Apps Móviles</a></li>
+          <li><a href="#calidad" class="portal-link">Calidad &amp; Tests</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" onclick="toggleColorScheme()" class="portal-action-btn" aria-label="Cambiar tema de color">
+          <span class="theme-label-dark">Oscuro</span>
+          <span class="theme-label-light">Claro</span>
+        </button>
+        <button type="button" onclick="window.print()" class="portal-action-btn portal-action-primary">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 stack-lg" style="padding: 1.5rem;">
+    <!-- HERO EMPRESARIAL -->
+    <header class="hero-section">
+      <div class="eyebrow">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Informe Empresarial · Ítem 2 · Seguridad Web y Backend Unificado</span>
+      </div>
+      <h1 class="hero-title">Seguridad Web, Control de Acceso y <span class="hero-highlight">Blindaje Financiero</span></h1>
+      <p class="hero-subtitle">
+        Resumen ejecutivo preparado para que <strong>Yoider</strong> presente a <strong>Solutoday</strong> qué riesgos críticos existían en el código base, cómo se resolvieron de forma segura y responsable en <code>web-v2</code>, qué pruebas garantizan la calidad del trabajo y qué ajustes requieren las aplicaciones móviles fuera de este alcance.
+      </p>
+
+      <div class="meta-strip">
+        <div>
+          <div class="meta-label">Alcance Contratado (Ítem 2)</div>
+          <div class="meta-value">Web, Panel y Backend API (<code>web-v2</code>)</div>
+        </div>
+        <div>
+          <div class="meta-label">Estado del Código</div>
+          <div class="meta-value" style="color: var(--accent-emerald);">Fusionado en <code>develop</code> (<code>cd7cf7d</code>)</div>
+        </div>
+        <div>
+          <div class="meta-label">Estado de Despliegue</div>
+          <div class="meta-value" style="color: var(--accent-amber);">Sin desplegar · pendiente QA y aceptación</div>
+        </div>
+        <div>
+          <div class="meta-label">Fecha de Corte</div>
+          <div class="meta-value">19 de noviembre de 2026</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI STRIP -->
+    <section class="kpi-strip print-card" aria-label="Métricas clave del Ítem 2">
+      <div class="kpi-cell">
+        <div class="kpi-num">8 PRs</div>
+        <div class="kpi-desc">Integrados en <code>develop</code> (<code>#1</code> al <code>#8</code>, 121 archivos auditados)</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">123 / 703</div>
+        <div class="kpi-desc">Pruebas automatizadas y aserciones aprobadas (0 fallos, 0 errores)</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">1 Débito</div>
+        <div class="kpi-desc">Pago de <strong>$85.250</strong> verificado en Chrome + MySQL tras reintento por corte de red</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-num">0 Incidentes</div>
+        <div class="kpi-desc">Riesgos identificados y cerrados en código (sin afirmar incidentes en producción)</div>
+      </div>
+    </section>
+
+    <!-- RESUMEN EJECUTIVO PARA DIRECCIÓN -->
+    <section class="section-card stack-md print-card" aria-label="Resumen para dirección">
+      <div>
+        <div class="section-kicker">01 · Resumen para Solutoday</div>
+        <h2 class="section-title">¿Por qué era urgente esta intervención y qué gana la empresa?</h2>
+        <p class="section-lead">
+          Antes del Ítem 2, el sistema confiaba demasiado en lo que enviaba el teléfono o el navegador del usuario (roles, precios, estados de cuenta y credenciales de terceros) y conservaba rutas de mantenimiento peligrosas. Hoy, las decisiones críticas las toma y verifica el servidor de Solutoday.
+        </p>
+      </div>
+      <div class="grid-3">
+        <div class="phase-card phase-0">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">LO CRÍTICO QUE HABÍA</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Rutas capaces de reiniciar la base de datos, credenciales de chat e IA expuestas al cliente, registros que aceptaban roles/estados sin control, acceso cruzado a reservas ajenas y pagos vulnerables a montos alterados o cobros duplicados.
+          </p>
+        </div>
+        <div class="phase-card phase-1">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">SOLUCIÓN RESPONSABLE</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Se cerraron las rutas peligrosas, las claves quedaron privadas en el servidor, se protegió cada operación por rol y pertenencia, se calculan los totales desde catálogo en el backend y los pagos corren en transacciones MySQL idempotentes.
+          </p>
+        </div>
+        <div class="phase-card phase-2">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">TRABAJO GARANTIZADO</div>
+          <p style="font-size: 0.82rem; color: var(--muted-foreground);">
+            Cada cambio fue protegido con pruebas automatizadas sobre MySQL aislado (<strong>123 pruebas / 703 aserciones</strong>), recorridos reales en navegador Chrome y emulador Android, y documentación trazable por Pull Request.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANTES VS DESPUÉS (INTERACTIVO CON FILTROS) -->
+    <section id="soluciones" class="section-card stack-md print-card" aria-label="Soluciones implementadas antes y después">
+      <div class="row-between">
+        <div>
+          <div class="section-kicker">02 · Comparativo Antes vs. Después</div>
+          <h2 class="section-title">Qué había, qué afectaba y cómo quedó resuelto</h2>
+          <p class="section-lead">
+            Filtra por área para revisar cada riesgo encontrado en el código original, su impacto potencial para la operación y la solución implementada con su PR de evidencia.
+          </p>
+        </div>
+        <div class="row-wrap no-print" role="group" aria-label="Filtrar soluciones">
+          <button type="button" onclick="filterSolutions('all')" data-sf="all" class="sf-btn portal-action-btn portal-action-primary">Todas (7)</button>
+          <button type="button" onclick="filterSolutions('ciber')" data-sf="ciber" class="sf-btn portal-action-btn">Ciberseguridad (3)</button>
+          <button type="button" onclick="filterSolutions('identidad')" data-sf="identidad" class="sf-btn portal-action-btn">Identidad y Permisos (2)</button>
+          <button type="button" onclick="filterSolutions('finanzas')" data-sf="finanzas" class="sf-btn portal-action-btn">Reservas y Pagos (2)</button>
+        </div>
+      </div>
+
+      <div id="solutions-grid" class="grid-2"></div>
+    </section>
+
+    <!-- DEMOSTRACIÓN VISUAL DE RESERVA Y PAGO -->
+    <section class="section-card stack-md print-card" aria-label="Demostración financiera en vivo">
+      <div>
+        <div class="section-kicker">03 · Demostración Financiera Comprobada</div>
+        <h2 class="section-title">Cálculo de reserva en el servidor y pago sin doble cobro</h2>
+        <p class="section-lead">
+          En la prueba real con navegador Chrome, Laravel y MySQL sobre el commit final <code>cd7cf7d</code>, verificamos que el total se calcula desde el catálogo y que una caída de internet durante el pago nunca duplica el débito.
+        </p>
+      </div>
+
+      <div class="math-strip">
+        <div class="math-box">
+          <div class="math-val">$145.000</div>
+          <div class="math-lbl">Tarifa base del servicio</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val" style="color: var(--accent-rose);">−$10.000</div>
+          <div class="math-lbl">Cupón validado</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val">+$20.000</div>
+          <div class="math-lbl">Complemento válido</div>
+        </div>
+        <div class="math-box">
+          <div class="math-val">+$15.500</div>
+          <div class="math-lbl">Impuestos</div>
+        </div>
+        <div class="math-box math-total">
+          <div class="math-val">$170.500</div>
+          <div class="math-lbl">Total fijado por servidor</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="notice-banner notice-banner-teal">
+          <strong>Escenario 1 · Reintento tras pérdida de conexión:</strong> Una billetera de <strong>$500.000</strong> pagó el anticipo de <strong>$85.250</strong>. Se cortó la respuesta al navegador después de que el servidor procesó el pago y el usuario reintentó con la misma referencia. <strong>Resultado en MySQL:</strong> 1 solo pago, 1 solo débito y saldo exacto de <strong>$414.750</strong>.
+        </div>
+        <div class="notice-banner">
+          <strong>Escenario 2 · Cuenta con saldo insuficiente:</strong> Una segunda cuenta con <strong>$50.000</strong> intentó pagar el mismo anticipo de <strong>$85.250</strong>. <strong>Resultado:</strong> el sistema mostró el aviso de saldo insuficiente, no registró ningún movimiento y la billetera conservó sus <strong>$50.000</strong> intactos.
+        </div>
+      </div>
+    </section>
+
+    <!-- SUITE DE DIAGRAMAS INTERACTIVOS ARCHIFY + GALERÍA POR PR -->
+    <section id="diagramas-archify" class="archify-showcase stack-md print-card" aria-label="Diagramas interactivos y visuales">
+      <div class="row-between">
+        <div>
+          <span class="archify-chip">ARCHIFY 3.2 · VISORES INTERACTIVOS + DIAGRAMAS POR PR</span>
+          <h2 class="section-title" style="margin-top: 0.45rem;">Diagramas para explicar el antes y el después sin tecnicismos</h2>
+          <p class="section-lead">
+            Abre los <strong>4 visores interactivos Archify</strong> para explorar el flujo en pantalla completa (con zoom, modo claro/oscuro y exportación), o haz clic en cualquiera de las <strong>9 figuras por PR</strong> para ampliarlas aquí mismo.
+          </p>
+        </div>
+      </div>
+
+      <!-- 4 Tarjetas Archify Interactivas -->
+      <div class="grid-4 no-print">
+        <a href="../entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-teal">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #3</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Ciberseguridad &amp; Proxy IA</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Cómo dejó de viajar la clave de IA hacia los dispositivos y pasó al servidor autenticado.</p>
+            </div>
+            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+          </article>
+        </a>
+
+        <a href="../entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-indigo">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #4</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Identidad, Roles y Técnicos</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Verificación de cuentas en servidor, alta segura con cupo bloqueado y aprobación en panel.</p>
+            </div>
+            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+          </article>
+        </a>
+
+        <a href="../entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-amber">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #5</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Permisos y Pertenencia</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Control estricto por dueño en reservas, ofertas, GPS, evidencias y cuentas bancarias.</p>
+            </div>
+            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+          </article>
+        </a>
+
+        <a href="../entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-violet">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #6</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">Pagos y Reintento Seguro</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Flujo financiero atómico: confirmación, reintento sin doble débito y cobros pendientes.</p>
+            </div>
+            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+          </article>
+        </a>
+      </div>
+
+      <!-- Galería de las 9 figuras por PR -->
+      <div>
+        <h3 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); margin-bottom: 0.75rem;">
+          Galería visual por cada Pull Request (haz clic para ampliar)
+        </h3>
+        <div id="diagram-gallery" class="grid-3"></div>
+      </div>
+    </section>
+
+    <!-- EVIDENCIA POR CADA PULL REQUEST (#1 al #8) -->
+    <section id="prs" class="section-card stack-md print-card" aria-label="Evidencia por Pull Request">
+      <div>
+        <div class="section-kicker">04 · Trazabilidad Completa en GitHub</div>
+        <h2 class="section-title">Los 8 Pull Requests fusionados en <code>develop</code> como evidencia auditable</h2>
+        <p class="section-lead">
+          Cada mejora del Ítem 2 fue entregada, revisada y fusionada de forma ordenada en <code>web-v2</code> hasta el commit final <a href="https://github.com/Solutoday/web-v2/commit/cd7cf7d08bffd91a9f06a3554b96fe24aafed4f7" target="_blank" rel="noopener" class="pr-link-pill"><code>cd7cf7d</code> ↗</a>.
+        </p>
+      </div>
+
+      <div tabindex="0" role="region" aria-labelledby="prs-table-caption" class="table-wrapper">
+        <table class="doc-table table-pr">
+          <caption id="prs-table-caption">Listado oficial de los 8 Pull Requests integrados en origin/develop de web-v2 (19 de noviembre de 2026).</caption>
+          <thead>
+            <tr>
+              <th scope="col">Pull Request</th>
+              <th scope="col">Corte</th>
+              <th scope="col">Qué resuelve y por qué protege a Solutoday</th>
+              <th scope="col">Commit de fusión</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/1" target="_blank" rel="noopener">PR #1 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Retira el instalador web, las rutas de reinicialización y la tarea que podía reiniciar tablas en MySQL.</td>
+              <td><code>e28d716</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Centraliza los avisos de chat Firebase en Laravel bajo sesión verificada, sin exponer tokens al cliente.</td>
+              <td><code>c4ba4f6</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/3" target="_blank" rel="noopener">PR #3 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
+              <td>Elimina la clave de IA de respuestas públicas y crea un proxy autenticado con límite de frecuencia.</td>
+              <td><code>d5a4c7e</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener">PR #4 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
+              <td>Fija roles y estados en servidor, verifica identidad Firebase, firma verificación de correo y blinda alta/aprobación de técnicos.</td>
+              <td><code>ea7f822</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></th>
+              <td><span class="repo-chip repo-chip-violet">BG-02.03</span></td>
+              <td>Valida rol y pertenencia en reservas, solicitudes, ofertas, GPS, evidencias temporales, bancos y billetera.</td>
+              <td><code>813f99d</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener">PR #6 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.04</span></td>
+              <td>Calcula precios de reservas desde catálogo/ofertas en servidor, blinda pagos con transacciones MySQL e idempotencia y corrige selector web.</td>
+              <td><code>a0c9f1e</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/7" target="_blank" rel="noopener">PR #7 ↗</a></th>
+              <td><span class="repo-chip repo-chip-indigo">BG-02.05</span></td>
+              <td>Habilita exigencia configurable de HTTPS detrás de proxy confiable y sanea registros operativos de correo/avisos.</td>
+              <td><code>ae75eaf</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/8" target="_blank" rel="noopener">PR #8 ↗</a></th>
+              <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
+              <td>Unifica la resolución segura de rutas de credenciales Firebase compartida entre los módulos de chat e identidad.</td>
+              <td><code>cd7cf7d</code> · <span class="status-pill status-ok">Integrado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GARANTÍA DE CALIDAD Y PRUEBAS AUTOMATIZADAS -->
+    <section id="calidad" class="section-card stack-md print-card" aria-label="Garantía de calidad y pruebas">
+      <div>
+        <div class="section-kicker">05 · Garantía de Calidad</div>
+        <h2 class="section-title">Pruebas automatizadas y verificaciones reales que respaldan el trabajo</h2>
+        <p class="section-lead">
+          Para entregar un trabajo serio y confiable, cada regla crítica se respaldó con <strong>pruebas automatizadas</strong> que se pueden volver a ejecutar en cualquier momento para evitar que futuros cambios reabran brechas de seguridad o errores de cobro.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="module-card card-teal">
+          <div>
+            <span class="module-index">SUITE GENERAL · MYSQL AISLADO</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-teal); margin-top: 0.45rem;">115 pruebas</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>652 aserciones</strong> aprobadas (0 fallos). Valida cierre de rutas, identidad, permisos, ofertas, precios, chat, IA y HTTPS.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">100 % aprobada sobre commit cd7cf7d</p>
+          </div>
+        </div>
+
+        <div class="module-card card-indigo">
+          <div>
+            <span class="module-index">SUITE FINANCIERA · MYSQL AISLADO</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-indigo); margin-top: 0.45rem;">8 pruebas</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>51 aserciones</strong> aprobadas (0 fallos). Valida pagos atómicos, reintentos por referencia, saldo insuficiente y reversión en error.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">100 % aprobada sobre commit cd7cf7d</p>
+          </div>
+        </div>
+
+        <div class="module-card card-emerald">
+          <div>
+            <span class="module-index">RECORRIDOS REALES · WEB &amp; ANDROID</span>
+            <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-emerald); margin-top: 0.45rem;">E2E Reales</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>Chrome + MySQL:</strong> anticipo con corte de red y 1 solo débito. <strong>Emulador Android + Panel:</strong> alta pendiente de técnico, aprobación y activación.</p>
+          </div>
+          <div>
+            <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
+            <p style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700; margin-top: 0.35rem;">Evidencias archivadas (JUnit, JSON, TSV y capturas)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice-banner notice-banner-teal">
+        <strong>Transparencia técnica:</strong> Las pruebas locales se ejecutaron con datos ficticios y servicios externos simulados (Firebase, OpenAI y pasarelas de pago). Las pruebas con servicios reales y el piloto con las apps distribuidas se ejecutarán cuando Solutoday habilite un ambiente QA, antes de pasar a producción.
+      </div>
+    </section>
+
+    <!-- SECCIÓN CLAVE: QUÉ NECESITAN LAS APPS MÓVILES (FUERA DEL ALCANCE DEL ÍTEM 2) -->
+    <section id="apps-moviles" class="section-card stack-md print-card" aria-label="Requisitos de actualización para aplicaciones móviles">
+      <div>
+        <div class="section-kicker" style="color: var(--accent-amber);">06 · Importante · Aplicaciones Móviles (Fuera del Alcance del Ítem 2)</div>
+        <h2 class="section-title">Qué necesitan actualizar <code>clientes-v2</code> y <code>proveedor-v2</code> para adoptar estos cambios</h2>
+        <p class="section-lead">
+          El Ítem 2 cubre exclusivamente <strong>Seguridad web y backend unificado (<code>web-v2</code>)</strong>. La actualización, compilación y publicación en tiendas de las aplicaciones móviles <strong>no fue cotizada dentro del Ítem 2</strong>. Sin embargo, para cuidar la operación de Solutoday, dejamos documentado exactamente qué requiere cada app antes de activar los controles más estrictos en producción:
+        </p>
+      </div>
+
+      <div tabindex="0" role="region" aria-labelledby="apps-table-caption" class="table-wrapper">
+        <table class="doc-table table-apps">
+          <caption id="apps-table-caption">Matriz de impacto y adaptaciones requeridas en clientes-v2 y proveedor-v2 (fuera del alcance cotizado del Ítem 2).</caption>
+          <thead>
+            <tr>
+              <th scope="col">App y Flujo</th>
+              <th scope="col">¿Funciona sin actualizar?</th>
+              <th scope="col">Qué debe hacer la app para incorporar los cambios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Acceso Google, Apple y OTP</th>
+              <td><span class="status-pill status-req">Requiere actualizar</span></td>
+              <td>Obtener y enviar <code>firebase_id_token</code> real por HTTPS en login/registro social y OTP, y mostrar en pantalla la instrucción de vinculación de cuentas previas. Probar Google/OTP en Android y Apple en iOS.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Registro y login por correo</th>
+              <td><span class="status-pill status-ok">Compatible hoy</span></td>
+              <td>Conserva el contrato actual (<code>POST /api/register</code> y <code>/api/login</code>). Solo requiere validación de rutina en el piloto QA.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Chat</th>
+              <td><span class="status-pill status-req">Requiere actualizar</span></td>
+              <td>Solicitar los avisos de chat al nuevo endpoint autenticado del backend en lugar de depender de la ruta antigua que entregaba el token de servicio Firebase.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Generación IA</th>
+              <td><span class="status-pill status-req">Requiere actualizar</span></td>
+              <td>Consumir el proxy autenticado de IA en Laravel (la clave privada ya no viaja a los dispositivos) y manejar los mensajes de límite de uso o servicio no disponible.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-violet">Prestadores</span> · Alta y listado de técnicos</th>
+              <td><span class="status-pill status-ok">Compatible hoy</span></td>
+              <td>El backend mantuvo compatibilidad con la ruta que usa la app actual exigiendo sesión Sanctum. Al actualizar <code>proveedor-v2</code>, migrar a la ruta dedicada <code>POST /api/handymen</code>.</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Reservas y pagos</th>
+              <td><span class="status-pill status-warn">Verificar en piloto QA</span></td>
+              <td>Confirmar con los binarios distribuidos la lectura del total calculado en servidor, anticipos, saldo insuficiente, cobros pendientes y reintentos sin doble débito.</td>
+            </tr>
+            <tr>
+              <th scope="row">Ambas apps · Transporte HTTPS y logs</th>
+              <td><span class="status-pill status-warn">Antes de exigir HTTPS</span></td>
+              <td>Asegurar que todas las URLs apunten a HTTPS válido, retirar excepciones que acepten certificados inválidos en Soluexperto y evitar imprimir tokens o contraseñas en logs.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="notice-banner">
+        <strong>Apoyo técnico ya adelantado:</strong> Aunque la actualización móvil está fuera de la cotización del Ítem 2, nuestro equipo dejó preparadas propuestas técnicas locales de compatibilidad en <code>clientes-v2</code> y <code>proveedor-v2</code> (sin fusionar ni desplegar) para agilizar el trabajo en caso de que Solutoday decida contratar o coordinar esa fase móvil.
+      </div>
+    </section>
+
+    <!-- GUION DE 5 MINUTOS PARA YOIDER + PRÓXIMOS PASOS + ACTA DE CIERRE -->
+    <section class="section-card stack-md print-card" aria-label="Guion para Yoider y cierre">
+      <div>
+        <div class="section-kicker">07 · Presentación y Continuidad</div>
+        <h2 class="section-title">Guion de 5 minutos para Yoider y decisiones antes de desplegar</h2>
+        <p class="section-lead">
+          El código permanece en <code>develop</code> sin afectar producción. Esta guía facilita la presentación ante Solutoday y ordena los acuerdos pendientes para pasar a QA.
+        </p>
+      </div>
+
+      <div tabindex="0" role="region" aria-labelledby="script-table-caption" class="table-wrapper">
+        <table class="doc-table table-script">
+          <caption id="script-table-caption">Guía sugerida de 5 minutos para que Yoider presente el Ítem 2 usando esta misma página web.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Tiempo</th>
+              <th scope="col">Qué explicar y mostrar en pantalla</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">0:00 – 0:45</th>
+              <td><strong>Portada y KPIs:</strong> “El Ítem 2 reforzó quién puede entrar al sistema, qué valor se cobra en cada reserva y cómo se protege cada pago. Los 8 PRs están integrados en <code>develop</code> y probados en local; aún no se despliega a producción”.</td>
+            </tr>
+            <tr>
+              <th scope="row">0:45 – 2:00</th>
+              <td><strong>Sección 02 y Diagramas Archify:</strong> Mostrar qué rutas peligrosas se eliminaron, cómo quedaron protegidas las claves en el servidor y cómo se valida identidad, técnicos y pertenencia por rol.</td>
+            </tr>
+            <tr>
+              <th scope="row">2:00 – 3:15</th>
+              <td><strong>Sección 03 (Reservas y Pagos):</strong> Explicar el ejemplo comprobado de <strong>$170.500</strong> y el anticipo de <strong>$85.250</strong> con corte de red: un solo pago, un solo débito y billetera de <strong>$50.000</strong> intacta ante saldo insuficiente.</td>
+            </tr>
+            <tr>
+              <th scope="row">3:15 – 4:10</th>
+              <td><strong>Secciones 04 y 05 (PRs y Pruebas):</strong> Mostrar los 8 PRs auditables en GitHub y las <strong>123 pruebas / 703 aserciones sin fallos</strong>, aclarando con transparencia que los servicios externos se simularon en laboratorio.</td>
+            </tr>
+            <tr>
+              <th scope="row">4:10 – 5:00</th>
+              <td><strong>Sección 06 y Próximos Pasos:</strong> Explicar qué requieren las apps móviles (fuera de la cotización del Ítem 2), acordar habilitación de ambiente QA, rotación de credenciales heredadas y aceptación formal.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3">
+        <div class="phase-card phase-0">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 1 · SEGURIDAD OPERATIVA</div>
+          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Asignar responsable en Solutoday para retirar material sensible heredado, verificar credenciales activas y programar su rotación segura.</p>
+        </div>
+        <div class="phase-card phase-1">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 2 · AMBIENTE QA</div>
+          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Habilitar ambiente QA con Firebase, OpenAI, SMTP y pasarelas en modo prueba (Wompi corresponde al Ítem 7) antes de autorizar cualquier despliegue.</p>
+        </div>
+        <div class="phase-card phase-2">
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 3 · PILOTO MÓVIL Y ACEPTACIÓN</div>
+          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Acordar alcance y calendario para las actualizaciones de <code>clientes-v2</code> y <code>proveedor-v2</code>, y registrar por separado revisión de Yoider y aceptación de Solutoday.</p>
+        </div>
+      </div>
+
+      <div class="signature-grid">
+        <div>
+          <div style="font-size: 0.78rem; font-weight: 700;">Entrega Técnica · Ítem 2 (<code>web-v2 @ cd7cf7d</code>)</div>
+          <div class="signature-line">Diver — Revisión consolidada en <code>develop</code> · 2026-11-19</div>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; font-weight: 700;">Revisión de Yoider / Aceptación Solutoday</div>
+          <div class="signature-line">Nombre y firma — Fecha: ____ / ____ / ______</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal nativo <dialog> para ampliar diagramas PNG por PR -->
+  <dialog id="diagram-modal" class="diagram-dialog" closedby="any" aria-labelledby="diagram-modal-title">
+    <div class="dialog-head">
+      <div>
+        <span id="diagram-modal-badge" class="module-index">PR</span>
+        <h2 id="diagram-modal-title" style="font-size: 1rem; font-weight: 800; margin-top: 0.25rem;">Diagrama</h2>
+      </div>
+      <form method="dialog">
+        <button type="submit" value="close" class="portal-action-btn" autofocus>Cerrar</button>
+      </form>
+    </div>
+    <div class="dialog-body">
+      <img id="diagram-modal-img" src="" alt="" />
+    </div>
+    <div class="dialog-foot">
+      <span id="diagram-modal-desc"></span>
+      <a id="diagram-modal-pr" href="#" target="_blank" rel="noopener" class="pr-link-pill">Ver Pull Request en GitHub ↗</a>
+    </div>
+  </dialog>
+
+  <script>
+    // Feature-detect Popover polyfill only when native support is missing (modern-web-guidance: navbar)
+    if (!Object.hasOwn(HTMLElement.prototype, "popover")) {
+      import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
+    }
+
+    const SOLUTIONS = [
+      {
+        cat: "ciber",
+        badge: "PR #1 · Ciberseguridad Crítica",
+        title: "Cierre de rutas de instalación y reinicio de datos",
+        why: "Evitar que una llamada web o tarea automática pudiera reconstruir tablas y borrar información operativa.",
+        before: "El código exponía rutas del instalador web, rutas de reinicialización y una tarea programada capaz de ejecutar reinicio de tablas.",
+        after: "Se retiraron por completo las entradas del instalador, las rutas de reinicio y la tarea programada. En laboratorio las 4 rutas devuelven 404.",
+        prNum: "#1",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/1"
+      },
+      {
+        cat: "ciber",
+        badge: "PR #2 · PR #3 · PR #8 · Secretos",
+        title: "Claves de Chat Firebase e IA protegidas en el servidor",
+        why: "Impedir que terceros extraigan credenciales privadas de la empresa para enviar notificaciones falsas o consumir saldo de IA.",
+        before: "El backend entregaba material de acceso de Firebase y podía exponer la clave privada de ChatGPT en la configuración hacia las apps.",
+        after: "Laravel envía avisos de chat validando participantes y ofrece un proxy autenticado para IA con límite de uso. Chat e identidad comparten validación segura de credenciales.",
+        prNum: "#2, #3 y #8",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/2"
+      },
+      {
+        cat: "ciber",
+        badge: "PR #7 · Transporte y Registros",
+        title: "Control configurable de HTTPS y registros saneados",
+        why: "Proteger las sesiones en tránsito y evitar que correos o avisos filtren detalles internos en los archivos de log.",
+        before: "No existía un control central para rechazar tráfico HTTP inseguro detrás de proxy y los logs podían registrar contenido excesivo.",
+        after: "Se agregó exigencia configurable de HTTPS detrás de proxy autorizado (verificado en laboratorio) y se depuraron los registros operativos.",
+        prNum: "#7",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/7"
+      },
+      {
+        cat: "identidad",
+        badge: "PR #4 · Identidad y Técnicos",
+        title: "Control de roles, verificación de cuentas y alta de técnicos",
+        why: "Impedir que un usuario se asigne privilegios indebidos, suplante cuentas sociales o cree técnicos bajo otro prestador.",
+        before: "El registro aceptaba roles/estados enviados por el cliente, el login social confiaba en campos sin firma, la verificación de correo no validaba firma y el alta de técnicos usaba la ruta pública.",
+        after: "Laravel fija roles y estados, verifica tokens Firebase, firma y caduca enlaces de verificación (30 min), bloquea cupos de técnicos y exige aprobación autorizada por POST en panel.",
+        prNum: "#4",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/4"
+      },
+      {
+        cat: "identidad",
+        badge: "PR #5 · Permisos y Pertenencia",
+        title: "Aislamiento estricto en reservas, ofertas, GPS y bancos",
+        why: "Garantizar que clientes, prestadores y técnicos solo vean y operen su propia información y servicios asignados.",
+        before: "Múltiples operaciones de reservas, evidencias, GPS, ofertas y datos bancarios carecían de validación por dueño o dejaban acceso a técnicos reasignados.",
+        after: "Cada endpoint valida rol y titularidad; al reasignar un técnico se corta su acceso previo y las evidencias se entregan mediante enlaces con vencimiento.",
+        prNum: "#5",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/5"
+      },
+      {
+        cat: "finanzas",
+        badge: "PR #6 · Valor de la Reserva",
+        title: "Cálculo oficial de precios y totales en el servidor",
+        why: "Asegurar que el monto cobrado coincida siempre con el catálogo, cupones, complementos, ofertas e impuestos autorizados.",
+        before: "El backend podía aceptar y persistir totales calculados o enviados desde la interfaz del usuario.",
+        after: "El servidor calcula el importe oficial desde catálogo/oferta y rechaza selecciones ajenas o tiempos duplicados. Comprobado en $170.500 exactos.",
+        prNum: "#6",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/6"
+      },
+      {
+        cat: "finanzas",
+        badge: "PR #6 · Pagos y MySQL",
+        title: "Pagos transaccionales e idempotentes sin cobros dobles",
+        why: "Evitar cobros duplicados ante fallos de internet y proteger saldos de billetera frente a escrituras incompletas.",
+        before: "Un reintento tras corte de red podía duplicar un cobro o acreditar recargas sin verificación previa; un error intermedio dejaba datos inconsistentes.",
+        after: "Reserva, pago, saldo e historial se guardan en una sola transacción MySQL; la referencia única evita dobles débitos y los cobros no verificados quedan pendientes.",
+        prNum: "#6",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/6"
+      }
+    ];
+
+    const DIAGRAMS = [
+      { pr: "PR #1", title: "Rutas y mantenimiento", desc: "Cierre del instalador web y eliminación del reinicio automático de base de datos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-01-rutas-y-mantenimiento.png", url: "https://github.com/Solutoday/web-v2/pull/1" },
+      { pr: "PR #2", title: "Avisos de chat Firebase", desc: "Notificaciones enviadas desde Laravel con validación de participantes y sin exponer credenciales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-02-avisos-de-chat.png", url: "https://github.com/Solutoday/web-v2/pull/2" },
+      { pr: "PR #3", title: "Generación de texto IA", desc: "Proxy autenticado en backend con límite de frecuencia y clave privada fuera de las apps.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-03-generacion-de-texto.png", url: "https://github.com/Solutoday/web-v2/pull/3" },
+      { pr: "PR #4", title: "Identidad, roles y técnicos", desc: "Control de registro en servidor, verificación Firebase, enlaces firmados y alta segura de técnicos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-04-identidad.png", url: "https://github.com/Solutoday/web-v2/pull/4" },
+      { pr: "PR #5", title: "Permisos y ofertas", desc: "Validación de titularidad en solicitudes, ofertas, reservas, GPS y evidencias temporales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-05-permisos-y-ofertas.png", url: "https://github.com/Solutoday/web-v2/pull/5" },
+      { pr: "PR #6", title: "Cálculo de reservas", desc: "Origen oficial del importe calculado en servidor desde catálogo, cupones e impuestos ($170.500).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-calculo-de-reservas.png", url: "https://github.com/Solutoday/web-v2/pull/6" },
+      { pr: "PR #6", title: "Reintento seguro de pago", desc: "Flujo comprobado en Chrome: pérdida de conexión, reintento con misma referencia y 1 solo débito ($85.250).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-reintento-de-pago.png", url: "https://github.com/Solutoday/web-v2/pull/6" },
+      { pr: "PR #7", title: "Transporte HTTPS y registros", desc: "Rechazo configurable de HTTP inseguro detrás de proxy y saneamiento de logs operativos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-07-transporte-y-registros.png", url: "https://github.com/Solutoday/web-v2/pull/7" },
+      { pr: "PR #8", title: "Configuración Firebase compartida", desc: "Resolución segura y unificada de credenciales Firebase para los servicios de chat e identidad.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-08-configuracion-firebase.png", url: "https://github.com/Solutoday/web-v2/pull/8" }
+    ];
+
+    function filterSolutions(cat) {
+      document.querySelectorAll('.sf-btn').forEach(btn => {
+        btn.className = btn.dataset.sf === cat ? 'sf-btn portal-action-btn portal-action-primary' : 'sf-btn portal-action-btn';
+      });
+      const list = SOLUTIONS.filter(s => cat === 'all' || s.cat === cat);
+      document.getElementById('solutions-grid').innerHTML = list.map(s => `
+        <article class="solution-card" data-cat="${s.cat}">
+          <div class="row-between">
+            <span class="sev-pill ${s.cat === 'ciber' ? 'sev-pill-sec' : 'sev-pill-tech'}">${s.badge}</span>
+            <a href="${s.prUrl}" target="_blank" rel="noopener" class="pr-link-pill">Evidencia PR ${s.prNum} ↗</a>
+          </div>
+          <h3 style="font-size: 0.96rem; font-weight: 800; color: var(--foreground);">${s.title}</h3>
+          <p style="font-size: 0.8rem; color: var(--muted-foreground);"><strong>Por qué se hizo:</strong> ${s.why}</p>
+          <div class="ba-grid">
+            <div class="ba-box ba-before">
+              <div class="ba-tag">Antes · Riesgo Crítico</div>
+              <div>${s.before}</div>
+            </div>
+            <div class="ba-box ba-after">
+              <div class="ba-tag">Después · Solución Segura</div>
+              <div>${s.after}</div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    const modal = document.getElementById('diagram-modal');
+    const modalTitle = document.getElementById('diagram-modal-title');
+    const modalBadge = document.getElementById('diagram-modal-badge');
+    const modalImg = document.getElementById('diagram-modal-img');
+    const modalDesc = document.getElementById('diagram-modal-desc');
+    const modalPr = document.getElementById('diagram-modal-pr');
+
+    function openDiagram(idx) {
+      const d = DIAGRAMS[idx];
+      modalBadge.textContent = d.pr;
+      modalTitle.textContent = d.title;
+      modalImg.src = d.img;
+      modalImg.alt = `${d.pr}: ${d.title}`;
+      modalDesc.textContent = d.desc;
+      modalPr.href = d.url;
+      modal.showModal();
+    }
+
+    modal.addEventListener('close', () => {
+      modal.returnValue = '';
+    });
+
+    // Safari fallback for closedby="any" (modern-web-guidance: dialog)
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      const outside = (e, dialog) => {
+        const r = dialog.getBoundingClientRect();
+        return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      };
+      let pressedOutside = false;
+      modal.addEventListener('pointerdown', (e) => { pressedOutside = outside(e, modal); });
+      modal.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e, modal)) modal.close(); });
+    }
+
+    document.getElementById('diagram-gallery').innerHTML = DIAGRAMS.map((d, i) => `
+      <button type="button" class="diagram-thumb-card" onclick="openDiagram(${i})" aria-label="Ampliar diagrama ${d.pr}: ${d.title}">
+        <img class="diagram-thumb-img" src="${d.img}" alt="${d.pr}: ${d.title}" loading="lazy" />
+        <div class="diagram-thumb-meta">
+          <div class="row-between">
+            <span class="module-index">${d.pr}</span>
+            <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-indigo);">Ampliar ↗</span>
+          </div>
+          <div style="font-size: 0.86rem; font-weight: 700; color: var(--foreground);">${d.title}</div>
+          <div style="font-size: 0.76rem; color: var(--muted-foreground);">${d.desc}</div>
+        </div>
+      </button>
+    `).join('');
+
+    // Two-state color-scheme toggle (modern-web-guidance: dark-mode-toggle)
+    function getSystemScheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function toggleColorScheme() {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const current = meta.content === 'dark' || meta.content === 'light' ? meta.content : getSystemScheme();
+      const target = current === 'dark' ? 'light' : 'dark';
+      const system = getSystemScheme();
+      try {
+        if (target === system) {
+          localStorage.removeItem('color-scheme');
+          meta.content = 'light dark';
+        } else {
+          localStorage.setItem('color-scheme', target);
+          meta.content = target;
+        }
+      } catch (e) {
+        meta.content = target;
+      }
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme') {
+        document.querySelector('meta[name="color-scheme"]').content = e.newValue ?? 'light dark';
+      }
+    });
+
+    filterSolutions('all');
+  </script>
+</body>
+</html>

@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Solutoday — Atlas Interactivo de Arquitectura</title>
+  <link rel="stylesheet" href="./portal.css" />
+  <style>
+    .tab-active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .node-card {
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      cursor: pointer;
+    }
+    .node-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .node-selected {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .edge-line {
+      transition: opacity 0.2s ease, stroke-width 0.2s ease;
+      cursor: pointer;
+    }
+    .edge-dimmed {
+      opacity: 0.18;
+    }
+    .state-pill {
+      transition: all 0.16s ease;
+      cursor: pointer;
+    }
+    .state-pill-active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="./index.html" class="portal-brand">
+        <span class="portal-brand-mark" aria-hidden="true">S</span>
+        <span class="portal-brand-title">Solutoday</span>
+        <span class="portal-brand-ver">v1.0.0-linea-base</span>
+      </a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <button class="menu-button" type="button" popovertarget="portal-menu" popovertargetaction="toggle" aria-controls="portal-menu">Menú</button>
+        <ul id="portal-menu" class="site-menu" popover="auto">
+          <li><a href="./index.html" class="portal-link">Acta Base</a></li>
+          <li><a href="./arquitectura.html" class="portal-link" aria-current="page">Arquitectura</a></li>
+          <li><a href="./casos-de-uso.html" class="portal-link">Casos de Uso</a></li>
+          <li><a href="./modelo-relacional.html" class="portal-link">Modelo ER</a></li>
+          <li><a href="./index.html#archify-suite" class="portal-link archify-nav-badge">Archify (4)</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" onclick="toggleColorScheme()" class="portal-action-btn" aria-label="Cambiar tema de color">
+          <span class="theme-label-dark">Oscuro</span>
+          <span class="theme-label-light">Claro</span>
+        </button>
+        <button type="button" onclick="window.print()" class="portal-action-btn portal-action-primary">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+  <div class="p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-5">
+
+    <!-- Header -->
+    <header class="bg-[var(--card)] hero-accent-card border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">SOLUTODAY ECOSYSTEM</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs border border-[var(--border)] text-[var(--muted-foreground)]">Laravel 11 + Vue 3 + 2x Flutter/MobX + Firebase + Docker Swarm</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-[var(--foreground)]">Atlas Interactivo de Arquitectura &amp; Comunicación</h1>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">Haz clic en cualquier nodo, enlace, estado o entidad para inspeccionar cómo funcionan y se comunican <code class="text-xs px-1 py-0.5 rounded bg-[var(--secondary)]">web-v2</code>, <code class="text-xs px-1 py-0.5 rounded bg-[var(--secondary)]">clientes-v2</code> y <code class="text-xs px-1 py-0.5 rounded bg-[var(--secondary)]">proveedor-v2</code>.</p>
+      </div>
+
+      <!-- KPI Pills -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center shrink-0">
+        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2">
+          <div class="text-lg font-bold text-[var(--foreground)]">3</div>
+          <div class="text-xs text-[var(--muted-foreground)]">Repositorios</div>
+        </div>
+        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2">
+          <div class="text-lg font-bold text-[var(--foreground)]">79</div>
+          <div class="text-xs text-[var(--muted-foreground)]">Modelos Eloquent</div>
+        </div>
+        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2">
+          <div class="text-lg font-bold text-[var(--foreground)]">11</div>
+          <div class="text-xs text-[var(--muted-foreground)]">Estados Booking</div>
+        </div>
+        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2">
+          <div class="text-lg font-bold text-[var(--foreground)]">146</div>
+          <div class="text-xs text-[var(--muted-foreground)]">Migraciones DB</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-1.5 flex flex-wrap gap-1.5" role="tablist">
+      <button onclick="switchTab('ecosystem')" id="tab-ecosystem" class="tab-btn tab-active px-4 py-2 rounded-lg text-sm font-medium transition">1. Mapa de Comunicación</button>
+      <button onclick="switchTab('workflow')" id="tab-workflow" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">2. Flujo Reserva, Pago &amp; Wallet</button>
+      <button onclick="switchTab('domain')" id="tab-domain" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">3. Modelo de Dominio (ER)</button>
+      <button onclick="switchTab('stacks')" id="tab-stacks" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">4. Stacks, Infra EC2 &amp; Auditoría</button>
+    </nav>
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: ECOSYSTEM & COMMUNICATION DIAGRAM -->
+    <!-- ========================================================= -->
+    <section id="panel-ecosystem" class="tab-panel space-y-4">
+      <!-- Flow Filter Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mr-1">Filtrar Canal:</span>
+          <button onclick="filterFlow('all')" data-flow="all" class="flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)]">Todos los Canales</button>
+          <button onclick="filterFlow('rest')" data-flow="rest" class="flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">REST API Sanctum</button>
+          <button onclick="filterFlow('firebase')" data-flow="firebase" class="flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">Chat Firestore + Auth</button>
+          <button onclick="filterFlow('push')" data-flow="push" class="flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">Push FCM v1 + Twilio</button>
+          <button onclick="filterFlow('payments')" data-flow="payments" class="flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">Pasarelas &amp; Storage</button>
+        </div>
+        <span class="text-xs text-[var(--muted-foreground)]">Clic en un componente o línea para ver detalles</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <!-- Interactive Architecture Canvas -->
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 md:p-5 relative overflow-hidden">
+          <div class="relative" id="diagram-container">
+            <!-- SVG Connector Overlay -->
+            <svg viewBox="0 0 820 520" class="w-full h-auto block" id="ecosystem-svg">
+              <defs>
+                <marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#00C6A3"></path>
+                </marker>
+                <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"></path>
+                </marker>
+                <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6"></path>
+                </marker>
+                <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#a855f7"></path>
+                </marker>
+              </defs>
+
+              <!-- Background Zone Boxes -->
+              <rect x="12" y="12" width="235" height="496" rx="14" fill="none" stroke="var(--border)" stroke-dasharray="5 5" />
+              <text x="26" y="34" fill="var(--muted-foreground)" font-size="12" font-weight="600">CAPA CLIENTE (MÓVIL &amp; WEB)</text>
+
+              <rect x="275" y="12" width="270" height="496" rx="14" fill="none" stroke="var(--border)" stroke-dasharray="5 5" />
+              <text x="289" y="34" fill="var(--muted-foreground)" font-size="12" font-weight="600">BACKEND · SWARM DEFINIDO PARA EC2</text>
+
+              <rect x="573" y="12" width="235" height="496" rx="14" fill="none" stroke="var(--border)" stroke-dasharray="5 5" />
+              <text x="587" y="34" fill="var(--muted-foreground)" font-size="12" font-weight="600">DATOS, CLOUD &amp; EXTERNOS</text>
+
+              <!-- Edges / Connections -->
+              <!-- clientes-v2 -> web-v2 (REST) -->
+              <path d="M 230 115 C 260 115, 265 185, 295 185" fill="none" stroke="#00C6A3" stroke-width="2.5" marker-end="url(#arrow-primary)" marker-start="url(#arrow-primary)" class="edge-line" data-edge="rest" onclick="selectItem('edge_rest_cli')" />
+              <!-- proveedor-v2 -> web-v2 (REST) -->
+              <path d="M 230 250 L 295 230" fill="none" stroke="#00C6A3" stroke-width="2.5" marker-end="url(#arrow-primary)" marker-start="url(#arrow-primary)" class="edge-line" data-edge="rest" onclick="selectItem('edge_rest_prov')" />
+              <!-- web public/admin -> web-v2 (Blade/Vue) -->
+              <path d="M 230 390 C 260 390, 265 275, 295 275" fill="none" stroke="#00C6A3" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow-primary)" class="edge-line" data-edge="rest" onclick="selectItem('edge_web_vue')" />
+
+              <!-- clientes & proveedor <-> Firestore Chat -->
+              <path d="M 230 92 C 360 40, 480 40, 590 92" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-amber)" marker-start="url(#arrow-amber)" class="edge-line" data-edge="firebase" onclick="selectItem('edge_firestore_chat')" />
+              <path d="M 230 272 C 360 325, 495 140, 590 115" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-amber)" marker-start="url(#arrow-amber)" class="edge-line" data-edge="firebase" onclick="selectItem('edge_firestore_chat')" />
+
+              <!-- web-v2 -> MySQL -->
+              <path d="M 525 220 L 590 220" fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)" class="edge-line" data-edge="rest" onclick="selectItem('edge_mysql')" />
+
+              <!-- web-v2 -> FCM & Twilio (Push) -->
+              <path d="M 525 255 C 555 255, 555 320, 590 320" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arrow-purple)" class="edge-line" data-edge="push" onclick="selectItem('edge_push_backend')" />
+              <!-- Apps -> FCM direct chat push -->
+              <path d="M 130 305 C 130 480, 540 485, 650 355" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrow-purple)" class="edge-line" data-edge="push" onclick="selectItem('edge_push_chat')" />
+
+              <!-- Apps & web-v2 -> Payments / S3 -->
+              <path d="M 525 280 C 555 280, 555 425, 590 425" fill="none" stroke="#3b82f6" stroke-width="2.2" marker-end="url(#arrow-blue)" class="edge-line" data-edge="payments" onclick="selectItem('edge_s3_pay')" />
+              <path d="M 165 148 C 210 495, 470 500, 590 445" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow-blue)" class="edge-line" data-edge="payments" onclick="selectItem('edge_s3_pay')" />
+
+              <!-- NODES (rendered as SVG groups with crisp foreign-free styling) -->
+              <!-- Node: clientes-v2 -->
+              <g onclick="selectItem('clientes')" class="cursor-pointer">
+                <rect id="svgnode-clientes" x="28" y="65" width="202" height="86" rx="12" fill="var(--background)" stroke="#00C6A3" stroke-width="2" />
+                <text x="42" y="90" fill="var(--foreground)" font-size="14" font-weight="700">clientes-v2 (Solutoday)</text>
+                <text x="42" y="109" fill="var(--muted-foreground)" font-size="12">Flutter / Dart • MobX • HTTP</text>
+                <text x="42" y="128" fill="#00C6A3" font-size="12" font-weight="600">com.solutoday2.app</text>
+              </g>
+
+              <!-- Node: proveedor-v2 -->
+              <g onclick="selectItem('proveedor')" class="cursor-pointer">
+                <rect id="svgnode-proveedor" x="28" y="205" width="202" height="94" rx="12" fill="var(--background)" stroke="#00C6A3" stroke-width="2" />
+                <text x="42" y="230" fill="var(--foreground)" font-size="14" font-weight="700">proveedor-v2 (Soluexperto)</text>
+                <text x="42" y="249" fill="var(--muted-foreground)" font-size="12">Dual: Provider / Handyman</text>
+                <text x="42" y="268" fill="#00C6A3" font-size="12" font-weight="600">com.solutoday2.provider</text>
+                <text x="42" y="286" fill="var(--muted-foreground)" font-size="12">RevenueCat IAP • GPS Tracking</text>
+              </g>
+
+              <!-- Node: Web Portal & Admin -->
+              <g onclick="selectItem('webfrontend')" class="cursor-pointer">
+                <rect id="svgnode-webfrontend" x="28" y="345" width="202" height="86" rx="12" fill="var(--background)" stroke="var(--border)" stroke-width="2" />
+                <text x="42" y="370" fill="var(--foreground)" font-size="14" font-weight="700">Web Pública &amp; Admin Panel</text>
+                <text x="42" y="389" fill="var(--muted-foreground)" font-size="12">Vue 3 + Pinia (#landing-app)</text>
+                <text x="42" y="408" fill="var(--muted-foreground)" font-size="12">Blade + DataTables + Bootstrap 5</text>
+              </g>
+
+              <!-- Node: web-v2 Core -->
+              <g onclick="selectItem('webv2')" class="cursor-pointer">
+                <rect id="svgnode-webv2" x="295" y="135" width="230" height="190" rx="14" fill="var(--background)" stroke="#00C6A3" stroke-width="2.5" />
+                <text x="312" y="162" fill="var(--foreground)" font-size="15" font-weight="700">web-v2 (Laravel 11 Core)</text>
+                <text x="312" y="182" fill="var(--muted-foreground)" font-size="12">Nginx + PHP-FPM 8.4 + Sanctum 4</text>
+                <line x1="312" y1="194" x2="508" y2="194" stroke="var(--border)" />
+                <text x="312" y="214" fill="var(--foreground)" font-size="12" font-weight="600">• API REST (api.php / admin-api.php)</text>
+                <text x="312" y="233" fill="var(--foreground)" font-size="12" font-weight="600">• Spatie Roles/Media + Traits</text>
+                <text x="312" y="252" fill="var(--foreground)" font-size="12" font-weight="600">• ProviderPaymentFinalizer</text>
+                <text x="312" y="271" fill="var(--foreground)" font-size="12" font-weight="600">• Supervisor Queue Worker</text>
+                <text x="312" y="290" fill="var(--muted-foreground)" font-size="12">  └─ AutoConfirm (30 min delay)</text>
+                <text x="312" y="309" fill="var(--muted-foreground)" font-size="12">• Proxy: Nginx Proxy Manager</text>
+              </g>
+
+              <!-- Node: Firebase Chat -->
+              <g onclick="selectItem('firebase')" class="cursor-pointer">
+                <rect id="svgnode-firebase" x="590" y="65" width="204" height="84" rx="12" fill="var(--background)" stroke="#f59e0b" stroke-width="2" />
+                <text x="605" y="90" fill="var(--foreground)" font-size="14" font-weight="700">Firebase Chat &amp; Auth</text>
+                <text x="605" y="109" fill="var(--muted-foreground)" font-size="12">Firestore (messages / contact)</text>
+                <text x="605" y="128" fill="#f59e0b" font-size="12" font-weight="600">Storage • Crashlytics</text>
+              </g>
+
+              <!-- Node: MySQL 8.0 -->
+              <g onclick="selectItem('mysql')" class="cursor-pointer">
+                <rect id="svgnode-mysql" x="590" y="175" width="204" height="82" rx="12" fill="var(--background)" stroke="#3b82f6" stroke-width="2" />
+                <text x="605" y="200" fill="var(--foreground)" font-size="14" font-weight="700">MySQL 8.0 (Swarm DB)</text>
+                <text x="605" y="219" fill="var(--muted-foreground)" font-size="12">146 migraciones • 79 modelos</text>
+                <text x="605" y="238" fill="#3b82f6" font-size="12" font-weight="600">Cola jobs + Tablas de dominio</text>
+              </g>
+
+              <!-- Node: FCM + Twilio + Mail -->
+              <g onclick="selectItem('notifications')" class="cursor-pointer">
+                <rect id="svgnode-notifications" x="590" y="280" width="204" height="84" rx="12" fill="var(--background)" stroke="#a855f7" stroke-width="2" />
+                <text x="605" y="305" fill="var(--foreground)" font-size="14" font-weight="700">FCM v1 + Twilio + SMTP</text>
+                <text x="605" y="324" fill="var(--muted-foreground)" font-size="12">Tópicos: user_{id}, userApp, providerApp</text>
+                <text x="605" y="343" fill="#a855f7" font-size="12" font-weight="600">SMS / WhatsApp / Email / Push</text>
+              </g>
+
+              <!-- Node: AWS S3 & Payment Gateways -->
+              <g onclick="selectItem('external')" class="cursor-pointer">
+                <rect id="svgnode-external" x="590" y="388" width="204" height="92" rx="12" fill="var(--background)" stroke="var(--border)" stroke-width="2" />
+                <text x="605" y="413" fill="var(--foreground)" font-size="14" font-weight="700">AWS S3 &amp; Pasarelas</text>
+                <text x="605" y="432" fill="var(--muted-foreground)" font-size="12">MediaLibrary S3 • Google Maps</text>
+                <text x="605" y="451" fill="var(--muted-foreground)" font-size="12">Stripe, PayPal, Razorpay, PIX,</text>
+                <text x="605" y="468" fill="var(--muted-foreground)" font-size="12">Flutterwave, Paystack, Cash, Wallet</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-2 pt-3 border-t border-[var(--border)] flex flex-wrap gap-4 text-xs text-[var(--muted-foreground)]">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-1 rounded bg-[#00C6A3] inline-block"></span> REST API Sanctum</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-1 rounded bg-[#f59e0b] inline-block"></span> Firestore Chat en Tiempo Real</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-1 rounded bg-[#a855f7] inline-block"></span> Push FCM v1 / Twilio</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-1 rounded bg-[#3b82f6] inline-block"></span> Persistencia MySQL / S3 / Pagos</span>
+          </div>
+        </div>
+
+        <!-- Inspector Panel -->
+        <aside class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between">
+          <div id="inspector-content" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+          <div class="mt-5 pt-4 border-t border-[var(--border)]">
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">Accesos rápidos del inspector</div>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="selectItem('webv2')" class="px-2.5 py-1 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]">web-v2</button>
+              <button onclick="selectItem('clientes')" class="px-2.5 py-1 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]">clientes-v2</button>
+              <button onclick="selectItem('proveedor')" class="px-2.5 py-1 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]">proveedor-v2</button>
+              <button onclick="selectItem('edge_firestore_chat')" class="px-2.5 py-1 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]">Flujo Chat</button>
+              <button onclick="selectItem('edge_push_chat')" class="px-2.5 py-1 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]">Push Chat FCM</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: WORKFLOW SIMULATOR (BOOKING, PAYMENTS & WALLET) -->
+    <!-- ========================================================= -->
+    <section id="panel-workflow" class="tab-panel hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-bold text-[var(--foreground)]">Simulador Interactivo de Flujo de Negocio</h2>
+            <p class="text-sm text-[var(--muted-foreground)]">Recorre paso a paso cómo interactúan las apps y el backend en los 3 escenarios principales de Solutoday.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="setScenario('booking')" id="scen-booking" class="scen-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">Reserva + Pago Efectivo/AutoConfirm</button>
+            <button onclick="setScenario('postjob')" id="scen-postjob" class="scen-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">Trabajo Publicado (PostJob + Bids)</button>
+            <button onclick="setScenario('cancel')" id="scen-cancel" class="scen-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]">Cancelación &amp; Reembolso Wallet</button>
+          </div>
+        </div>
+
+        <!-- Stepper Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-[var(--background)] border border-[var(--border)] rounded-xl p-3">
+          <div class="flex items-center gap-2">
+            <button onclick="prevStep()" class="px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] hover:border-[var(--primary)]">← Anterior</button>
+            <button onclick="nextStep()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)]">Siguiente →</button>
+            <button onclick="togglePlay()" id="play-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] hover:border-[var(--primary)]">▶ Reproducir</button>
+          </div>
+          <div class="text-xs font-medium text-[var(--muted-foreground)]" id="step-counter">Paso 1 de 6</div>
+        </div>
+
+        <!-- Step Timeline Pills -->
+        <div id="step-pills" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"></div>
+
+        <!-- Active Step Detail Card -->
+        <div id="step-detail" class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-2"></div>
+      </div>
+
+      <!-- Complete 11-State Reference -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-3">Catálogo Completo de Estados de Reserva (<code class="text-xs">booking_statuses</code>)</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">1. pending</span><span class="text-[var(--muted-foreground)]">Creada por cliente</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">2. accept</span><span class="text-[var(--muted-foreground)]">Aceptada / asignada</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">3. on_going</span><span class="text-[var(--muted-foreground)]">Técnico en camino (GPS)</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">4. in_progress</span><span class="text-[var(--muted-foreground)]">Ejecutando trabajo</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">5. hold</span><span class="text-[var(--muted-foreground)]">Pausada (acumula tiempo)</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">6. pending_approval</span><span class="text-[var(--muted-foreground)]">Cierre y cargos extra</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">7. waiting</span><span class="text-[var(--muted-foreground)]">Espera pago anticipo</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">8. completed</span><span class="text-[var(--muted-foreground)]">Finalizada + Comisiones</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">9. cancelled</span><span class="text-[var(--muted-foreground)]">Cancelada (+/- multa)</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">10. rejected</span><span class="text-[var(--muted-foreground)]">Rechazada por proveedor</span></div>
+          <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)]"><span class="font-bold block">11. failed</span><span class="text-[var(--muted-foreground)]">Fallo de flujo/pago</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: DOMAIN & ER EXPLORER -->
+    <!-- ========================================================= -->
+    <section id="panel-domain" class="tab-panel hidden space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-[var(--foreground)]">Entidades Centrales de Dominio (<code class="text-sm">web-v2/app/Models</code>)</h2>
+              <p class="text-xs text-[var(--muted-foreground)]">Selecciona una entidad para inspeccionar su tabla, atributos clave, scopes y relaciones Eloquent.</p>
+            </div>
+          </div>
+          <div id="er-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+        </div>
+
+        <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5" id="er-detail"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 4: STACKS, EC2 INFRA & AUDIT -->
+    <!-- ========================================================= -->
+    <section id="panel-stacks" class="tab-panel hidden space-y-4">
+      <!-- 3-Column Comparison -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-base">web-v2 (Backend &amp; Web)</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-[var(--secondary)] text-[var(--secondary-foreground)]">PHP / JS</span>
+          </div>
+          <ul class="text-xs space-y-1.5 text-[var(--muted-foreground)]">
+            <li><strong class="text-[var(--foreground)]">Framework:</strong> Laravel ^11.0 + Sanctum ^4.0</li>
+            <li><strong class="text-[var(--foreground)]">Runtime:</strong> PHP 8.4-FPM + Nginx + Supervisor</li>
+            <li><strong class="text-[var(--foreground)]">Frontend Web:</strong> Blade + Vue 3.2 + Pinia + Laravel Mix 6</li>
+            <li><strong class="text-[var(--foreground)]">Base de Datos:</strong> MySQL 8.0 (146 migraciones)</li>
+            <li><strong class="text-[var(--foreground)]">Archivos:</strong> Spatie MediaLibrary ^11.4 sobre AWS S3</li>
+            <li><strong class="text-[var(--foreground)]">Permisos:</strong> Spatie Permission ^6.1 (5 roles)</li>
+            <li><strong class="text-[var(--foreground)]">Colas &amp; Cron:</strong> Worker <code>database</code> en Supervisor. El scheduler de <code>Kernel.php</code> requiere ejecución independiente</li>
+            <li><strong class="text-[var(--foreground)]">Deploy:</strong> GitHub Actions → AWS ECR → EC2 Docker Swarm</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-base">clientes-v2 (Solutoday)</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-[var(--secondary)] text-[var(--secondary-foreground)]">Dart / Flutter</span>
+          </div>
+          <ul class="text-xs space-y-1.5 text-[var(--muted-foreground)]">
+            <li><strong class="text-[var(--foreground)]">Versión:</strong> 11.14.0+102 (<code>booking_system_flutter</code>)</li>
+            <li><strong class="text-[var(--foreground)]">IDs:</strong> <code>com.solutoday2.app</code> (Android/iOS)</li>
+            <li><strong class="text-[var(--foreground)]">Estado:</strong> MobX (^2.5.0) + 5 Stores + Caché en memoria</li>
+            <li><strong class="text-[var(--foreground)]">Persistencia:</strong> <code>nb_utils</code> (SharedPreferences)</li>
+            <li><strong class="text-[var(--foreground)]">Auth:</strong> Email/Pass + Google Sign-In + Apple Sign-In</li>
+            <li><strong class="text-[var(--foreground)]">Chat &amp; Push:</strong> Firestore + Storage + FCM v1</li>
+            <li><strong class="text-[var(--foreground)]">Pagos:</strong> 11+ pasarelas + Wallet + Cash/Transacción</li>
+            <li><strong class="text-[var(--foreground)]">Extra:</strong> 5 dashboards configurables, búsqueda por voz, tracking GPS</li>
+          </ul>
+        </div>
+
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-base">proveedor-v2 (Soluexperto)</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-[var(--secondary)] text-[var(--secondary-foreground)]">Dart / Flutter</span>
+          </div>
+          <ul class="text-xs space-y-1.5 text-[var(--muted-foreground)]">
+            <li><strong class="text-[var(--foreground)]">Versión:</strong> 11.14.0+95 (<code>handyman_provider_flutter</code>)</li>
+            <li><strong class="text-[var(--foreground)]">IDs:</strong> <code>com.solutoday2.provider</code> (Android/iOS)</li>
+            <li><strong class="text-[var(--foreground)]">Roles:</strong> Dual en runtime (<code>provider</code> y <code>handyman</code>)</li>
+            <li><strong class="text-[var(--foreground)]">Estado:</strong> MobX (^2.5.0) + TimeSlotStore + RolesStore</li>
+            <li><strong class="text-[var(--foreground)]">Suscripciones:</strong> RevenueCat (<code>purchases_flutter</code>) + API</li>
+            <li><strong class="text-[var(--foreground)]">Operación:</strong> Catálogo, Slots, Pujas, Banners, Evidencias, Cash</li>
+            <li><strong class="text-[var(--foreground)]">Analytics:</strong> Syncfusion Flutter Charts</li>
+            <li><strong class="text-[var(--foreground)]">Tracking:</strong> Emisión de coordenadas GPS a Laravel</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Critical Findings Matrix -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 class="text-base font-bold text-[var(--foreground)]">Auditoría Técnica — Hallazgos Verificados</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Riesgos de seguridad, configuración e inconsistencias de código observados directamente en los repositorios.</p>
+          </div>
+          <div class="flex gap-1.5">
+            <button onclick="filterFindings('all')" class="finding-btn px-2.5 py-1 rounded text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)]" data-sev="all">Todos (9)</button>
+            <button onclick="filterFindings('critical')" class="finding-btn px-2.5 py-1 rounded text-xs font-medium border border-[var(--border)]" data-sev="critical">Críticos</button>
+            <button onclick="filterFindings('bug')" class="finding-btn px-2.5 py-1 rounded text-xs font-medium border border-[var(--border)]" data-sev="bug">Bugs / Deuda</button>
+          </div>
+        </div>
+        <div id="findings-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // =========================================================
+    // DATA DEFINITIONS (100% VERIFIED FROM REPOSITORY FILES)
+    // =========================================================
+    const INSPECTOR_ITEMS = {
+      webv2: {
+        badge: 'BACKEND CORE • PHP / LARAVEL 11',
+        title: 'web-v2 (API + Admin + Web)',
+        summary: 'Monolito Laravel 11 que centraliza la base de datos MySQL, reglas de negocio, autenticación Sanctum, cobro de comisiones y notificaciones multicanal.',
+        bullets: [
+          'Autenticación API por tokens Sanctum (routes/api.php y routes/admin-api.php).',
+          'RBAC con Spatie Permission: admin, demo_admin, provider, handyman, user.',
+          'Traits de negocio: NotificationTrait, EarningTrait, TranslationTrait.',
+          'Servicio transaccional ProviderPaymentFinalizer con lockForUpdate() y auto-deshabilitación de wallet <= 0.',
+          'Despliegue en Docker Swarm (EC2) con Nginx + PHP-FPM 8.4 + Supervisor Queue Worker.'
+        ],
+        files: ['routes/api.php', 'app/Services/ProviderPaymentFinalizer.php', 'app/Traits/NotificationTrait.php', 'supervisord.conf']
+      },
+      clientes: {
+        badge: 'APP MÓVIL • FLUTTER / DART',
+        title: 'clientes-v2 (App Solutoday)',
+        summary: 'Aplicación Flutter para clientes finales (com.solutoday2.app). Gestiona catálogo geolocalizado, reservas, cotizaciones (PostJob), pagos multi-pasarela, chat Firestore y tracking en vivo.',
+        bullets: [
+          'Estado global con MobX (AppStore, AppConfigurationStore, FilterStore, RolesAndPermissionStore).',
+          'Cliente HTTP propio en network_utils.dart con auto-renovación en 401 (reGenerateToken).',
+          '5 plantillas de Dashboard configurables desde /api/configurations.',
+          'Login estándar, Google Sign-In y Apple Sign-In + búsqueda por voz.',
+          'Cliente REST compartido por los módulos, con repositorios propios de blog y soporte.'
+        ],
+        files: ['lib/main.dart', 'lib/utils/configs.dart', 'lib/network/rest_apis.dart', 'lib/services/auth_services.dart']
+      },
+      proveedor: {
+        badge: 'APP DUAL • FLUTTER / DART',
+        title: 'proveedor-v2 (App Soluexperto)',
+        summary: 'Aplicación dual (com.solutoday2.provider) que cambia de experiencia en tiempo de ejecución según userType: Proveedor (dueño/negocio) o Handyman (técnico en campo).',
+        bullets: [
+          'ProviderDashboardScreen: servicios, paquetes, addons, franjas horarias, equipo de handymen, bids y banners promocionales.',
+          'HandymanDashboardScreen: disponibilidad, ejecución de órdenes, pruebas ServiceProof y tracking GPS en vivo.',
+          'Suscripciones híbridas con RevenueCat (purchases_flutter) y API Laravel.',
+          'Gráficos de ingresos con Syncfusion Charts y conciliación de pagos en efectivo (transfer-payment).',
+          'Consume la API compartida de web-v2.'
+        ],
+        files: ['lib/main.dart', 'lib/provider/provider_dashboard_screen.dart', 'lib/handyman/handyman_dashboard_screen.dart', 'lib/networks/rest_apis.dart']
+      },
+      webfrontend: {
+        badge: 'PORTAL WEB • BLADE + VUE 3',
+        title: 'Web Pública & Panel Administrativo',
+        summary: 'Vistas servidas directamente desde web-v2. El portal público combina Blade con 30+ componentes Vue 3 montados en #landing-app; el panel admin usa Blade + jQuery + Yajra DataTables.',
+        bullets: [
+          'resources/js/app.js registra Pinia, vue-i18n y componentes (BookingWizard, Payment, Wallet, PostJobForm).',
+          'Compilado con Laravel Mix 6 (webpack.mix.js -> public/js/landing-app.min.js).',
+          'Admin gestiona categorías, aprobación de proveedores/documentos/servicios, tarifas, impuestos, payouts y notificaciones.'
+        ],
+        files: ['resources/js/app.js', 'webpack.mix.js', 'routes/web.php', 'routes/frontend.php']
+      },
+      firebase: {
+        badge: 'TIEMPO REAL • GOOGLE FIREBASE',
+        title: 'Firebase Auth, Firestore & Storage',
+        summary: 'Plano de mensajería desacoplado de Laravel. Las apps móviles leen y escriben chats directamente en Cloud Firestore.',
+        bullets: [
+          'Colección users/{uid} sincronizada en login con el campo users.uid en MySQL vía POST /api/update-profile.',
+          'Mensajes replicados en messages/{senderUid}/{receiverUid} y messages/{receiverUid}/{senderUid}.',
+          'Bandeja de contactos en users/{uid}/contact/{contactUid} con estado isOnline y lastMessageTime.',
+          'Multimedia del chat (imágenes, PDF, audio, video <= 5MB) almacenados en Firebase Storage (chat_files/).'
+        ],
+        files: ['clientes-v2/lib/services/chat_services.dart', 'proveedor-v2/lib/networks/firebase_services/chat_messages_service.dart']
+      },
+      mysql: {
+        badge: 'PERSISTENCIA • DOCKER SWARM',
+        title: 'MySQL 8.0 (Stack database)',
+        summary: 'Base de datos relacional única del ecosistema, definida como servicio Swarm (database_db) en la red overlay database_shared_network.',
+        bullets: [
+          '146 archivos de migración y 79 modelos Eloquent.',
+          'Almacena usuarios, catálogo, reservas, comisiones, pagos, wallets, tickets HelpDesk y la cola de jobs (tabla jobs).',
+          'Tablas de configuración dinámica (settings) alimentan /api/configurations para ambas apps móviles.'
+        ],
+        files: ['ec2/server/db/docker-compose.yml', 'config/database.php', 'database/migrations/']
+      },
+      notifications: {
+        badge: 'MENSAJERÍA • FCM v1 + TWILIO + SMTP',
+        title: 'Notificaciones Multicanal',
+        summary: 'Motor híbrido de alertas. Eventos de negocio salen desde Laravel (CommonNotification); notificaciones de chat salen directo desde Flutter vía FCM v1.',
+        bullets: [
+          'FcmChannel en Laravel genera token OAuth2 con google/apiclient desde storage/app/data/*.json.',
+          'Envío por tópicos FCM: user_{id}, userApp, providerApp y handymanApp.',
+          'Canales adicionales en CommonNotification: database (tabla notifications), mail (SMTP) y Twilio SDK (SMS y WhatsApp).',
+          'Nota histórica: OneSignal está comentado en config/constant.php y config/services.php.'
+        ],
+        files: ['app/Notifications/CommonNotification.php', 'app/Broadcasting/FcmChannel.php', 'app/Helper/helper.php']
+      },
+      external: {
+        badge: 'SERVICIOS EXTERNOS • S3 / PAGOS / MAPAS',
+        title: 'AWS S3, Pasarelas y Geolocalización',
+        summary: 'Almacenamiento de medios en la nube, geocodificación y 11+ integraciones de pago.',
+        bullets: [
+          'AWS S3 es el disco por defecto en config/filesystems.php para Spatie MediaLibrary (fotos, documentos, ServiceProof).',
+          'Pasarelas SDK/REST: Stripe, PayPal, Razorpay, Flutterwave, Paystack, CinetPay, Sadad, Airtel, PhonePe, PIX, Midtrans.',
+          'Google Maps SDK + Geocoder Laravel para búsquedas por radio (Service::scopeLocationService) y tracking en vivo.'
+        ],
+        files: ['config/filesystems.php', 'clientes-v2/lib/services/', 'app/Http/Controllers/BookingController.php']
+      },
+      edge_rest_cli: {
+        badge: 'CONEXIÓN REST • CLIENTE ↔ LARAVEL',
+        title: 'API REST: clientes-v2 ↔ web-v2',
+        summary: 'Comunicación síncrona HTTP/JSON autenticada con Laravel Sanctum.',
+        bullets: [
+          'Endpoint base: http://api.solutoday.com:8000/api/ con cabecera language-code: es.',
+          'Inicio: POST /api/configurations sincroniza moneda, flags y permisos.',
+          'Flujo principal: dashboard-detail, search-list, booking-save, save-payment, save-post-job, get-location, wallet-top-up.'
+        ],
+        files: ['clientes-v2/lib/network/network_utils.dart', 'clientes-v2/lib/network/rest_apis.dart']
+      },
+      edge_rest_prov: {
+        badge: 'CONEXIÓN REST • PROVEEDOR ↔ LARAVEL',
+        title: 'API REST: proveedor-v2 ↔ web-v2',
+        summary: 'Comunicación síncrona HTTP/JSON para operación comercial y trabajo en campo.',
+        bullets: [
+          'Provider: provider-dashboard, service-save, booking-assigned, save-bid, save-banner, transfer-payment.',
+          'Handyman: handyman-dashboard, booking-update, update-location, save-service-proof, handyman-update-available-status.'
+        ],
+        files: ['proveedor-v2/lib/networks/network_utils.dart', 'proveedor-v2/lib/networks/rest_apis.dart']
+      },
+      edge_web_vue: {
+        badge: 'CONEXIÓN INTERNA • WEB ↔ LARAVEL',
+        title: 'Portal Web Vue 3 + Blade Admin',
+        summary: 'Rutas web con sesión cookie (web.php) y rutas Sanctum híbridas en frontend.php.',
+        bullets: [
+          'Componentes Vue 3 (BookingWizard, Payment, Wallet) consumen endpoints Laravel.',
+          'Panel administrativo renderizado en Blade con DataTables del lado servidor (Yajra).'
+        ],
+        files: ['routes/web.php', 'routes/frontend.php', 'resources/js/app.js']
+      },
+      edge_firestore_chat: {
+        badge: 'CONEXIÓN DIRECTA • FLUTTER ↔ FIRESTORE',
+        title: 'Flujo de Chat P2P en Firestore',
+        summary: 'Las dos apps Flutter leen y escriben mensajes directamente en Firestore sin pasar por MySQL.',
+        bullets: [
+          '1. Login Laravel -> AuthService.verifyFirebaseUser() autentica en Firebase Auth.',
+          '2. Se escribe documento en users/{uid} y se guarda uid en Laravel (update-profile).',
+          '3. Al chatear, addMessage() escribe simultáneamente en senderCollection y receiverCollection.',
+          '4. Adjuntos se suben directo a Firebase Storage (chat_files/).'
+        ],
+        files: ['clientes-v2/lib/services/chat_services.dart', 'clientes-v2/lib/services/auth_services.dart']
+      },
+      edge_mysql: {
+        badge: 'CONEXIÓN INTERNA • LARAVEL ↔ MYSQL',
+        title: 'Eloquent ORM & Cola Database',
+        summary: 'Red interna Docker Swarm database_shared_network entre solutoday_app y database_db.',
+        bullets: [
+          'PDO MySQL con transacciones explícitas en ProviderPaymentFinalizer (lockForUpdate).',
+          'Tabla jobs alimenta al proceso laravel-queue-worker en supervisord.conf.'
+        ],
+        files: ['ec2/server/apps/docker-compose.yml', 'config/queue.php']
+      },
+      edge_push_backend: {
+        badge: 'PUSH NEGOCIO • LARAVEL → FCM/TWILIO',
+        title: 'Disparo de Notificaciones de Negocio',
+        summary: 'Cada cambio en reservas, pagos, bids o wallet pasa por NotificationTrait -> CommonNotification.',
+        bullets: [
+          '1. Controlador llama $this->sendNotification($activity_data).',
+          '2. NotificationTrait arma plantilla por idioma (es/en) y notifica vía CommonNotification (ShouldQueue).',
+          '3. CommonNotification envía a FcmChannel (FCM v1 topic user_{id}), Mail, Twilio SMS/WhatsApp y tabla notifications.'
+        ],
+        files: ['app/Traits/NotificationTrait.php', 'app/Notifications/CommonNotification.php']
+      },
+      edge_push_chat: {
+        badge: 'PUSH CHAT • APP → LARAVEL → FCM v1',
+        title: 'Push Directo de Chat desde Móvil',
+        summary: 'Patrón particular heredado: la app emisora pide el token de servidor FCM a Laravel y llama directo a Google.',
+        bullets: [
+          '1. App emisora consulta GET /api/firebase-detail (sin auth:sanctum!).',
+          '2. Laravel genera access_token OAuth2 con la Service Account y lo retorna junto al project_id.',
+          '3. La app Flutter hace POST directo a https://fcm.googleapis.com/v1/projects/{id}/messages:send hacia topic user_{receiverId}.'
+        ],
+        files: ['clientes-v2/lib/services/notification_services.dart', 'app/Http/Controllers/API/DashboardController.php']
+      },
+      edge_s3_pay: {
+        badge: 'MEDIA & PAGOS • S3 / PASARELAS',
+        title: 'Almacenamiento S3 & Flujo Financiero',
+        summary: 'Evidencias, avatares y documentos van a AWS S3; pagos combinan SDK en app + verificación/registro en backend.',
+        bullets: [
+          'Spatie MediaLibrary guarda imágenes de servicios, perfiles, banners y ServiceProof en bucket S3.',
+          'App cliente ejecuta SDK de pago (ej. Stripe/Razorpay/PayPal) y luego reporta a POST /api/save-payment.'
+        ],
+        files: ['config/filesystems.php', 'app/Http/Controllers/API/PaymentController.php']
+      }
+    };
+
+    const SCENARIOS = {
+      booking: {
+        title: 'Reserva Directa + Pago Cash/Transacción + Auto-Confirmación',
+        steps: [
+          {
+            short: '1. Bootstrap',
+            actor: 'clientes-v2 / proveedor-v2 → web-v2',
+            endpoint: 'POST /api/configurations',
+            status: 'Pre-Reserva',
+            summary: 'Al abrir la app (SplashScreen), ambas apps sincronizan moneda, radio de búsqueda, claves de mapa/pasarelas, permisos y estado de autorización del usuario.',
+            details: [
+              'Si is_user_authorized == false (ej. proveedor deshabilitado por wallet <= 0), la app limpia la sesión local.',
+              'Verifica maintenance_mode y force_update_user_app / provider_app.'
+            ],
+            effects: 'AppConfigurationStore hidratado en MobX y SharedPreferences.'
+          },
+          {
+            short: '2. Crear Reserva',
+            actor: 'clientes-v2 → web-v2',
+            endpoint: 'POST /api/booking-save',
+            status: 'pending',
+            summary: 'El cliente selecciona servicio, fecha/slot, dirección, cupón o addons, y opcionalmente adjunta fotos iniciales del problema.',
+            details: [
+              'BookingController::store valida que el proveedor tenga status == 1 (Active).',
+              'Si hay adjuntos (attachment_count), crea ServiceProof con type = "CLIENTE" y los sube a AWS S3.',
+              'Dispara NotificationTrait("add_booking") -> Push FCM + Email al proveedor.'
+            ],
+            effects: 'Registro en bookings (status = pending), booking_activities y service_proofs.'
+          },
+          {
+            short: '3. Aceptar y Asignar',
+            actor: 'proveedor-v2 → web-v2',
+            endpoint: 'POST /api/booking-assigned',
+            status: 'accept',
+            summary: 'El proveedor acepta el servicio y se asigna a sí mismo o a uno de sus técnicos (handyman).',
+            details: [
+              'Inserta relación en booking_handyman_mappings y cambia booking.status = "accept".',
+              'Ejecuta EarningTrait::addBookingCommission() calculando reparto provisional entre admin, provider y handyman.',
+              'Notifica al cliente y al técnico asignado vía FCM v1.'
+            ],
+            effects: 'Registros creados en commission_earnings y notificación push al tópico user_{customerId}.'
+          },
+          {
+            short: '4. En Camino & Ejecución',
+            actor: 'proveedor-v2 ↔ web-v2 ↔ clientes-v2',
+            endpoint: 'POST /api/booking-update + update-location / get-location',
+            status: 'on_going → in_progress → completed',
+            summary: 'El técnico avanza los estados, comparte ubicación GPS en vivo y al concluir sube evidencias fotográficas.',
+            details: [
+              'En on_going, proveedor-v2 envía lat/lng a POST /api/update-location (tabla live_locations).',
+              'clientes-v2 consulta GET /api/get-location (cacheado 30s).',
+              'En in_progress / hold se mide duración; al terminar se suben fotos vía POST /api/save-service-proof (type = "PROVIDER") y cargos extra.'
+            ],
+            effects: 'Actualización de live_locations, booking_extra_charges y totales finales en bookings.'
+          },
+          {
+            short: '5. Pago Cash / Transacción',
+            actor: 'clientes-v2 → web-v2 (Queue)',
+            endpoint: 'POST /api/save-payment',
+            status: 'pending_by_provider',
+            summary: 'El cliente registra el pago presencial (cash o transacción) al proveedor asignado.',
+            details: [
+              'PaymentController::savePayment crea registro en payments y payment_histories (customer_send_provider -> pending_by_provider).',
+              'Despacha el job AutoConfirmProviderPayment::dispatch(...)->delay(now()->addMinutes(30)).'
+            ],
+            effects: 'El retraso se declara en el despacho. La espera efectiva depende de la conexión asíncrona y del worker.'
+          },
+          {
+            short: '6. Finalización & Wallet',
+            actor: 'proveedor-v2 o Queue Worker → ProviderPaymentFinalizer',
+            endpoint: 'POST /api/transfer-payment o AutoConfirmProviderPayment',
+            status: 'completed + paid',
+            summary: 'La aprobación manual o el job pueden confirmar el pago. El débito de comisión también requiere completar la reserva.',
+            details: [
+              'ProviderPaymentFinalizer::finalize() abre transacción DB con lockForUpdate() sobre payment, booking y wallet.',
+              'Marca payment_status = "paid" y crea PaymentHistory (provider_approved_cash / approved_by_provider).',
+              'Para reserva completed y pago paid, debita Administracion si el medio es cash o transacción.',
+              'Si wallet.amount <= 0, cambia User.status = 2 (STATUS_WALLET_DISABLED).'
+            ],
+            effects: 'Comisiones en unpaid, WalletHistory debitado y eventual bloqueo de login del proveedor si saldo <= 0.'
+          }
+        ]
+      },
+      postjob: {
+        title: 'Flujo de Trabajo Publicado (PostJobRequest + Ofertas / Bids)',
+        steps: [
+          {
+            short: '1. Publicar Necesidad',
+            actor: 'clientes-v2 → web-v2',
+            endpoint: 'POST /api/save-post-job',
+            status: 'requested',
+            summary: 'El cliente describe un trabajo a medida (título, descripción, precio estimado, servicios relacionados) cuando no elige un servicio fijo.',
+            details: [
+              'PostJobRequestController::store crea el registro en post_job_requests y su mapeo post_job_service_mappings.',
+              'Envía notificación job_requested.'
+            ],
+            effects: 'Nuevo PostJobRequest visible para proveedores.'
+          },
+          {
+            short: '2. Explorar Solicitudes',
+            actor: 'proveedor-v2 → web-v2',
+            endpoint: 'GET /api/get-post-job + POST get-post-job-detail',
+            status: 'requested',
+            summary: 'Los proveedores revisan trabajos disponibles desde su panel y consultan el detalle.',
+            details: [
+              'API devuelve el listado filtrado por rol (PostJobRequest::scopeMyPostJob).'
+            ],
+            effects: 'Proveedor evalúa alcance y presupuesto.'
+          },
+          {
+            short: '3. Enviar Puja (Bid)',
+            actor: 'proveedor-v2 → web-v2',
+            endpoint: 'POST /api/save-bid',
+            status: 'requested (con oferta)',
+            summary: 'El proveedor envía su propuesta económica y duración estimada.',
+            details: [
+              'PostJobBidController::store crea/actualiza en post_job_bids.',
+              'Dispara notificación provider_send_bid al cliente por FCM v1.'
+            ],
+            effects: 'El cliente recibe push y al tocarla abre MyPostDetailScreen.'
+          },
+          {
+            short: '4. Aceptar Puja',
+            actor: 'clientes-v2 → web-v2',
+            endpoint: 'POST /api/save-post-job',
+            status: 'assigned',
+            summary: 'El cliente selecciona la oferta y envía provider_id, job_price y el estado assigned.',
+            details: [
+              'Notifica al proveedor ganador (user_accept_bid) para abrir BidListScreen.'
+            ],
+            effects: 'La solicitud queda asignada. La app abre la pantalla para crear la reserva en un segundo paso.'
+          },
+          {
+            short: '5. Convertir en Reserva',
+            actor: 'clientes-v2 → web-v2',
+            endpoint: 'POST /api/booking-save (type: user_post_job)',
+            status: 'pending → accept → completed',
+            summary: 'El trabajo aceptado se materializa en un Booking formal con post_request_id para seguimiento, GPS, evidencias y pago.',
+            details: [
+              'BookingController::store vincula post_request_id y actualiza la fecha del PostJobRequest.',
+              'La reserva entra al flujo de Booking. La selección y la reserva pueden quedar en momentos distintos.'
+            ],
+            effects: 'Unificación en el flujo estándar de Booking + Payment + CommissionEarning.'
+          }
+        ]
+      },
+      cancel: {
+        title: 'Flujo de Cancelación, Cargos y Reembolso a Wallet',
+        steps: [
+          {
+            short: '1. Cálculo de Multa',
+            actor: 'clientes-v2 / web-v2',
+            endpoint: 'Booking::getCancellationCharges()',
+            status: 'Antes de cancelar',
+            summary: 'Si el servicio no es gratuito y cancellation_charge está activo en settings, evalúa la ventana de horas previa a la cita.',
+            details: [
+              'Compara fecha/hora de cita vs hora actual en la zona horaria del sitio.',
+              'Si faltan <= cancellation_charge_hours horas, aplica el % configurado sobre booking.amount.'
+            ],
+            effects: 'Se muestra al cliente el monto exacto de penalización antes de confirmar.'
+          },
+          {
+            short: '2. Ejecutar Cancelación',
+            actor: 'clientes-v2 / proveedor-v2 → web-v2',
+            endpoint: 'POST /api/booking-update',
+            status: 'cancelled / rejected',
+            summary: 'BookingController::bookingUpdate procesa el cambio de estado y ajusta saldos en la Wallet del cliente.',
+            details: [
+              'Si había anticipo (payment_status == advanced_paid): reembolsa (advance_paid_amount - cancellation_charge_amount) a la Wallet del cliente.',
+              'Marca pago como "Advanced Refund" y dispara notificaciones wallet_refund y cancellation_charges.',
+              'Si no hubo anticipo pero sí multa > 0, debita el cargo directamente de la Wallet del cliente.'
+            ],
+            effects: 'Actualización de wallets, wallet_histories y envío de push de reembolso/cargo.'
+          },
+          {
+            short: '3. Notificación & Registro',
+            actor: 'web-v2 → clientes-v2 & proveedor-v2',
+            endpoint: 'NotificationTrait("cancel_booking")',
+            status: 'cancelled',
+            summary: 'Se registra la actividad en booking_activities y se notifica por FCM/Email a todas las partes.',
+            details: [
+              'El motivo de cancelación queda persistido en bookings.reason.'
+            ],
+            effects: 'Cierre auditable de la reserva cancelada.'
+          }
+        ]
+      }
+    };
+
+    const ENTITIES = [
+      {
+        name: 'User',
+        table: 'users',
+        tag: 'Core / Spatie',
+        desc: 'Entidad unificada para admin, demo_admin, provider, handyman y user (cliente).',
+        fields: ['id', 'username', 'email', 'user_type', 'status (0:Pending, 1:Active, 2:WalletDisabled)', 'provider_id (para handyman)', 'uid (Firebase Auth/Firestore)', 'is_subscribe', 'is_available', 'providertype_id / handymantype_id'],
+        relations: ['hasMany Service (provider)', 'hasMany Booking (customer/provider)', 'hasMany BookingHandymanMapping', 'hasOne Wallet', 'hasOne ProviderSubscription', 'hasMany UserBlock', 'morphMany Media']
+      },
+      {
+        name: 'Booking',
+        table: 'bookings',
+        tag: 'Core Transaccional',
+        desc: 'Reserva de servicio o trabajo post-job. Centraliza precios, impuestos JSON, tiempos, descuentos y estado operativo.',
+        fields: ['id', 'customer_id', 'provider_id', 'service_id', 'post_request_id', 'type (service | user_post_job)', 'status (11 estados)', 'payment_id', 'date', 'start_at', 'end_at', 'duration_diff', 'total_amount', 'advance_paid_amount', 'final_total_tax', 'cancellation_charge_amount'],
+        relations: ['belongsTo User (customer/provider)', 'belongsTo Service', 'belongsTo Payment', 'hasMany BookingHandymanMapping', 'hasMany BookingExtraCharge', 'hasMany BookingActivity', 'hasMany LiveLocation', 'hasMany CommissionEarning']
+      },
+      {
+        name: 'Service',
+        table: 'services',
+        tag: 'Catálogo',
+        desc: 'Servicios publicados por proveedores o admin, con soporte de precios fijos, por hora o gratuitos, slots y anticipos.',
+        fields: ['id', 'name', 'category_id', 'subcategory_id', 'provider_id', 'type (fixed|hourly|free)', 'price', 'discount', 'is_slot', 'visit_type (on_site|online)', 'service_request_status (approve|pending|reject)', 'is_enable_advance_payment'],
+        relations: ['belongsTo Category / SubCategory', 'belongsTo User (provider)', 'hasMany ServiceAddon', 'hasMany ProviderServiceAddressMapping', 'hasMany BookingRating', 'morphMany Translations']
+      },
+      {
+        name: 'Payment & PaymentHistory',
+        table: 'payments / payment_histories',
+        tag: 'Finanzas',
+        desc: 'Registro de pagos y cadena de custodia. La FK admite varios pagos por reserva.',
+        fields: ['payment_id', 'booking_id', 'customer_id', 'payment_type (cash, transacción, stripe, wallet, etc.)', 'payment_status (paid, pending, advanced_paid, Advanced Refund)', 'txn_id', 'action (customer_send_provider, provider_approved_cash, ...)', 'status (pending_by_provider, approved_by_provider, ...)'],
+        relations: ['belongsTo Booking', 'belongsTo User (sender/receiver/customer)', 'hasMany PaymentHistory']
+      },
+      {
+        name: 'Wallet & WalletHistory',
+        table: 'wallets / wallet_histories',
+        tag: 'Billetera',
+        desc: 'Saldo interno de clientes y proveedores. wallets.user_id admite nulos y no es único.',
+        fields: ['user_id', 'title', 'amount', 'status', 'activity_type (withdraw_money, wallet_top_up, ...)', 'activity_message', 'activity_data (JSON Credit/Debit)'],
+        relations: ['belongsTo User', 'hasMany WalletHistory (por user_id)']
+      },
+      {
+        name: 'CommissionEarning',
+        table: 'commission_earnings',
+        tag: 'Reparto',
+        desc: 'Desglose contable de ganancias por reserva para admin, provider y handyman.',
+        fields: ['id', 'employee_id', 'booking_id', 'user_type (admin|provider|handyman)', 'commission_amount', 'commission_status (pending|unpaid|paid)', 'commissions (snapshot JSON)'],
+        relations: ['belongsTo Booking', 'belongsTo User (employee_id)']
+      },
+      {
+        name: 'PostJobRequest & Bid',
+        table: 'post_job_requests / post_job_bids',
+        tag: 'Subasta',
+        desc: 'Permite a clientes solicitar trabajos personalizados y recibir cotizaciones/pujas de proveedores.',
+        fields: ['id', 'title', 'customer_id', 'provider_id', 'status', 'price / job_price', 'post_request_id', 'duration'],
+        relations: ['hasMany PostJobBid', 'hasMany PostJobServiceMapping', 'belongsTo User (customer/provider)']
+      },
+      {
+        name: 'ServiceProof',
+        table: 'service_proofs',
+        tag: 'Evidencias',
+        desc: 'Pruebas fotográficas duales: evidencia inicial subida por CLIENTE al reservar y evidencia de cierre subida por PROVIDER/técnico.',
+        fields: ['id', 'title', 'description', 'service_id', 'booking_id', 'user_id', 'type (CLIENTE | PROVIDER)'],
+        relations: ['belongsTo Booking', 'belongsTo Service', 'belongsTo User', 'morphMany Media (booking_attachment en S3)']
+      },
+      {
+        name: 'PromotionalBanner',
+        table: 'promotional_banners',
+        tag: 'Marketing',
+        desc: 'Banners promocionales pagados por proveedores sujetos a aprobación administrativa y fechas de vigencia.',
+        fields: ['id', 'title', 'banner_type', 'status (pending|accepted|rejected)', 'start_date', 'end_date', 'charges', 'total_amount', 'payment_status', 'service_id', 'provider_id'],
+        relations: ['belongsTo User (provider)', 'belongsTo Service']
+      },
+      {
+        name: 'HelpDesk & UserBlock',
+        table: 'help_desk / user_blocks',
+        tag: 'Soporte & Confianza',
+        desc: 'Tickets de mesa de ayuda con hilo de actividades y bloqueo bidireccional de interacciones entre usuarios.',
+        fields: ['help_desk: employee_id, subject, mode, status (open|closed)', 'user_blocks: blocker_id, blocked_id, status'],
+        relations: ['hasMany HelpDeskActivityMapping', 'CheckUserBlocked Middleware', 'Filtrado en BookingController::getBookingList']
+      }
+    ];
+
+    const FINDINGS = [
+  {
+    "sev": "critical",
+    "title": "SEC-01 · Credenciales S3 y MySQL versionadas",
+    "repo": "web-v2",
+    "file": "config/filesystems.php · ec2/server/db/docker-compose.yml",
+    "desc": "El código contiene credenciales. La vigencia, los permisos y la exposición por ambiente quedan por verificar."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-02 · Reinicialización de datos e instalador web",
+    "repo": "web-v2",
+    "file": "routes/api.php:27 · routes/web.php:76 y 535 · Console/Kernel.php:37",
+    "desc": "La ruta API llama a migrate:refresh y la web fuerza migrate:fresh. El instalador puede mostrar o escribir configuración y ejecutar migraciones. El reinicio periódico depende de que se ejecute el scheduler."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-03 · Token de servidor FCM en una ruta pública",
+    "repo": "web-v2 + apps",
+    "file": "routes/api.php:45 · DashboardController::firebaseDetails",
+    "desc": "La respuesta puede entregar un token OAuth2 válido cuando el servidor está configurado. El push de chat depende de esta ruta."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-04 · HTTP y aceptación de certificados inválidos",
+    "repo": "Apps Flutter",
+    "file": "lib/utils/configs.dart · proveedor-v2/lib/main.dart:196",
+    "desc": "Las apps apuntan a HTTP. Soluexperto acepta certificados inválidos en su cliente Dart."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-05 · Contraseñas y tokens en apps y registros",
+    "repo": "Apps Flutter",
+    "file": "network_utils.dart · sign_in_screen.dart · auth_services.dart",
+    "desc": "Las apps guardan contraseñas para reautenticarse, registran cabeceras con token y usan una contraseña compartida para Firebase Auth."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-06 · Controles insuficientes de identidad",
+    "repo": "web-v2",
+    "file": "API/User/UserController.php:52 y 546 · VerificationController.php:10",
+    "desc": "El registro acepta el rol de la solicitud. El login social emite tokens sin verificación observada del proveedor. La verificación de correo escribe el estado antes de validar la firma."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-07 · Permisos insuficientes por rol y registro",
+    "repo": "web-v2",
+    "file": "routes/admin-api.php:22 · API/BookingController.php:244, 342 y 864",
+    "desc": "La API administrativa usa Sanctum sin filtro general de rol. Detalle, actualización y GPS de reservas carecen de comprobación de pertenencia en los métodos revisados."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-08 · Escrituras financieras sin verificación suficiente",
+    "repo": "web-v2",
+    "file": "API/PaymentController.php:30 · API/WalletController.php:58 · API/BookingController.php:573",
+    "desc": "Registro de pagos, recargas, banners y suscripciones confían en datos de cliente. El cierre con técnico conserva un débito separado del finalizador."
+  },
+  {
+    "sev": "critical",
+    "title": "SEC-09 · Respuestas API con posibles secretos",
+    "repo": "web-v2",
+    "file": "API/DashboardController.php:551 · PaymentGatewayResource.php:15",
+    "desc": "Configuración móvil puede incluir una clave de ChatGPT. El recurso de pasarelas devuelve las configuraciones completas."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-01 · Rutas con métodos ausentes",
+    "repo": "web-v2",
+    "file": "routes/api.php:99 · routes/web.php:557",
+    "desc": "El método indicado falta para booking-action y para rutas web de webhook y pago de banners."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-02 · Post-Job desalineado con las pruebas",
+    "repo": "web-v2 + cliente",
+    "file": "PostJobRequestController.php:134 · tests/Feature/PostJobNegotiationTest.php",
+    "desc": "El móvil guarda assigned antes de reservar. Las pruebas esperan reglas y símbolos ausentes en el modelo actual."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-03 · Restauración incorrecta de ciudad",
+    "repo": "clientes-v2",
+    "file": "lib/store/app_store.dart:74",
+    "desc": "La app inicializa cityId a partir de COUNTRY_ID."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-04 · Conexión de cola y worker pueden diferir",
+    "repo": "web-v2",
+    "file": ".env.example:19 · supervisord.conf:35",
+    "desc": "La plantilla usa sync y Supervisor consume database. La espera efectiva de 30 minutos depende de la conexión y del worker activos."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-05 · Lógica dispersa y servicios vacíos",
+    "repo": "web-v2",
+    "file": "BookingController.php · NotificationTrait.php · app/Services",
+    "desc": "Las reglas se reparten entre controladores, traits y helpers. Hay stubs sin implementación."
+  },
+  {
+    "sev": "bug",
+    "title": "TECH-06 · Cobertura desigual y despliegue DEV sin etapa de pruebas",
+    "repo": "Los tres repositorios",
+    "file": "test/widget_test.dart · .github/workflows/deploy-dev.yml",
+    "desc": "Las apps conservan pruebas de ejemplo. El workflow DEV no declara una etapa de pruebas."
+  }
+];
+
+    // =========================================================
+    // STATE & RENDER LOGIC
+    // =========================================================
+    let currentTab = 'ecosystem';
+    let currentScenario = 'booking';
+    let currentStepIdx = 0;
+    let playInterval = null;
+    let currentFindingFilter = 'all';
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      document.getElementById('panel-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-[var(--muted-foreground)]');
+      });
+      const activeBtn = document.getElementById('tab-' + tabId);
+      activeBtn.classList.add('tab-active');
+      activeBtn.classList.remove('text-[var(--muted-foreground)]');
+    }
+
+    function selectItem(key) {
+      const data = INSPECTOR_ITEMS[key];
+      if (!data) return;
+
+      // Reset highlight on svg nodes
+      document.querySelectorAll('[id^="svgnode-"]').forEach(n => {
+        n.setAttribute('stroke-width', n.id === 'svgnode-webv2' ? '2.5' : '2');
+      });
+      const targetNode = document.getElementById('svgnode-' + key);
+      if (targetNode) {
+        targetNode.setAttribute('stroke-width', '4');
+      }
+
+      const container = document.getElementById('inspector-content');
+      container.innerHTML = `
+        <div class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)]">${data.badge}</div>
+        <h2 class="text-lg font-bold text-[var(--foreground)]">${data.title}</h2>
+        <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">${data.summary}</p>
+        <div class="space-y-1.5 pt-1">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Comportamiento clave</div>
+          <ul class="space-y-1.5 text-xs text-[var(--foreground)]">
+            ${data.bullets.map(b => `<li class="flex items-start gap-2"><span class="text-[var(--primary)] font-bold">•</span><span>${b}</span></li>`).join('')}
+          </ul>
+        </div>
+        <div class="pt-2">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1.5">Evidencia en archivos</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${data.files.map(f => `<code class="text-xs px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">${f}</code>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function filterFlow(flow) {
+      document.querySelectorAll('.flow-btn').forEach(btn => {
+        if (btn.dataset.flow === flow) {
+          btn.className = 'flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--primary)] text-[var(--primary-foreground)]';
+        } else {
+          btn.className = 'flow-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]';
+        }
+      });
+
+      document.querySelectorAll('.edge-line').forEach(edge => {
+        if (flow === 'all' || edge.dataset.edge === flow) {
+          edge.classList.remove('edge-dimmed');
+        } else {
+          edge.classList.add('edge-dimmed');
+        }
+      });
+    }
+
+    // =========================================================
+    // TAB 2: WORKFLOW SIMULATOR
+    // =========================================================
+    function setScenario(scenId) {
+      stopPlay();
+      currentScenario = scenId;
+      currentStepIdx = 0;
+
+      document.querySelectorAll('.scen-btn').forEach(btn => {
+        btn.className = 'scen-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]';
+      });
+      document.getElementById('scen-' + scenId).className = 'scen-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+
+      renderStep();
+    }
+
+    function renderStep() {
+      const scen = SCENARIOS[currentScenario];
+      const step = scen.steps[currentStepIdx];
+
+      document.getElementById('step-counter').textContent = `Paso ${currentStepIdx + 1} de ${scen.steps.length} — ${scen.title}`;
+
+      const pillsEl = document.getElementById('step-pills');
+      pillsEl.innerHTML = scen.steps.map((s, idx) => `
+        <button onclick="goToStep(${idx})" class="state-pill text-left p-2.5 rounded-xl border text-xs ${idx === currentStepIdx ? 'state-pill-active' : 'border-[var(--border)] bg-[var(--background)] text-[var(--foreground)]'}">
+          <div class="font-bold truncate">${s.short}</div>
+          <div class="truncate opacity-80">${s.status}</div>
+        </button>
+      `).join('');
+
+      document.getElementById('step-detail').innerHTML = `
+        <div class="lg:col-span-7 bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)]">${step.actor}</span>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full border border-[var(--primary)] text-[var(--primary)]">Estado: ${step.status}</span>
+          </div>
+          <h3 class="text-base font-bold text-[var(--foreground)]">${step.short}</h3>
+          <p class="text-sm text-[var(--muted-foreground)]">${step.summary}</p>
+          <div class="pt-1">
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1.5">Ejecución Interna</div>
+            <ul class="space-y-1.5 text-xs">
+              ${step.details.map(d => `<li class="flex items-start gap-2"><span class="text-[var(--primary)] font-bold">→</span><span>${d}</span></li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div class="lg:col-span-5 bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Endpoint / Mecanismo</div>
+            <code class="block text-xs p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] break-all">${step.endpoint}</code>
+          </div>
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Impacto en Base de Datos / Sistema</div>
+            <div class="text-xs p-3 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]">${step.effects}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function goToStep(idx) {
+      stopPlay();
+      currentStepIdx = idx;
+      renderStep();
+    }
+
+    function nextStep() {
+      const total = SCENARIOS[currentScenario].steps.length;
+      currentStepIdx = (currentStepIdx + 1) % total;
+      renderStep();
+    }
+
+    function prevStep() {
+      const total = SCENARIOS[currentScenario].steps.length;
+      currentStepIdx = (currentStepIdx - 1 + total) % total;
+      renderStep();
+    }
+
+    function togglePlay() {
+      if (playInterval) {
+        stopPlay();
+      } else {
+        document.getElementById('play-btn').textContent = '⏸ Pausar';
+        playInterval = setInterval(nextStep, 2600);
+      }
+    }
+
+    function stopPlay() {
+      if (playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
+        document.getElementById('play-btn').textContent = '▶ Reproducir';
+      }
+    }
+
+    // =========================================================
+    // TAB 3: ER EXPLORER
+    // =========================================================
+    let selectedEntityIdx = 0;
+
+    function renderER() {
+      const grid = document.getElementById('er-grid');
+      grid.innerHTML = ENTITIES.map((e, i) => `
+        <button onclick="selectEntity(${i})" class="node-card text-left p-3 rounded-xl border bg-[var(--background)] ${i === selectedEntityIdx ? 'node-selected' : 'border-[var(--border)]'}">
+          <div class="text-xs font-semibold text-[var(--primary)]">${e.tag}</div>
+          <div class="text-sm font-bold text-[var(--foreground)] mt-0.5">${e.name}</div>
+          <div class="text-xs text-[var(--muted-foreground)] truncate mt-0.5">${e.table}</div>
+        </button>
+      `).join('');
+
+      const ent = ENTITIES[selectedEntityIdx];
+      document.getElementById('er-detail').innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)]">${ent.tag}</span>
+            <h3 class="text-lg font-bold text-[var(--foreground)] mt-2">${ent.name}</h3>
+            <div class="text-xs text-[var(--muted-foreground)]">Tabla(s): <code>${ent.table}</code></div>
+            <p class="text-sm text-[var(--muted-foreground)] mt-2">${ent.desc}</p>
+          </div>
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1.5">Campos y Claves Principales</div>
+            <div class="flex flex-wrap gap-1.5">
+              ${ent.fields.map(f => `<code class="text-xs px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)]">${f}</code>`).join('')}
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1.5">Relaciones Eloquent / Scopes</div>
+            <ul class="space-y-1 text-xs">
+              ${ent.relations.map(r => `<li class="flex items-start gap-2"><span class="text-[var(--primary)] font-bold">↳</span><span>${r}</span></li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectEntity(idx) {
+      selectedEntityIdx = idx;
+      renderER();
+    }
+
+    // =========================================================
+    // TAB 4: FINDINGS
+    // =========================================================
+    function filterFindings(sev) {
+      currentFindingFilter = sev;
+      document.querySelectorAll('.finding-btn').forEach(btn => {
+        if (btn.dataset.sev === sev) {
+          btn.className = 'finding-btn px-2.5 py-1 rounded text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)]';
+        } else {
+          btn.className = 'finding-btn px-2.5 py-1 rounded text-xs font-medium border border-[var(--border)]';
+        }
+      });
+      renderFindings();
+    }
+
+    function renderFindings() {
+      const items = FINDINGS.filter(f => currentFindingFilter === 'all' || f.sev === currentFindingFilter);
+      document.getElementById('findings-list').innerHTML = items.map(f => `
+        <div class="p-3.5 rounded-xl border border-[var(--border)] bg-[var(--background)] space-y-1.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold px-2 py-0.5 rounded ${f.sev === 'critical' ? 'bg-red-500/15 text-red-500' : 'bg-amber-500/15 text-amber-500'}">
+              ${f.sev === 'critical' ? 'SEGURIDAD CRÍTICA' : 'BUG / DEUDA TÉCNICA'}
+            </span>
+            <span class="text-xs text-[var(--muted-foreground)]">${f.repo}</span>
+          </div>
+          <div class="text-sm font-bold text-[var(--foreground)]">${f.title}</div>
+          <p class="text-xs text-[var(--muted-foreground)]">${f.desc}</p>
+          <code class="block text-xs text-[var(--muted-foreground)] truncate pt-1">${f.file}</code>
+        </div>
+      `).join('');
+    }
+
+    // Initialize all views
+    selectItem('webv2');
+    renderStep();
+    renderER();
+    renderFindings();
+  </script>
+  </div>
+
+  <script>
+    function getSystemScheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function toggleColorScheme() {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const current = meta.content === 'dark' || meta.content === 'light' ? meta.content : getSystemScheme();
+      const target = current === 'dark' ? 'light' : 'dark';
+      const system = getSystemScheme();
+      try {
+        if (target === system) {
+          localStorage.removeItem('color-scheme');
+          meta.content = 'light dark';
+        } else {
+          localStorage.setItem('color-scheme', target);
+          meta.content = target;
+        }
+      } catch (e) {
+        meta.content = target;
+      }
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme') {
+        document.querySelector('meta[name="color-scheme"]').content = e.newValue ?? 'light dark';
+      }
+    });
+  </script>
+
+</body>
+</html>

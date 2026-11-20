@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Solutoday — Diagramas UML Interactivos de Casos de Uso</title>
+  <link rel="stylesheet" href="./portal.css" />
+  <style>
+    .actor-btn-active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .uc-oval {
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .uc-oval:hover ellipse {
+      stroke: var(--primary);
+      stroke-width: 2.5;
+    }
+    .uc-oval-selected ellipse {
+      stroke: var(--primary) !important;
+      stroke-width: 3 !important;
+      fill: color-mix(in srgb, var(--primary) 16%, var(--card)) !important;
+    }
+    .uc-dimmed {
+      opacity: 0.22;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="./index.html" class="portal-brand">
+        <span class="portal-brand-mark" aria-hidden="true">S</span>
+        <span class="portal-brand-title">Solutoday</span>
+        <span class="portal-brand-ver">v1.0.0-linea-base</span>
+      </a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <button class="menu-button" type="button" popovertarget="portal-menu" popovertargetaction="toggle" aria-controls="portal-menu">Menú</button>
+        <ul id="portal-menu" class="site-menu" popover="auto">
+          <li><a href="./index.html" class="portal-link">Acta Base</a></li>
+          <li><a href="./arquitectura.html" class="portal-link">Arquitectura</a></li>
+          <li><a href="./casos-de-uso.html" class="portal-link" aria-current="page">Casos de Uso</a></li>
+          <li><a href="./modelo-relacional.html" class="portal-link">Modelo ER</a></li>
+          <li><a href="./index.html#archify-suite" class="portal-link archify-nav-badge">Archify (4)</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" onclick="toggleColorScheme()" class="portal-action-btn" aria-label="Cambiar tema de color">
+          <span class="theme-label-dark">Oscuro</span>
+          <span class="theme-label-light">Claro</span>
+        </button>
+        <button type="button" onclick="window.print()" class="portal-action-btn portal-action-primary">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+  <div class="p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-5">
+
+    <!-- Header -->
+    <header class="bg-[var(--card)] hero-accent-card border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">UML USE CASES</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs border border-[var(--border)] text-[var(--muted-foreground)]">web-v2 • clientes-v2 • proveedor-v2</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-[var(--foreground)]">Diagramas Interactivos de Casos de Uso — Solutoday</h1>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">Selecciona un actor o vista UML y haz clic en cualquier óvalo de caso de uso para ver precondiciones, flujo, relaciones <code class="text-xs px-1 py-0.5 rounded bg-[var(--secondary)]">«include» / «extend»</code> y endpoints reales.</p>
+      </div>
+      <div class="flex flex-wrap gap-2 items-center">
+        <input id="uc-search" type="text" oninput="renderDiagram()" placeholder="Buscar caso de uso o endpoint..." class="px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-xs text-[var(--foreground)] w-56 focus:outline-none focus:border-[var(--primary)]" />
+      </div>
+    </header>
+
+    <!-- Actor / View Selector -->
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 flex flex-wrap gap-1.5" role="tablist">
+      <button onclick="selectView('all')" id="view-all" class="actor-btn actor-btn-active px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] transition">Vista Global (26 CUs)</button>
+      <button onclick="selectView('cliente')" id="view-cliente" class="actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">👤 Cliente (clientes-v2 + Web)</button>
+      <button onclick="selectView('proveedor')" id="view-proveedor" class="actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">🏢 Proveedor (Soluexperto)</button>
+      <button onclick="selectView('handyman')" id="view-handyman" class="actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">👷 Técnico Handyman</button>
+      <button onclick="selectView('admin')" id="view-admin" class="actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">🛡️ Administrador (web-v2)</button>
+      <button onclick="selectView('sistema')" id="view-sistema" class="actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">⚙️ Worker, Cron &amp; Externos</button>
+    </div>
+
+    <!-- Main Workspace: UML Diagram Canvas + Inspector -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- UML Canvas -->
+      <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 overflow-x-auto">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="text-sm font-bold text-[var(--foreground)]" id="diagram-title">Diagrama UML — Ecosistema Completo</div>
+          <div class="flex flex-wrap gap-3 text-xs text-[var(--muted-foreground)]">
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-[#00C6A3] inline-block"></span> Asociación Actor</span>
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 border-t-2 border-dashed border-[#3b82f6] inline-block"></span> «include»</span>
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 border-t-2 border-dashed border-[#f59e0b] inline-block"></span> «extend»</span>
+          </div>
+        </div>
+        <div id="svg-wrapper" class="min-w-[680px]"></div>
+      </div>
+
+      <!-- Use Case Spec Inspector -->
+      <aside class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between space-y-4">
+        <div id="uc-inspector" class="space-y-3"></div>
+        <div class="pt-3 border-t border-[var(--border)]">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">Casos de uso visibles en esta vista</div>
+          <div id="uc-quick-list" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto"></div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================================================================
+    // DATA MODEL: VERIFIED USE CASES FROM web-v2, clientes-v2, proveedor-v2
+    // =========================================================================
+    const ACTORS = {
+      cliente:   { id: 'cliente',   label: 'Cliente',       sub: 'clientes-v2 / Web', side: 'left',  color: '#00C6A3' },
+      proveedor: { id: 'proveedor', label: 'Proveedor',     sub: 'proveedor-v2',      side: 'left',  color: '#3b82f6' },
+      handyman:  { id: 'handyman',  label: 'Técnico',       sub: 'Handyman App',      side: 'left',  color: '#f59e0b' },
+      admin:     { id: 'admin',     label: 'Administrador', sub: 'web-v2 Panel',      side: 'right', color: '#a855f7' },
+      sistema:   { id: 'sistema',   label: 'Worker / Cron', sub: 'Queue & Kernel',    side: 'right', color: '#ec4899' },
+      externos:  { id: 'externos',  label: 'Externos',      sub: 'FCM/Firebase/Pay',  side: 'right', color: '#64748b' }
+    };
+
+    const USE_CASES = [
+      {
+        id: 'CU-01', title: 'Autenticarse y Sincronizar Sesión', domain: 'Acceso y Confianza',
+        actors: ['cliente', 'proveedor', 'handyman', 'admin'],
+        apps: ['web-v2', 'clientes-v2', 'proveedor-v2'],
+        pre: 'Usuario registrado. Proveedor/Handyman debe tener status = 1 (Active; bloquea 0 Pending y 2 Wallet Disabled).',
+        post: 'Token Bearer Sanctum emitido, Firebase Auth sincronizado (users.uid) y suscripción a tópicos FCM user_{id}.',
+        flow: [
+          'La app envía credenciales a POST /api/login (o POST /api/social-login con Google/Apple en clientes-v2).',
+          'Laravel valida User::blockedLoginStatuses() y emite api_token de Sanctum.',
+          'AuthService::verifyFirebaseUser() autentica en Firebase Auth, crea/actualiza Firestore users/{uid} y sincroniza uid con POST /api/update-profile.',
+          'La app se suscribe en FCM a user_{id} y al tópico de su rol (userApp / providerApp / handymanApp).'
+        ],
+        relations: [{ type: 'include', target: 'CU-21', label: 'Suscripción FCM y registro Firebase' }],
+        endpoints: ['POST /api/register', 'POST /api/login', 'POST /api/social-login', 'POST /api/update-profile', 'POST /api/configurations']
+      },
+      {
+        id: 'CU-02', title: 'Subir Documentos KYC', domain: 'Acceso y Confianza',
+        actors: ['proveedor', 'admin'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Proveedor autenticado y tipos de documento configurados en tabla documents.',
+        post: 'Documentos almacenados en S3 (ProviderDocument) pendientes de verificación administrativa.',
+        flow: [
+          'Proveedor consulta documentos requeridos en GET /api/document-list.',
+          'Sube archivos desde VerifyProviderScreen hacia POST /api/provider-document-save.',
+          'Admin revisa y aprueba/rechaza desde web.php (providerdocument.action).'
+        ],
+        relations: [],
+        endpoints: ['GET /api/document-list', 'GET /api/provider-document-list', 'POST /api/provider-document-save', 'POST /api/provider-document-action']
+      },
+      {
+        id: 'CU-03', title: 'Bloquear Usuario / Reportar Servicio', domain: 'Acceso y Confianza',
+        actors: ['cliente', 'proveedor', 'admin'],
+        apps: ['clientes-v2', 'proveedor-v2', 'web-v2'],
+        pre: 'Usuario autenticado con sesión Sanctum.',
+        post: 'Relación guardada en user_blocks o reporte registrado en service_reports.',
+        flow: [
+          'Usuario bloquea a otro actor vía POST /api/block-user (CheckUserBlocked bloquea interacciones y getBookingList oculta reservas).',
+          'Cliente reporta un servicio inapropiado vía POST /api/report-service.',
+          'Admin modera en servicereport.* pudiendo marcar revisado, cambiar estado, eliminar servicio o banear usuario.'
+        ],
+        relations: [],
+        endpoints: ['POST /api/block-user', 'POST /api/unblock-user', 'GET /api/blocked-users', 'POST /api/report-service', 'POST /servicereport/ban-user/{id}']
+      },
+      {
+        id: 'CU-04', title: 'Buscar servicios y gestionar favoritos', domain: 'Catálogo y Descubrimiento',
+        actors: ['cliente'],
+        apps: ['clientes-v2', 'web-v2'],
+        pre: 'Configuración inicial sincronizada desde /api/configurations.',
+        post: 'Lista filtrada de servicios activos, aprobados y dentro del radio geográfico.',
+        flow: [
+          'DashboardFragment carga sliders, banners aceptados, categorías, servicios destacados y blogs vía GET /api/dashboard-detail.',
+          'Cliente busca por texto, voz (speech_to_text), categoría, precio o lat/lng en GET /api/search-list.',
+          'Consulta detalle, reseñas y disponibilidad en POST /api/service-detail.',
+          'El cliente autenticado puede añadir o quitar servicios y proveedores de favoritos.'
+        ],
+        relations: [],
+        endpoints: ['GET /api/dashboard-detail', 'GET /api/search-list', 'POST /api/service-detail', 'GET /api/category-list', 'GET /api/coupon-list', 'POST /api/save-favourite', 'POST /api/delete-favourite', 'GET /api/user-favourite-service', 'POST /api/save-favourite-provider']
+      },
+      {
+        id: 'CU-05', title: 'Gestionar Catálogo, Paquetes y Slots', domain: 'Catálogo y Descubrimiento',
+        actors: ['proveedor'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Proveedor activo (y suscrito si earning_type == subscription).',
+        post: 'Servicios, paquetes, addons, direcciones y franjas horarias persistidos en MySQL y S3.',
+        flow: [
+          'Proveedor crea/edita servicios (fijo, por hora o gratis) en POST /api/service-save.',
+          'Configura paquetes (package-save), complementos (service-addon-save), direcciones (save-provideraddress) y horarios (save-provider-slot).',
+          'Opcionalmente publica artículos en el blog (POST /api/blog-save).'
+        ],
+        relations: [{ type: 'include', target: 'CU-23', label: 'Requiere aprobación admin si aplica' }],
+        endpoints: ['POST /api/service-save', 'POST /api/package-save', 'POST /api/service-addon-save', 'POST /api/save-provider-slot', 'POST /api/save-provideraddress']
+      },
+      {
+        id: 'CU-06', title: 'Publicar y Pagar Banners Promocionales', domain: 'Catálogo y Descubrimiento',
+        actors: ['proveedor', 'admin'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'promotional_banner habilitado en configuración y proveedor activo.',
+        post: 'Banner visible en dashboard-detail una vez pagado y aprobado.',
+        flow: [
+          'Proveedor crea banner vinculado a servicio o URL externa vía POST /api/save-banner.',
+          'Paga la tarifa diaria vía POST /api/banner-payment (Wallet o pasarela).',
+          'Admin aprueba o rechaza en PromotionalBanner-update-status (si rechaza, reembolsa wallet).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/save-banner', 'POST /api/banner-payment', 'GET /api/promotional-banner-list', 'POST /api/PromotionalBanner-update-status']
+      },
+      {
+        id: 'CU-07', title: 'Crear Reserva de Servicio (Booking)', domain: 'Reservas y Ejecución',
+        actors: ['cliente'],
+        apps: ['clientes-v2', 'web-v2'],
+        pre: 'Cliente autenticado, proveedor activo (status=1), dirección y slot válidos.',
+        post: 'Reserva creada en estado pending, evidencias iniciales CLIENTE guardadas y proveedor notificado.',
+        flow: [
+          'Cliente selecciona servicio/paquete, addons, cupón promocional, fecha/hora y dirección.',
+          'Opcionalmente adjunta fotos iniciales que se guardan en ServiceProof con type = "CLIENTE".',
+          'App envía POST /api/booking-save; Laravel crea Booking y dispara NotificationTrait("add_booking").'
+        ],
+        relations: [
+          { type: 'include', target: 'CU-15', label: 'Anticipo o pago del servicio' },
+          { type: 'extend', target: 'CU-10', label: 'Evidencia inicial CLIENTE' }
+        ],
+        endpoints: ['POST /api/booking-save', 'GET /api/booking-list', 'POST /api/booking-detail']
+      },
+      {
+        id: 'CU-08', title: 'Aceptar, Rechazar o Asignar Técnico', domain: 'Reservas y Ejecución',
+        actors: ['proveedor'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Reserva existente en estado pending o accept.',
+        post: 'Técnico(s) asignado(s) en booking_handyman_mappings y comisiones calculadas.',
+        flow: [
+          'Proveedor acepta la reserva o selecciona uno/varios técnicos (o a sí mismo) vía POST /api/booking-assigned.',
+          'Si ya había un técnico previo, dispara notificación transfer_booking.',
+          'Ejecuta EarningTrait::addBookingCommission() para calcular reparto admin/provider/handyman.'
+        ],
+        relations: [{ type: 'include', target: 'CU-21', label: 'Notificar cliente y técnico' }],
+        endpoints: ['POST /api/booking-assigned', 'POST /api/booking-update', 'GET /api/user-list?user_type=handyman']
+      },
+      {
+        id: 'CU-09', title: 'Ejecutar Servicio, Cargos Extra y GPS en Vivo', domain: 'Reservas y Ejecución',
+        actors: ['handyman', 'cliente'],
+        apps: ['proveedor-v2', 'clientes-v2'],
+        pre: 'Reserva aceptada/asignada al técnico.',
+        post: 'Reserva avanza por on_going → in_progress → hold/pending_approval → completed.',
+        flow: [
+          'En estado on_going, proveedor-v2 envía coordenadas periódicas a POST /api/update-location; clientes-v2 las consulta en GET /api/get-location (caché 30s).',
+          'El técnico registra inicio/pausa/fin (start_at, end_at, duration_diff) y cargos extra vía POST /api/booking-update.',
+          'Al marcar completed, se recalculan subtotales, impuestos y comisiones definitivas.'
+        ],
+        relations: [
+          { type: 'extend', target: 'CU-10', label: 'Adjuntar evidencia final PROVIDER' },
+          { type: 'extend', target: 'CU-16', label: 'Conciliar cobro si pago es Cash/Transacción' }
+        ],
+        endpoints: ['POST /api/booking-update', 'POST /api/update-location', 'GET /api/get-location']
+      },
+      {
+        id: 'CU-10', title: 'Subir Evidencias de Servicio (ServiceProof)', domain: 'Reservas y Ejecución',
+        actors: ['handyman', 'proveedor', 'cliente'],
+        apps: ['proveedor-v2', 'clientes-v2', 'web-v2'],
+        pre: 'Reserva existente en curso o completada (o siendo creada por el cliente).',
+        post: 'Registros e imágenes guardados en service_proofs y AWS S3.',
+        flow: [
+          'Técnico abre ServiceProofScreen en proveedor-v2, describe el trabajo realizado y adjunta fotos.',
+          'Envía multipart a POST /api/save-service-proof (se muestran en booking-detail bajo service_proof y service_proof_client).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/save-service-proof', 'POST /api/booking-detail']
+      },
+      {
+        id: 'CU-11', title: 'Cancelar Reserva y Procesar Multa/Reembolso', domain: 'Reservas y Ejecución',
+        actors: ['cliente', 'proveedor'],
+        apps: ['clientes-v2', 'proveedor-v2', 'web-v2'],
+        pre: 'Reserva no completada.',
+        post: 'Reserva en estado cancelled/rejected; Wallet del cliente acreditada o debitada.',
+        flow: [
+          'Booking::getCancellationCharges() calcula si la cancelación cae dentro de la ventana de penalización.',
+          'En POST /api/booking-update, si hubo pago anticipado (advanced_paid), reembolsa (anticipo - multa) a la Wallet y marca payment_status = "Advanced Refund".',
+          'Si no hubo anticipo pero sí multa, debita el cargo de la Wallet del cliente y notifica cancel_booking.'
+        ],
+        relations: [{ type: 'include', target: 'CU-17', label: 'Ajuste de saldo en Wallet' }],
+        endpoints: ['POST /api/booking-update']
+      },
+      {
+        id: 'CU-12', title: 'Calificar Servicio y Técnico', domain: 'Reservas y Ejecución',
+        actors: ['cliente'],
+        apps: ['clientes-v2', 'web-v2'],
+        pre: 'Reserva completada por el usuario.',
+        post: 'Reseñas publicadas en booking_ratings y handyman_ratings.',
+        flow: [
+          'Cliente envía calificación/comentario del servicio a POST /api/save-booking-rating.',
+          'Cliente envía calificación específica del técnico a POST /api/save-handyman-rating.'
+        ],
+        relations: [],
+        endpoints: ['POST /api/save-booking-rating', 'POST /api/save-handyman-rating', 'POST /api/delete-booking-rating', 'GET /api/get-user-ratings']
+      },
+      {
+        id: 'CU-13', title: 'Publicar Solicitud de Trabajo (PostJobRequest)', domain: 'Trabajos a Medida (Post-Job)',
+        actors: ['cliente', 'sistema'],
+        apps: ['clientes-v2', 'web-v2'],
+        pre: 'job_request_service_status habilitado.',
+        post: 'Solicitud publicada en estado requested para recibir ofertas de proveedores.',
+        flow: [
+          'Cliente describe la necesidad, presupuesto estimado y servicios asociados en POST /api/save-post-job.',
+          'Laravel notifica a proveedores (job_requested).',
+          'Si la fecha vence sin ser aceptada, el cron diario check:postjobrequest la pasa a cancelled.'
+        ],
+        relations: [{ type: 'extend', target: 'CU-14', label: 'Recibir y aceptar ofertas' }],
+        endpoints: ['POST /api/save-post-job', 'GET /api/get-post-job', 'POST /api/post-job-delete/{id}']
+      },
+      {
+        id: 'CU-14', title: 'Enviar y Aceptar Pujas / Cotizaciones (Bids)', domain: 'Trabajos a Medida (Post-Job)',
+        actors: ['proveedor', 'cliente'],
+        apps: ['proveedor-v2', 'clientes-v2', 'web-v2'],
+        pre: 'PostJobRequest en estado requested.',
+        post: 'El cliente guarda assigned. Luego puede crear una reserva en un segundo paso.',
+        flow: [
+          'Proveedor envía oferta de precio y duración en POST /api/save-bid (notifica provider_send_bid al cliente).',
+          'Cliente selecciona la oferta. La app envía proveedor, importe y assigned a POST /api/save-post-job.',
+          'Cliente confirma la reserva formal mediante POST /api/booking-save (type="user_post_job").'
+        ],
+        relations: [{ type: 'include', target: 'CU-07', label: 'Convertir cotización en reserva' }],
+        endpoints: ['POST /api/save-bid', 'GET /api/get-bid-list', 'POST /api/save-post-job', 'POST /api/booking-save']
+      },
+      {
+        id: 'CU-15', title: 'Pagar Servicio (Online, Wallet, Cash/Transacción)', domain: 'Pagos, Wallet y Comisiones',
+        actors: ['cliente', 'externos'],
+        apps: ['clientes-v2', 'web-v2'],
+        pre: 'Reserva creada y pasarelas consultadas vía GET /api/payment-gateways.',
+        post: 'El servidor registra el pago. La comprobación de liquidación y los controles de saldo dependen de la ruta.',
+        flow: [
+          'Para pagos online, clientes-v2 ejecuta el SDK/WebView (Stripe, PayPal, Razorpay, Flutterwave, PIX, etc.) y luego reporta a POST /api/save-payment.',
+          'El flujo de wallet intenta descontar el monto después de crear el pago.',
+          'Si el primer asignado es proveedor, registra pending_by_provider y despacha el job con 30 minutos de retraso declarado.'
+        ],
+        relations: [{ type: 'extend', target: 'CU-27', label: 'Despacho diferido en la rama de proveedor' }],
+        endpoints: ['GET /api/payment-gateways', 'POST /api/create-stripe-payment', 'POST /api/save-payment', 'POST /api/download-invoice']
+      },
+      {
+        id: 'CU-16', title: 'Aprobar Cash/Transacción y Descontar Comisión', domain: 'Pagos, Wallet y Comisiones',
+        actors: ['proveedor', 'handyman', 'sistema'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Pago registrado con custodia pendiente (pending_by_provider / handyman).',
+        post: 'La aprobación confirma el pago. El débito requiere además reserva completada y efectivo o transferencia.',
+        flow: [
+          'Técnico registra entrega de efectivo a proveedor (transfer-payment: handyman_send_provider).',
+          'El proveedor puede aprobar manualmente. El job puede confirmar en segundo plano si la cola efectiva es asíncrona.',
+          'El finalizador confirma el pago y aplica el débito solo para reserva completada y modalidad presencial. El cierre con técnico conserva una rama separada.',
+          'Si wallet.amount <= 0, cambia User.status a 2 (STATUS_WALLET_DISABLED).'
+        ],
+        relations: [{ type: 'include', target: 'CU-28', label: 'Transacción atómica ProviderPaymentFinalizer' }],
+        endpoints: ['POST /api/transfer-payment', 'GET /api/payment-history', 'POST /api/booking-update']
+      },
+      {
+        id: 'CU-17', title: 'Recargar, Retirar Wallet y Gestionar Bancos', domain: 'Pagos, Wallet y Comisiones',
+        actors: ['cliente', 'proveedor', 'handyman'],
+        apps: ['clientes-v2', 'proveedor-v2', 'web-v2'],
+        pre: 'wallet_status habilitado en /api/configurations.',
+        post: 'Saldo actualizado en wallets y movimientos en wallet_histories.',
+        flow: [
+          'Consulta de saldo y movimientos en user-wallet-balance y wallet-history.',
+          'Recarga vía POST /api/wallet-top-up (o Stripe wallet endpoints).',
+          'Registro de cuentas bancarias (save-bank, default-bank) y solicitud de retiro vía POST /api/withdraw-money.'
+        ],
+        relations: [],
+        endpoints: ['GET /api/user-wallet-balance', 'GET /api/wallet-history', 'POST /api/wallet-top-up', 'POST /api/withdraw-money', 'POST /api/save-bank']
+      },
+      {
+        id: 'CU-18', title: 'Gestionar Suscripciones y RevenueCat IAP', domain: 'Pagos, Wallet y Comisiones',
+        actors: ['proveedor', 'sistema', 'externos'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Modalidad earning_type == subscription o IAP habilitado.',
+        post: 'Plan activo en provider_subscriptions y bandera User.is_subscribe = 1.',
+        flow: [
+          'Proveedor lista planes en GET /api/plan-list y se suscribe vía POST /api/save-subscription o vía RevenueCat (purchases_flutter).',
+          'Puede cancelar con POST /api/cancel-subscription.',
+          'Cron diario check:subscription desactiva suscripciones expiradas.'
+        ],
+        relations: [],
+        endpoints: ['GET /api/plan-list', 'POST /api/save-subscription', 'POST /api/cancel-subscription', 'GET /api/subscription-history']
+      },
+      {
+        id: 'CU-19', title: 'Liquidar Payouts y Aprobar Cash en Admin', domain: 'Pagos, Wallet y Comisiones',
+        actors: ['admin'],
+        apps: ['web-v2'],
+        pre: 'Comisiones en estado unpaid o cash enviado al admin.',
+        post: 'Payout registrado en provider_payouts / handyman_payouts o retiro procesado.',
+        flow: [
+          'Admin revisa ganancias en earning-list / earning-data.',
+          'Ejecuta payout a proveedor (providerpayout.store: Stripe, RazorpayX, banco o efectivo) o técnico (handymanpayout.store).',
+          'Aprueba solicitudes de retiro de wallet (wallet_transaction_payout) y cash pendiente (cash.approve).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/provider-payout', 'POST /api/handyman-payout-save', 'GET /cash/approve/{id}', 'GET /withdrawal-request-payout/{id}']
+      },
+      {
+        id: 'CU-20', title: 'Chat en Tiempo Real (Firestore + Storage)', domain: 'Comunicación y Soporte',
+        actors: ['cliente', 'proveedor', 'handyman', 'externos'],
+        apps: ['clientes-v2', 'proveedor-v2'],
+        pre: 'enable_chat activo y ambos usuarios sincronizados en Firebase Auth/Firestore.',
+        post: 'Mensaje guardado en Firestore para emisor/receptor y push enviado.',
+        flow: [
+          'La app escucha Stream de Cloud Firestore en users/{uid}/contact y messages/{sender}/{receiver}.',
+          'Al enviar texto o adjunto (subido a Firebase Storage chat_files/), escribe en ambas colecciones.',
+          'Obtiene token en GET /api/firebase-detail y envía push directa vía FCM HTTP v1 con flag is_chat = "1".'
+        ],
+        relations: [{ type: 'include', target: 'CU-21', label: 'Push directa vía FCM v1' }],
+        endpoints: ['Firestore: messages/{s}/{r}', 'Firestore: users/{id}/contact', 'GET /api/firebase-detail']
+      },
+      {
+        id: 'CU-21', title: 'Notificaciones Multicanal (FCM, Email, SMS, WhatsApp)', domain: 'Comunicación y Soporte',
+        actors: ['sistema', 'admin', 'externos'],
+        apps: ['web-v2', 'clientes-v2', 'proveedor-v2'],
+        pre: 'Plantillas configuradas en NotificationTemplate / MailTemplates.',
+        post: 'Usuario notificado en app (FCM + DB) y canales externos configurados.',
+        flow: [
+          'Eventos de negocio llaman NotificationTrait::sendNotification() -> CommonNotification (ShouldQueue).',
+          'CommonNotification evalúa canales activos: FcmChannel (FCM v1 topic user_{id}), mail, Twilio SMS, Twilio WhatsApp, database.',
+          'Admin también puede disparar notificaciones masivas desde send-push-notification (BulkNotification).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/notification-list', 'POST /api/send-push-notification']
+      },
+      {
+        id: 'CU-22', title: 'Mesa de Ayuda y Tickets (HelpDesk)', domain: 'Comunicación y Soporte',
+        actors: ['cliente', 'proveedor', 'handyman', 'admin'],
+        apps: ['clientes-v2', 'proveedor-v2', 'web-v2'],
+        pre: 'Usuario autenticado.',
+        post: 'Ticket abierto, respondido con historial o cerrado.',
+        flow: [
+          'Usuario crea ticket con descripción y adjuntos vía POST /api/helpdesk-save.',
+          'Las respuestas e imágenes se registran con POST /api/helpdesk-activity-save/{id}.',
+          'Se cierra mediante POST /api/helpdesk-closed/{id}, notificando por FCM.'
+        ],
+        relations: [],
+        endpoints: ['GET /api/helpdesk-list', 'POST /api/helpdesk-save', 'GET /api/helpdesk-detail', 'POST /api/helpdesk-activity-save/{id}', 'POST /api/helpdesk-closed/{id}']
+      },
+      {
+        id: 'CU-23', title: 'Aprobar y Moderar Entidades (Admin)', domain: 'Gobierno Admin',
+        actors: ['admin'],
+        apps: ['web-v2'],
+        pre: 'Usuario con rol admin y permisos Spatie correspondientes.',
+        post: 'Entidades aprobadas, suspendidas o reactivadas en plataforma.',
+        flow: [
+          'Aprueba o reactiva proveedores (incluyendo aquellos en status = 2 Wallet Disabled) en ProviderController.',
+          'Aprueba solicitudes de nuevos servicios (service.updateStatus) y banners promocionales.',
+          'Resuelve reportes de servicios (servicereport.*) con opción de banear o eliminar.'
+        ],
+        relations: [],
+        endpoints: ['GET /provider/approve/{id}', 'POST /update-status', 'POST /api/PromotionalBanner-update-status', 'POST /servicereport/ban-user/{id}']
+      },
+      {
+        id: 'CU-24', title: 'Configurar Sistema, Catálogos, Impuestos y Roles', domain: 'Gobierno Admin',
+        actors: ['admin'],
+        apps: ['web-v2'],
+        pre: 'Rol admin (acciones protegidas con demoUserPermission para demo_admin).',
+        post: 'Configuración global reflejada inmediatamente en /api/configurations para las apps.',
+        flow: [
+          'Admin gestiona roles/permisos Spatie, categorías, subcategorías, sliders, cupones, impuestos (incl. "Administracion"), planes y plantillas.',
+          'Configura moneda, zona horaria, llaves de mapas, pasarelas de pago, modo mantenimiento y versiones mínimas de las apps.',
+          'Consulta métricas de dashboard y exporta facturas/reportes (Excel/PDF).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/configurations', 'GET /api/admin-dashboard', 'web.php (setting.*, role.*, permission.*, tax.*, coupon.*)']
+      },
+      {
+        id: 'CU-25', title: 'Gestionar Técnicos y Comisiones (Handyman)', domain: 'Operación Proveedor',
+        actors: ['proveedor'],
+        apps: ['proveedor-v2', 'web-v2'],
+        pre: 'Proveedor activo (y dentro de límite del plan si aplica suscripción).',
+        post: 'Técnicos registrados bajo provider_id con su HandymanType de comisión.',
+        flow: [
+          'Proveedor crea/edita/elimina técnicos (add-user, edit-user, handyman-action, handyman-delete).',
+          'Configura tipos de comisión fija o porcentual para técnicos (handymantype-save).'
+        ],
+        relations: [],
+        endpoints: ['POST /api/add-user', 'POST /api/edit-user', 'POST /api/handyman-action', 'POST /api/handymantype-save']
+      },
+      {
+        id: 'CU-26', title: 'Controlar Disponibilidad en Campo', domain: 'Operación Técnico',
+        actors: ['handyman'],
+        apps: ['proveedor-v2'],
+        pre: 'Usuario autenticado con user_type == "handyman".',
+        post: 'Campo users.is_available actualizado.',
+        flow: [
+          'Desde HandymanHomeFragment, el técnico activa o desactiva su interruptor de disponibilidad.',
+          'App envía POST /api/handyman-update-available-status.'
+        ],
+        relations: [],
+        endpoints: ['POST /api/handyman-update-available-status']
+      },
+      {
+        id: 'CU-27', title: 'Autoconfirmar pago pendiente', domain: 'Automatización Backend',
+        actors: ['sistema'],
+        apps: ['web-v2'],
+        pre: 'Historial pendiente de proveedor. La espera declarada requiere conexión asíncrona y worker activo.',
+        post: 'El job delega en el finalizador si el historial conserva la acción y el estado esperados.',
+        flow: [
+          'savePayment despacha con 30 minutos de retraso declarado en la rama de proveedor.',
+          'AutoConfirmProviderPayment::handle verifica si PaymentHistory sigue en customer_send_provider / pending_by_provider.',
+          'Si sigue pendiente, delega a ProviderPaymentFinalizer::finalize(..., ["source" => "auto"]).'
+        ],
+        relations: [{ type: 'include', target: 'CU-28', label: 'Ejecutar finalización atómica' }],
+        endpoints: ['Job: App\\Jobs\\AutoConfirmProviderPayment']
+      },
+      {
+        id: 'CU-28', title: 'Finalizar Pago y Controlar Wallet Proveedor', domain: 'Automatización Backend',
+        actors: ['sistema'],
+        apps: ['web-v2'],
+        pre: 'El finalizador recibe el pago y su reserva. La aprobación usa el historial de proveedor.',
+        post: 'Pago confirmado. El débito por comisión es condicional y puede deshabilitar al proveedor activo si el saldo queda en cero o menos.',
+        flow: [
+          'El finalizador bloquea el pago y la reserva. Bloquea la billetera al aplicar el débito.',
+          'Registra approved_by_provider si falta y marca paid. Con la reserva completada aplica los efectos de cierre.',
+          'Solo con reserva completed, pago paid y modalidad cash o transacción puede debitar Administracion.',
+          'Si el nuevo saldo es <= 0, actualiza User.status = 2 (Wallet Disabled).'
+        ],
+        relations: [],
+        endpoints: ['Service: App\\Services\\ProviderPaymentFinalizer']
+      },
+      {"id": "CU-29", "title": "Expirar suscripciones vencidas", "actors": ["sistema"], "pre": "El scheduler se ejecuta y la modalidad es suscripción.", "post": "El comando desactiva el indicador de suscripción y el plan activo cuando su fecha ya pasó.", "flow": ["Kernel declara check:subscription a diario en modalidad de suscripción.", "Compara la fecha de fin con el día actual."], "endpoints": ["Comando: check:subscription"], "domain": "Automatización Backend", "apps": ["web-v2"], "relations": []},
+      {"id": "CU-30", "title": "Cancelar solicitudes de trabajo vencidas", "actors": ["sistema"], "pre": "Scheduler activo y solicitud en requested.", "post": "La solicitud pasa a cancelled si su fecha es anterior al día actual.", "flow": ["Kernel declara check:postjobrequest a diario.", "El comando revisa las solicitudes pendientes por fecha."], "endpoints": ["Comando: check:postjobrequest"], "domain": "Automatización Backend", "apps": ["web-v2"], "relations": []},
+      {"id": "CU-31", "title": "Despachar notificación multicanal de negocio", "actors": ["sistema", "externos"], "pre": "Evento de negocio y canal configurado para el destinatario.", "post": "Laravel procesa la notificación mediante los canales habilitados.", "flow": ["NotificationTrait puede crear CommonNotification.", "La notificación usa la cola y selecciona canales por configuración y destinatario."], "endpoints": ["app/Traits/NotificationTrait.php", "app/Notifications/CommonNotification.php"], "domain": "Automatización Backend", "apps": ["web-v2"], "relations": []},
+      {"id": "CU-32", "title": "Enviar notificación de campaña", "actors": ["admin", "sistema", "externos"], "pre": "Configuración de notificaciones y público de la campaña.", "post": "El controlador prepara y envía el mensaje mediante FCM cuando está configurado.", "flow": ["El panel o la API llama a SettingController::sendPushNotification.", "Existe BulkNotification. Su punto de despacho queda por verificar."], "endpoints": ["POST /api/send-push-notification", "POST /send-push-notification"], "domain": "Automatización Backend", "apps": ["web-v2"], "relations": []}
+    ];
+
+    // =========================================================================
+    // VIEW DEFINITIONS (LAYOUT POSITIONS FOR UML DIAGRAMS)
+    // =========================================================================
+    const VIEWS = {
+      all: {
+        title: 'Vista Global — Todos los Actores y Casos de Uso del Ecosistema',
+        actors: ['cliente', 'proveedor', 'handyman', 'admin', 'sistema'],
+        useCases: USE_CASES.map(u => u.id)
+      },
+      cliente: {
+        title: 'Diagrama UML — Actor: Cliente (clientes-v2 + Web Pública)',
+        actors: ['cliente', 'externos'],
+        useCases: ['CU-01', 'CU-03', 'CU-04', 'CU-07', 'CU-09', 'CU-10', 'CU-11', 'CU-12', 'CU-13', 'CU-14', 'CU-15', 'CU-17', 'CU-20', 'CU-22']
+      },
+      proveedor: {
+        title: 'Diagrama UML — Actor: Proveedor (proveedor-v2 modo Provider)',
+        actors: ['proveedor', 'admin', 'externos'],
+        useCases: ['CU-01', 'CU-02', 'CU-03', 'CU-05', 'CU-06', 'CU-08', 'CU-10', 'CU-11', 'CU-14', 'CU-16', 'CU-17', 'CU-18', 'CU-20', 'CU-22', 'CU-23', 'CU-25']
+      },
+      handyman: {
+        title: 'Diagrama UML — Actor: Técnico / Handyman (proveedor-v2 modo Handyman)',
+        actors: ['handyman', 'externos'],
+        useCases: ['CU-01', 'CU-09', 'CU-10', 'CU-16', 'CU-17', 'CU-20', 'CU-22', 'CU-26']
+      },
+      admin: {
+        title: 'Diagrama UML — Actor: Administrador (web-v2 Panel Web + admin-api)',
+        actors: ['admin', 'sistema'],
+        useCases: ['CU-01', 'CU-02', 'CU-03', 'CU-06', 'CU-19', 'CU-21', 'CU-22', 'CU-23', 'CU-24', 'CU-32']
+      },
+      sistema: {
+        title: 'Diagrama UML — Automatización Backend (Worker, Cron y Servicios Externos)',
+        actors: ['sistema', 'externos'],
+        useCases: ['CU-13', 'CU-15', 'CU-16', 'CU-18', 'CU-20', 'CU-21', 'CU-27', 'CU-28', 'CU-29', 'CU-30', 'CU-31', 'CU-32']
+      }
+    };
+
+    let currentView = 'all';
+    let selectedUcId = 'CU-07';
+
+    function selectView(viewId) {
+      currentView = viewId;
+      document.querySelectorAll('.actor-btn').forEach(b => {
+        b.className = 'actor-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition';
+      });
+      document.getElementById('view-' + viewId).className = 'actor-btn actor-btn-active px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] transition';
+
+      const visibleUCs = VIEWS[viewId].useCases;
+      if (!visibleUCs.includes(selectedUcId)) {
+        selectedUcId = visibleUCs[0];
+      }
+      renderDiagram();
+      renderInspector();
+    }
+
+    function selectUC(ucId) {
+      selectedUcId = ucId;
+      renderDiagram();
+      renderInspector();
+    }
+
+    function drawStickFigure(x, y, actor) {
+      return `
+        <g class="cursor-default">
+          <circle cx="${x}" cy="${y}" r="11" fill="none" stroke="${actor.color}" stroke-width="2.2"/>
+          <line x1="${x}" y1="${y + 11}" x2="${x}" y2="${y + 34}" stroke="${actor.color}" stroke-width="2.2"/>
+          <line x1="${x - 14}" y1="${y + 20}" x2="${x + 14}" y2="${y + 20}" stroke="${actor.color}" stroke-width="2.2"/>
+          <line x1="${x}" y1="${y + 34}" x2="${x - 11}" y2="${y + 52}" stroke="${actor.color}" stroke-width="2.2"/>
+          <line x1="${x}" y1="${y + 34}" x2="${x + 11}" y2="${y + 52}" stroke="${actor.color}" stroke-width="2.2"/>
+          <text x="${x}" y="${y + 68}" text-anchor="middle" fill="var(--foreground)" font-size="12" font-weight="700">${actor.label}</text>
+          <text x="${x}" y="${y + 82}" text-anchor="middle" fill="var(--muted-foreground)" font-size="12">${actor.sub}</text>
+        </g>
+      `;
+    }
+
+    function renderDiagram() {
+      const view = VIEWS[currentView];
+      document.getElementById('diagram-title').textContent = view.title;
+
+      const q = document.getElementById('uc-search').value.trim().toLowerCase();
+      const visibleUCs = USE_CASES.filter(u => view.useCases.includes(u.id));
+
+      // Compute dynamic height based on number of UCs (2 columns inside System Boundary)
+      const cols = visibleUCs.length <= 9 ? 1 : 2;
+      const rows = Math.ceil(visibleUCs.length / cols);
+      const rowHeight = 64;
+      const topPad = 60;
+      const svgHeight = Math.max(460, topPad + rows * rowHeight + 45);
+      const svgWidth = 860;
+
+      // Place actors on left and right
+      const leftActors = view.actors.filter(a => ACTORS[a].side === 'left');
+      const rightActors = view.actors.filter(a => ACTORS[a].side === 'right');
+
+      const actorCoords = {};
+      leftActors.forEach((aId, idx) => {
+        const spacing = (svgHeight - 80) / (leftActors.length + 1);
+        actorCoords[aId] = { x: 65, y: 40 + spacing * (idx + 1) - 25 };
+      });
+      rightActors.forEach((aId, idx) => {
+        const spacing = (svgHeight - 80) / (rightActors.length + 1);
+        actorCoords[aId] = { x: svgWidth - 65, y: 40 + spacing * (idx + 1) - 25 };
+      });
+
+      // Boundary box
+      const boundX = 155;
+      const boundW = svgWidth - 310;
+      const boundY = 16;
+      const boundH = svgHeight - 32;
+
+      // Place UC ovals inside boundary
+      const ucCoords = {};
+      visibleUCs.forEach((uc, i) => {
+        const col = cols === 1 ? 0 : i % 2;
+        const row = cols === 1 ? i : Math.floor(i / 2);
+        const cx = cols === 1 ? boundX + boundW / 2 : boundX + (col === 0 ? boundW * 0.27 : boundW * 0.73);
+        const cy = topPad + 24 + row * rowHeight;
+        ucCoords[uc.id] = { cx, cy, rx: cols === 1 ? 165 : 122, ry: 24 };
+      });
+
+      // Build edges (Actor -> UC)
+      let edgesSvg = '';
+      visibleUCs.forEach(uc => {
+        const pos = ucCoords[uc.id];
+        const matchesSearch = !q || uc.title.toLowerCase().includes(q) || uc.id.toLowerCase().includes(q) || uc.endpoints.some(e => e.toLowerCase().includes(q));
+        const isSel = uc.id === selectedUcId;
+
+        view.actors.forEach(aId => {
+          const connectsActor = uc.actors.includes(aId) || (aId === 'externos' && (uc.apps.includes('clientes-v2') || uc.id === 'CU-20' || uc.id === 'CU-21' || uc.id === 'CU-15' || uc.id === 'CU-18'));
+          if (!connectsActor) return;
+          // For 'externos', only connect relevant external use cases
+          if (aId === 'externos' && !['CU-01', 'CU-09', 'CU-15', 'CU-18', 'CU-20', 'CU-21', 'CU-31', 'CU-32'].includes(uc.id)) return;
+
+          const aPos = actorCoords[aId];
+          const actor = ACTORS[aId];
+          const startX = actor.side === 'left' ? aPos.x + 18 : aPos.x - 18;
+          const startY = aPos.y + 24;
+          const endX = actor.side === 'left' ? pos.cx - pos.rx : pos.cx + pos.rx;
+          const endY = pos.cy;
+          const opacity = !matchesSearch ? 0.1 : (isSel ? 0.95 : 0.35);
+          const sw = isSel ? 2.2 : 1.2;
+
+          edgesSvg += `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" stroke="${actor.color}" stroke-width="${sw}" opacity="${opacity}" />`;
+        });
+
+        // Draw include/extend lines if target is also visible in current view
+        uc.relations.forEach(rel => {
+          if (ucCoords[rel.target]) {
+            const tPos = ucCoords[rel.target];
+            const color = rel.type === 'include' ? '#3b82f6' : '#f59e0b';
+            const op = (isSel || selectedUcId === rel.target) ? 0.95 : 0.45;
+            const midX = (pos.cx + tPos.cx) / 2;
+            const midY = (pos.cy + tPos.cy) / 2;
+            edgesSvg += `
+              <line x1="${pos.cx}" y1="${pos.cy}" x2="${tPos.cx}" y2="${tPos.cy}" stroke="${color}" stroke-width="1.6" stroke-dasharray="5 4" opacity="${op}" marker-end="url(#uml-arrow-${rel.type})" />
+              <text x="${midX}" y="${midY - 4}" text-anchor="middle" fill="${color}" font-size="12" font-weight="600" opacity="${op}">«${rel.type}»</text>
+            `;
+          }
+        });
+      });
+
+      // Build UC ovals
+      let ovalsSvg = '';
+      visibleUCs.forEach(uc => {
+        const pos = ucCoords[uc.id];
+        const isSel = uc.id === selectedUcId;
+        const matchesSearch = !q || uc.title.toLowerCase().includes(q) || uc.id.toLowerCase().includes(q) || uc.endpoints.some(e => e.toLowerCase().includes(q));
+        const label = `${uc.id} ${uc.title}`;
+        const shortLabel = label.length > (cols === 1 ? 42 : 31) ? label.slice(0, cols === 1 ? 40 : 29) + '…' : label;
+
+        ovalsSvg += `
+          <g onclick="selectUC('${uc.id}')" class="uc-oval ${isSel ? 'uc-oval-selected' : ''} ${!matchesSearch ? 'uc-dimmed' : ''}">
+            <ellipse cx="${pos.cx}" cy="${pos.cy}" rx="${pos.rx}" ry="${pos.ry}" fill="var(--background)" stroke="var(--border)" stroke-width="1.6" />
+            <text x="${pos.cx}" y="${pos.cy - 2}" text-anchor="middle" fill="var(--foreground)" font-size="12" font-weight="600">${shortLabel}</text>
+            <text x="${pos.cx}" y="${pos.cy + 13}" text-anchor="middle" fill="var(--muted-foreground)" font-size="12">${uc.domain}</text>
+          </g>
+        `;
+      });
+
+      // Build Actors SVG
+      let actorsSvg = '';
+      view.actors.forEach(aId => {
+        actorsSvg += drawStickFigure(actorCoords[aId].x, actorCoords[aId].y, ACTORS[aId]);
+      });
+
+      document.getElementById('svg-wrapper').innerHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" class="w-full h-auto block">
+          <defs>
+            <marker id="uml-arrow-include" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6" />
+            </marker>
+            <marker id="uml-arrow-extend" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+            </marker>
+          </defs>
+          <!-- System Boundary -->
+          <rect x="${boundX}" y="${boundY}" width="${boundW}" height="${boundH}" rx="14" fill="var(--card)" stroke="var(--border)" stroke-width="1.8" />
+          <text x="${boundX + 16}" y="${boundY + 22}" fill="var(--muted-foreground)" font-size="12" font-weight="700">SISTEMA: ECOSISTEMA SOLUTODAY (web-v2 + clientes-v2 + proveedor-v2)</text>
+          ${edgesSvg}
+          ${ovalsSvg}
+          ${actorsSvg}
+        </svg>
+      `;
+
+      // Quick pills list
+      document.getElementById('uc-quick-list').innerHTML = visibleUCs.map(uc => `
+        <button onclick="selectUC('${uc.id}')" class="px-2 py-1 rounded-md text-xs border transition ${uc.id === selectedUcId ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]' : 'bg-[var(--background)] border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)]'}">${uc.id}</button>
+      `).join('');
+    }
+
+    function renderInspector() {
+      const uc = USE_CASES.find(u => u.id === selectedUcId) || USE_CASES[0];
+      document.getElementById('uc-inspector').innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--primary)] text-[var(--primary-foreground)]">${uc.id}</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-[var(--secondary)] text-[var(--secondary-foreground)]">${uc.domain}</span>
+        </div>
+        <h2 class="text-lg font-bold text-[var(--foreground)]">${uc.title}</h2>
+
+        <div class="flex flex-wrap gap-1.5">
+          ${uc.actors.map(a => `<span class="text-xs px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--background)]">Actor: ${ACTORS[a].label}</span>`).join('')}
+          ${uc.apps.map(app => `<code class="text-xs px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--primary)]">${app}</code>`).join('')}
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Precondiciones</div>
+          <p class="text-xs text-[var(--foreground)] bg-[var(--background)] p-2.5 rounded-lg border border-[var(--border)]">${uc.pre}</p>
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Flujo Principal</div>
+          <ol class="space-y-1.5 text-xs text-[var(--foreground)] list-decimal list-inside">
+            ${uc.flow.map(step => `<li class="leading-relaxed">${step}</li>`).join('')}
+          </ol>
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Postcondición</div>
+          <p class="text-xs text-[var(--muted-foreground)]">${uc.post}</p>
+        </div>
+
+        ${uc.relations.length ? `
+          <div class="space-y-1">
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Relaciones UML</div>
+            <div class="space-y-1">
+              ${uc.relations.map(r => `<div class="text-xs flex items-center gap-2"><span class="px-1.5 py-0.5 rounded font-semibold ${r.type === 'include' ? 'bg-blue-500/15 text-blue-500' : 'bg-amber-500/15 text-amber-500'}">«${r.type}»</span><button onclick="selectUC('${r.target}')" class="underline font-semibold text-[var(--primary)]">${r.target}</button><span class="text-[var(--muted-foreground)]">${r.label}</span></div>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Endpoints / Archivos Clave</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${uc.endpoints.map(ep => `<code class="text-xs px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">${ep}</code>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    renderDiagram();
+    renderInspector();
+  </script>
+  </div>
+
+  <script>
+    function getSystemScheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function toggleColorScheme() {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const current = meta.content === 'dark' || meta.content === 'light' ? meta.content : getSystemScheme();
+      const target = current === 'dark' ? 'light' : 'dark';
+      const system = getSystemScheme();
+      try {
+        if (target === system) {
+          localStorage.removeItem('color-scheme');
+          meta.content = 'light dark';
+        } else {
+          localStorage.setItem('color-scheme', target);
+          meta.content = target;
+        }
+      } catch (e) {
+        meta.content = target;
+      }
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme') {
+        document.querySelector('meta[name="color-scheme"]').content = e.newValue ?? 'light dark';
+      }
+    });
+  </script>
+
+</body>
+</html>

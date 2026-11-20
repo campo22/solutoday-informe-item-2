@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Solutoday — Diagramas Relacionales Interactivos (ER)</title>
+  <link rel="stylesheet" href="./portal.css" />
+  <style>
+    .dom-btn-active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .er-box {
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .er-box:hover rect {
+      stroke: var(--primary);
+      stroke-width: 2.2;
+    }
+    .er-box-selected rect {
+      stroke: var(--primary) !important;
+      stroke-width: 3 !important;
+      fill: color-mix(in srgb, var(--primary) 12%, var(--card)) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="./index.html" class="portal-brand">
+        <span class="portal-brand-mark" aria-hidden="true">S</span>
+        <span class="portal-brand-title">Solutoday</span>
+        <span class="portal-brand-ver">v1.0.0-linea-base</span>
+      </a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <button class="menu-button" type="button" popovertarget="portal-menu" popovertargetaction="toggle" aria-controls="portal-menu">Menú</button>
+        <ul id="portal-menu" class="site-menu" popover="auto">
+          <li><a href="./index.html" class="portal-link">Acta Base</a></li>
+          <li><a href="./arquitectura.html" class="portal-link">Arquitectura</a></li>
+          <li><a href="./casos-de-uso.html" class="portal-link">Casos de Uso</a></li>
+          <li><a href="./modelo-relacional.html" class="portal-link" aria-current="page">Modelo ER</a></li>
+          <li><a href="./index.html#archify-suite" class="portal-link archify-nav-badge">Archify (4)</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" onclick="toggleColorScheme()" class="portal-action-btn" aria-label="Cambiar tema de color">
+          <span class="theme-label-dark">Oscuro</span>
+          <span class="theme-label-light">Claro</span>
+        </button>
+        <button type="button" onclick="window.print()" class="portal-action-btn portal-action-primary">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+  <div class="p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-5">
+
+    <!-- Header -->
+    <header class="bg-[var(--card)] hero-accent-card border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">DATA ARCHITECTURE • ER</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs border border-[var(--border)] text-[var(--muted-foreground)]">Mapa de MySQL y Cloud Firestore</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-[var(--foreground)]">Explorador Relacional de Base de Datos — Solutoday</h1>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">Inspecciona el esquema verificado desde las 146 migraciones de <code class="text-xs px-1 py-0.5 rounded bg-[var(--secondary)]">web-v2</code> y las colecciones NoSQL de chat. Haz clic en cualquier tabla para ver sus PK, FK, tipos de dato y relaciones.</p>
+      </div>
+      <div>
+        <input id="er-search" type="text" oninput="renderSchema()" placeholder="Buscar tabla o columna (ej. wallet, uid, fk)..." class="px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-xs text-[var(--foreground)] w-64 focus:outline-none focus:border-[var(--primary)]" />
+      </div>
+    </header>
+
+    <!-- Domain Tabs -->
+    <nav class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 flex flex-wrap gap-1.5">
+      <button onclick="selectDomain('core')" id="dom-core" class="dom-btn dom-btn-active px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] transition">1. Identidad, RBAC &amp; Confianza</button>
+      <button onclick="selectDomain('catalog')" id="dom-catalog" class="dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">2. Catálogo, Cobertura &amp; Cupones</button>
+      <button onclick="selectDomain('booking')" id="dom-booking" class="dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">3. Reservas, Evidencias &amp; GPS</button>
+      <button onclick="selectDomain('finance')" id="dom-finance" class="dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">4. Pagos, Wallet &amp; Comisiones</button>
+      <button onclick="selectDomain('growth')" id="dom-growth" class="dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">5. Post-Job, Banners &amp; HelpDesk</button>
+      <button onclick="selectDomain('firestore')" id="dom-firestore" class="dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition">6. Firebase Firestore (Chat)</button>
+    </nav>
+
+    <!-- Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- SVG Diagram -->
+      <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 overflow-x-auto">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="text-sm font-bold text-[var(--foreground)]" id="dom-title">Dominio 1</div>
+          <div class="flex flex-wrap gap-3 text-xs text-[var(--muted-foreground)]">
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-[#00C6A3] inline-block"></span> FK SQL Explícita</span>
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 border-t-2 border-dashed border-[#f59e0b] inline-block"></span> Relación Lógica / Polimórfica</span>
+          </div>
+        </div>
+        <div id="er-svg-container" class="min-w-[680px]"></div>
+      </div>
+
+      <!-- Table Inspector -->
+      <aside class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between space-y-4">
+        <div id="table-inspector" class="space-y-3"></div>
+        <div class="pt-3 border-t border-[var(--border)]">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">Tablas en este dominio</div>
+          <div id="table-pills" class="flex flex-wrap gap-1.5"></div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+
+  <script>
+    const DOMAINS = {
+      core: {
+        title: 'Dominio 1 — Identidad, RBAC (Spatie), Geografía y Confianza',
+        tables: ['users', 'provider_types', 'handyman_types', 'documents', 'provider_documents', 'user_blocks', 'roles', 'countries', 'states', 'cities'],
+        edges: [
+          { from: 'provider_types', to: 'users', label: '1:N', type: 'logic' },
+          { from: 'handyman_types', to: 'users', label: '1:N', type: 'logic' },
+          { from: 'countries', to: 'states', label: '1:N', type: 'logic' },
+          { from: 'states', to: 'cities', label: '1:N', type: 'logic' },
+          { from: 'users', to: 'provider_documents', label: '1:N FK', type: 'sql' },
+          { from: 'documents', to: 'provider_documents', label: '1:N FK', type: 'sql' },
+          { from: 'users', to: 'user_blocks', label: '1:N FK (x2)', type: 'sql' },
+          { from: 'users', to: 'roles', label: 'N:M Spatie', type: 'logic' }
+        ]
+      },
+      catalog: {
+        title: 'Dominio 2 — Catálogo, Paquetes, Cobertura y Reportes',
+        tables: ['categories', 'sub_categories', 'services', 'service_addons', 'service_packages', 'package_service_mappings', 'provider_address_mappings', 'provider_service_address_mappings', 'provider_slot_mappings', 'coupons', 'service_reports'],
+        edges: [
+          { from: 'categories', to: 'sub_categories', label: '1:N FK', type: 'sql' },
+          { from: 'categories', to: 'services', label: '1:N FK', type: 'sql' },
+          { from: 'services', to: 'service_addons', label: '1:N', type: 'logic' },
+          { from: 'services', to: 'package_service_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'service_packages', to: 'package_service_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'services', to: 'provider_service_address_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'provider_address_mappings', to: 'provider_service_address_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'services', to: 'service_reports', label: '1:N FK', type: 'sql' }
+        ]
+      },
+      booking: {
+        title: 'Dominio 3 — Ciclo de Reservas (bookings), Evidencias y GPS',
+        tables: ['bookings', 'booking_statuses', 'booking_handyman_mappings', 'booking_address_mappings', 'booking_coupon_mappings', 'booking_service_addon_mapping', 'booking_package_mappings', 'booking_extra_charges', 'booking_activities', 'service_proofs', 'live_locations', 'booking_ratings', 'handyman_ratings'],
+        edges: [
+          { from: 'bookings', to: 'booking_handyman_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'bookings', to: 'booking_address_mappings', label: '1:1 FK', type: 'sql' },
+          { from: 'bookings', to: 'booking_extra_charges', label: '1:N FK', type: 'sql' },
+          { from: 'bookings', to: 'booking_activities', label: '1:N', type: 'logic' },
+          { from: 'bookings', to: 'service_proofs', label: '1:N FK', type: 'sql' },
+          { from: 'bookings', to: 'live_locations', label: '1:N', type: 'logic' },
+          { from: 'bookings', to: 'booking_ratings', label: '1:N FK', type: 'sql' },
+          { from: 'bookings', to: 'handyman_ratings', label: '1:N FK', type: 'sql' },
+          { from: 'bookings', to: 'booking_coupon_mappings', label: '1:1', type: 'logic' },
+          { from: 'bookings', to: 'booking_service_addon_mapping', label: '1:N', type: 'logic' },
+          { from: 'bookings', to: 'booking_package_mappings', label: '1:1', type: 'logic' }
+        ]
+      },
+      finance: {
+        title: 'Dominio 4 — Pagos, Comisiones, Wallet y Suscripciones',
+        tables: ['bookings', 'payments', 'payment_histories', 'commission_earnings', 'users', 'wallets', 'wallet_histories', 'banks', 'withdraw_money', 'provider_payouts', 'handyman_payouts', 'taxes', 'plans', 'provider_subscriptions', 'subscription_transactions'],
+        edges: [
+          { from: 'bookings', to: 'payments', label: '1:N FK', type: 'sql' },
+          { from: 'users', to: 'wallets', label: '1:N FK', type: 'sql' },
+          { from: 'payments', to: 'payment_histories', label: '1:N FK', type: 'sql' },
+          { from: 'users', to: 'wallet_histories', label: 'Por user_id', type: 'logic' },
+          { from: 'banks', to: 'withdraw_money', label: '1:N', type: 'logic' },
+          { from: 'plans', to: 'provider_subscriptions', label: '1:N FK', type: 'sql' },
+          { from: 'provider_subscriptions', to: 'subscription_transactions', label: '1:N FK', type: 'sql' }
+        ]
+      },
+      growth: {
+        title: 'Dominio 5 — Post-Job (Subastas), Banners Promocionales, Soporte y Blogs',
+        tables: ['post_job_requests', 'post_job_service_mappings', 'post_job_bids', 'promotional_banners', 'banner_payments', 'help_desk', 'help_desk_activity_mapping', 'blogs'],
+        edges: [
+          { from: 'post_job_requests', to: 'post_job_service_mappings', label: '1:N FK', type: 'sql' },
+          { from: 'post_job_requests', to: 'post_job_bids', label: '1:N FK', type: 'sql' },
+          { from: 'promotional_banners', to: 'banner_payments', label: '1:N FK', type: 'sql' },
+          { from: 'help_desk', to: 'help_desk_activity_mapping', label: '1:N', type: 'logic' }
+        ]
+      },
+      firestore: {
+        title: 'Dominio 6 — Esquema NoSQL en Cloud Firestore & Storage (Chat)',
+        tables: ['fs_users', 'fs_contact', 'fs_messages', 'fs_storage'],
+        edges: [
+          { from: 'fs_users', to: 'fs_contact', label: 'subcolección', type: 'logic' },
+          { from: 'fs_users', to: 'fs_messages', label: 'sender/receiver', type: 'logic' },
+          { from: 'fs_messages', to: 'fs_storage', label: 'photoUrl', type: 'logic' }
+        ]
+      }
+    };
+
+    const TABLES = {
+      users: {
+        engine: 'MySQL', pk: 'id', notes: 'Tabla maestra multi-rol (admin, demo_admin, provider, handyman, user). SoftDeletes + Spatie HasRoles + HasApiTokens + HasMedia.',
+        cols: [
+          ['id', 'bigint (PK)', 'Identificador único'],
+          ['username / email', 'string', 'Credenciales únicas'],
+          ['user_type', 'string', 'admin | demo_admin | provider | handyman | user'],
+          ['status', 'tinyint', '0=Pending, 1=Active, 2=WalletDisabled'],
+          ['provider_id', 'bigint (FK)', 'Para handyman: proveedor padre'],
+          ['providertype_id', 'bigint (FK)', 'Tabla de comisión proveedor'],
+          ['handymantype_id', 'bigint (FK)', 'Tabla de comisión técnico'],
+          ['uid', 'string', 'UID sincronizado con Firebase Auth / Firestore'],
+          ['is_subscribe / is_available', 'tinyint', 'Suscripción activa y disponibilidad en campo']
+        ]
+      },
+      provider_types: {
+        engine: 'MySQL', pk: 'id', notes: 'Define el esquema de comisión de los proveedores.',
+        cols: [['id', 'bigint (PK)', ''], ['name', 'string', 'Nombre del plan de comisión'], ['commission', 'double', 'Porcentaje o monto fijo'], ['type', 'string', 'percent | fixed'], ['status', 'tinyint', 'Activo/Inactivo']]
+      },
+      handyman_types: {
+        engine: 'MySQL', pk: 'id', notes: 'Define el esquema de comisión por técnico asignado.',
+        cols: [['id', 'bigint (PK)', ''], ['name', 'string', ''], ['commission', 'double', ''], ['type', 'string', 'percent | fixed'], ['status', 'tinyint', '']]
+      },
+      documents: {
+        engine: 'MySQL', pk: 'id', notes: 'Catálogo de documentos KYC requeridos para verificar proveedores.',
+        cols: [['id', 'bigint (PK)', ''], ['name', 'string', ''], ['is_required', 'tinyint', 'Obligatorio o no'], ['status', 'tinyint', '']]
+      },
+      provider_documents: {
+        engine: 'MySQL', pk: 'id', notes: 'Documentos subidos por cada proveedor (archivos en S3 vía Spatie MediaLibrary).',
+        cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['document_id', 'bigint (FK -> documents.id)', ''], ['is_verified', 'tinyint', '0=Pendiente, 1=Aprobado']]
+      },
+      user_blocks: {
+        engine: 'MySQL', pk: 'id', notes: 'Migración 2025_09_26. Bloqueos bidireccionales con índice único (blocker_id, blocked_id).',
+        cols: [['id', 'bigint (PK)', ''], ['blocker_id', 'bigint (FK -> users.id)', 'Quien bloquea'], ['blocked_id', 'bigint (FK -> users.id)', 'Usuario bloqueado'], ['reason', 'text', 'Motivo'], ['status', 'tinyint', '1=Activo']]
+      },
+      roles: {
+        engine: 'MySQL (Spatie)', pk: 'id', notes: '5 roles base: admin, demo_admin, user, provider, handyman. Conectado a permissions mediante role_has_permissions y model_has_roles.',
+        cols: [['id', 'bigint (PK)', ''], ['name', 'string', ''], ['guard_name', 'string', 'web']]
+      },
+      countries: { engine: 'MySQL', pk: 'id', notes: 'Catálogo de países y monedas.', cols: [['id', 'int (PK)', ''], ['code', 'string', ''], ['name', 'string', ''], ['dial_code', 'int', ''], ['currency_code / symbol', 'string', '']] },
+      states: { engine: 'MySQL', pk: 'id', notes: 'Departamentos / estados por país.', cols: [['id', 'int (PK)', ''], ['country_id', 'int (FK)', ''], ['name', 'string', '']] },
+      cities: { engine: 'MySQL', pk: 'id', notes: 'Ciudades por estado.', cols: [['id', 'int (PK)', ''], ['state_id', 'int (FK)', ''], ['name', 'string', '']] },
+
+      categories: { engine: 'MySQL', pk: 'id', notes: 'Categorías principales de servicios.', cols: [['id', 'bigint (PK)', ''], ['name', 'string', ''], ['color', 'string', ''], ['status', 'tinyint', ''], ['is_featured', 'tinyint', '']] },
+      sub_categories: { engine: 'MySQL', pk: 'id', notes: 'Subcategorías hijas con FK a categories.', cols: [['id', 'bigint (PK)', ''], ['category_id', 'bigint (FK -> categories.id)', ''], ['name', 'string', ''], ['status', 'tinyint', '']] },
+      services: {
+        engine: 'MySQL', pk: 'id', notes: 'Servicios del catálogo o creados dinámicamente para post_job. Soporta traducciones polimórficas.',
+        cols: [
+          ['id', 'bigint (PK)', ''], ['name', 'string', ''], ['category_id', 'bigint (FK -> categories.id)', ''],
+          ['subcategory_id', 'bigint', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['price', 'double', ''],
+          ['type', 'string', 'fixed | hourly | free'], ['visit_type', 'string', 'on_site | online'],
+          ['is_slot', 'tinyint', 'Usa horarios del proveedor'], ['service_request_status', 'string', 'approve | pending | reject'],
+          ['is_enable_advance_payment', 'tinyint', 'Habilita pago anticipado']
+        ]
+      },
+      service_addons: { engine: 'MySQL', pk: 'id', notes: 'Complementos adicionales contratables dentro de un servicio.', cols: [['id', 'bigint (PK)', ''], ['service_id', 'bigint', ''], ['name', 'string', ''], ['price', 'double', ''], ['qty', 'int', ''], ['status', 'tinyint', '']] },
+      service_packages: { engine: 'MySQL', pk: 'id', notes: 'Paquetes agrupados de múltiples servicios.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['category_id / subcategory_id', 'bigint', ''], ['price', 'double', ''], ['start_at / end_at', 'datetime', '']] },
+      package_service_mappings: { engine: 'MySQL', pk: 'id', notes: 'Tabla puente N:M entre servicios y paquetes.', cols: [['id', 'bigint (PK)', ''], ['service_id', 'bigint (FK)', ''], ['service_package_id', 'bigint (FK)', '']] },
+      provider_address_mappings: { engine: 'MySQL', pk: 'id', notes: 'Coordenadas geográficas usadas por Service::scopeLocationService (fórmula Haversine).', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['address', 'text', ''], ['latitude / longitude', 'text', ''], ['status', 'tinyint', '']] },
+      provider_service_address_mappings: { engine: 'MySQL', pk: 'id', notes: 'Asocia servicios con sedes/cobertura del proveedor.', cols: [['id', 'bigint (PK)', ''], ['service_id', 'bigint (FK)', ''], ['provider_address_id', 'bigint (FK)', '']] },
+      provider_slot_mappings: { engine: 'MySQL', pk: 'id', notes: 'Franjas horarias de atención por día de la semana.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK)', ''], ['days', 'string', 'mon..sun'], ['start_at / end_at', 'time', ''], ['status', 'boolean', '']] },
+      coupons: { engine: 'MySQL', pk: 'id', notes: 'Cupones de descuento vinculados a servicios vía coupon_service_mappings.', cols: [['id', 'bigint (PK)', ''], ['code', 'string', ''], ['discount_type', 'string', 'fixed | percentage'], ['discount', 'double', ''], ['expire_date', 'datetime', ''], ['status', 'tinyint', '']] },
+      service_reports: { engine: 'MySQL', pk: 'id', notes: 'Migración 2025_09_30. Reportes de usuarios sobre servicios inapropiados.', cols: [['id', 'bigint (PK)', ''], ['user_id', 'bigint (FK -> users.id)', ''], ['service_id', 'bigint (FK -> services.id)', ''], ['reason', 'text', ''], ['status', 'string', 'Estado revisión']] },
+
+      bookings: {
+        engine: 'MySQL', pk: 'id', notes: 'Entidad transaccional central. Calcula totales finales, impuestos JSON, descuentos y multas por cancelación.',
+        cols: [
+          ['id', 'bigint (PK)', ''], ['customer_id', 'bigint (FK -> users.id)', ''], ['provider_id', 'bigint (FK -> users.id)', ''],
+          ['service_id', 'bigint (FK -> services.id)', ''], ['post_request_id', 'bigint', 'Si viene de PostJob'],
+          ['payment_id', 'bigint', 'Referencia al pago'], ['status', 'string', '11 estados en booking_statuses'],
+          ['date / start_at / end_at', 'datetime', 'Cita e hitos'], ['duration_diff', 'string', 'Segundos acumulados'],
+          ['amount / total_amount', 'double', 'Precio base y total final'], ['advance_paid_amount', 'double', 'Anticipo pagado'],
+          ['final_total_tax', 'double', 'Impuestos calculados'], ['cancellation_charge_amount', 'double', 'Multa aplicada']
+        ]
+      },
+      booking_statuses: { engine: 'MySQL', pk: 'id', notes: 'Catálogo de 11 estados ordenados por sequence.', cols: [['id', 'bigint (PK)', ''], ['value', 'string', 'pending, accept, on_going, in_progress, hold, completed, ...'], ['label', 'string', ''], ['sequence', 'int', '']] },
+      booking_handyman_mappings: { engine: 'MySQL', pk: 'id', notes: 'Asignación de uno o varios técnicos (o el propio proveedor) a una reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK -> bookings.id)', ''], ['handyman_id', 'bigint (FK -> users.id)', '']] },
+      booking_address_mappings: { engine: 'MySQL', pk: 'id', notes: 'Snapshot de coordenadas/dirección de la reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK)', ''], ['address', 'text', ''], ['latitude / longitude', 'text', '']] },
+      booking_coupon_mappings: { engine: 'MySQL', pk: 'id', notes: 'Snapshot del cupón aplicado en la reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint', ''], ['code', 'string', ''], ['discount', 'double', ''], ['discount_type', 'string', '']] },
+      booking_service_addon_mapping: { engine: 'MySQL', pk: 'id', notes: 'Addons seleccionados dentro de la reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint', ''], ['service_addon_id', 'bigint', ''], ['name', 'string', ''], ['price', 'double', '']] },
+      booking_package_mappings: { engine: 'MySQL', pk: 'id', notes: 'Snapshot de paquete contratado en la reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint', ''], ['service_package_id', 'bigint', ''], ['price', 'double', ''], ['services', 'json', '']] },
+      booking_extra_charges: { engine: 'MySQL', pk: 'id', notes: 'Cargos adicionales añadidos durante la ejecución en campo.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK)', ''], ['title', 'text', ''], ['price', 'double', ''], ['qty', 'double', '']] },
+      booking_activities: { engine: 'MySQL', pk: 'id', notes: 'Bitácora auditable de transiciones de estado y eventos de reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint', ''], ['datetime', 'timestamp', ''], ['activity_type', 'string', ''], ['activity_message', 'text', '']] },
+      service_proofs: { engine: 'MySQL', pk: 'id', notes: 'Evidencia fotográfica dual personalizada en Solutoday (CLIENTE al crear y PROVIDER al cerrar).', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK)', ''], ['service_id', 'bigint (FK)', ''], ['user_id', 'bigint (FK)', ''], ['type', 'string', 'CLIENTE | PROVIDER'], ['title / description', 'string', 'Adjuntos vía Spatie Media']] },
+      live_locations: { engine: 'MySQL', pk: 'id', notes: 'La API actualiza por booking_id y cachea la lectura 30 segundos. El esquema no garantiza unicidad por reserva.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint', ''], ['latitude', 'double', ''], ['longitude', 'double', ''], ['updated_at', 'timestamp', '']] },
+      booking_ratings: { engine: 'MySQL', pk: 'id', notes: 'Reseña del cliente al servicio.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK)', ''], ['service_id', 'bigint (FK)', ''], ['customer_id', 'bigint', ''], ['rating', 'double', ''], ['review', 'longtext', '']] },
+      handyman_ratings: { engine: 'MySQL', pk: 'id', notes: 'Reseña del cliente al técnico asignado.', cols: [['id', 'bigint (PK)', ''], ['booking_id', 'bigint (FK)', ''], ['handyman_id', 'bigint (FK)', ''], ['customer_id', 'bigint (FK)', ''], ['rating', 'double', '']] },
+
+      payments: { engine: 'MySQL', pk: 'id', notes: 'booking_id es FK y admite varios pagos por reserva. El finalizador bloquea el pago y su reserva.', cols: [['id', 'bigint (PK)', ''], ['customer_id', 'bigint (FK)', ''], ['booking_id', 'bigint (FK)', ''], ['payment_type', 'string', 'cash | transacción | stripe | wallet | ...'], ['payment_status', 'string', 'paid | pending | advanced_paid | Advanced Refund'], ['total_amount', 'double', ''], ['txn_id', 'string', '']] },
+      payment_histories: { engine: 'MySQL', pk: 'id', notes: 'Cadena de custodia del dinero (customer_send_provider -> pending_by_provider -> approved_by_provider -> admin).', cols: [['id', 'bigint (PK)', ''], ['payment_id', 'bigint (FK)', ''], ['booking_id', 'bigint (FK)', ''], ['parent_id', 'bigint', ''], ['sender_id / receiver_id', 'bigint', ''], ['action / status', 'string', ''], ['total_amount', 'double', '']] },
+      commission_earnings: { engine: 'MySQL', pk: 'id', notes: 'Desglose de reparto calculado en EarningTrait para admin, provider y handyman.', cols: [['id', 'bigint (PK)', ''], ['employee_id', 'bigint', ''], ['booking_id', 'bigint', ''], ['user_type', 'string', 'admin | provider | handyman'], ['commission_amount', 'double', ''], ['commission_status', 'string', 'pending | unpaid | paid']] },
+      wallets: { engine: 'MySQL', pk: 'id', notes: 'user_id es una FK nullable y no única. El débito del finalizador puede deshabilitar al proveedor activo si el saldo queda en cero o menos.', cols: [['id', 'bigint (PK)', ''], ['user_id', 'bigint (FK -> users.id)', ''], ['title', 'text', ''], ['amount', 'double', 'Saldo actual'], ['status', 'tinyint', '']] },
+      wallet_histories: { engine: 'MySQL', pk: 'id', notes: 'Movimientos de crédito y débito referenciados por usuario. No contienen una FK a wallets.', cols: [['id', 'bigint (PK)', ''], ['user_id', 'bigint', ''], ['datetime', 'timestamp', ''], ['activity_type', 'string', 'withdraw_money | wallet_top_up | ...'], ['activity_message', 'text', ''], ['activity_data', 'text (JSON)', '']] },
+      banks: { engine: 'MySQL', pk: 'id', notes: 'Cuentas bancarias para retiros y payouts.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['bank_name / account_no', 'string', ''], ['stripe_account', 'string', ''], ['status', 'tinyint', '']] },
+      withdraw_money: { engine: 'MySQL', pk: 'id', notes: 'Solicitudes de retiro de saldo de wallet.', cols: [['id', 'bigint (PK)', ''], ['user_id', 'bigint', ''], ['bank_id', 'bigint', ''], ['amount', 'double', ''], ['status', 'string', '']] },
+      provider_payouts: { engine: 'MySQL', pk: 'id', notes: 'Pagos/liquidaciones efectuadas a proveedores.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK -> users.id)', ''], ['payment_method', 'text', ''], ['amount', 'double', ''], ['paid_date', 'datetime', '']] },
+      handyman_payouts: { engine: 'MySQL', pk: 'id', notes: 'Pagos efectuados a técnicos.', cols: [['id', 'bigint (PK)', ''], ['handyman_id', 'bigint (FK -> users.id)', ''], ['payment_method', 'text', ''], ['amount', 'double', ''], ['paid_date', 'datetime', '']] },
+      taxes: { engine: 'MySQL', pk: 'id', notes: 'Incluye el registro "Administracion" usado por ProviderPaymentFinalizer para debitar comisión en pagos cash/transacción.', cols: [['id', 'bigint (PK)', ''], ['title', 'string', 'Ej. Administracion'], ['type', 'string', 'percent | fixed'], ['value', 'double', ''], ['status', 'tinyint', '']] },
+      plans: { engine: 'MySQL', pk: 'id', notes: 'Planes de suscripción para proveedores.', cols: [['id', 'bigint (PK)', ''], ['title', 'string', ''], ['identifier', 'string', 'ID RevenueCat / Play / AppStore'], ['type', 'string', ''], ['amount', 'double', '']] },
+      provider_subscriptions: { engine: 'MySQL', pk: 'id', notes: 'Suscripciones contratadas (vigiladas diariamente por check:subscription).', cols: [['id', 'bigint (PK)', ''], ['plan_id', 'bigint (FK -> plans.id)', ''], ['user_id', 'bigint', ''], ['start_at / end_at', 'datetime', ''], ['status', 'string', 'active | inactive | cancelled']] },
+      subscription_transactions: { engine: 'MySQL', pk: 'id', notes: 'Recibos de pago de suscripciones.', cols: [['id', 'bigint (PK)', ''], ['subscription_plan_id', 'bigint (FK)', ''], ['user_id', 'bigint', ''], ['amount', 'double', ''], ['payment_status', 'string', '']] },
+
+      post_job_requests: { engine: 'MySQL', pk: 'id', notes: 'Solicitudes personalizadas publicadas por clientes.', cols: [['id', 'bigint (PK)', ''], ['title / description', 'string', ''], ['customer_id', 'bigint (FK -> users.id)', ''], ['provider_id', 'bigint', 'Proveedor adjudicado'], ['price / job_price', 'double', ''], ['status', 'string', 'requested | accepted | assigned | cancelled'], ['date', 'datetime', '']] },
+      post_job_service_mappings: { engine: 'MySQL', pk: 'id', notes: 'Servicios asociados a una solicitud Post-Job.', cols: [['id', 'bigint (PK)', ''], ['post_request_id', 'bigint (FK)', ''], ['service_id', 'bigint (FK)', '']] },
+      post_job_bids: { engine: 'MySQL', pk: 'id', notes: 'Migración 2026_06_15 añade restricción única de puja.', cols: [['id', 'bigint (PK)', ''], ['post_request_id', 'bigint (FK)', ''], ['provider_id', 'bigint (FK)', ''], ['customer_id', 'bigint (FK)', ''], ['price', 'double', ''], ['duration', 'string', '']] },
+      promotional_banners: { engine: 'MySQL', pk: 'id', notes: 'Banners pagados por proveedores para mostrarse en el home.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK)', ''], ['service_id', 'bigint (FK)', ''], ['status', 'enum', 'pending | accepted | rejected'], ['start_date / end_date', 'date', ''], ['total_amount', 'decimal', ''], ['payment_status', 'enum', '']] },
+      banner_payments: { engine: 'MySQL', pk: 'id', notes: 'Pagos de banners promocionales.', cols: [['id', 'bigint (PK)', ''], ['provider_id', 'bigint (FK)', ''], ['banner_id', 'bigint (FK)', ''], ['total_amount', 'decimal', ''], ['payment_status', 'enum', '']] },
+      help_desk: { engine: 'MySQL', pk: 'id', notes: 'Tickets de soporte HelpDesk.', cols: [['id', 'bigint (PK)', ''], ['employee_id', 'bigint', 'Usuario solicitante'], ['subject / description', 'string', ''], ['status', 'string', 'open | closed']] },
+      help_desk_activity_mapping: { engine: 'MySQL', pk: 'id', notes: 'Hilo de mensajes y respuestas del ticket.', cols: [['id', 'bigint (PK)', ''], ['helpdesk_id', 'bigint', ''], ['sender_id / receiver_id', 'bigint', ''], ['messages', 'longtext', ''], ['activity_type', 'string', '']] },
+      blogs: { engine: 'MySQL', pk: 'id', notes: 'Artículos publicados por admin o proveedores.', cols: [['id', 'bigint (PK)', ''], ['author_id', 'bigint', ''], ['title', 'string', ''], ['total_views', 'double', ''], ['status', 'tinyint', '']] },
+
+      fs_users: { engine: 'Cloud Firestore', pk: 'doc(uid)', notes: 'Colección raíz users/{uid}. Sincronizada desde ambas apps Flutter usando el UID de Firebase Auth.', cols: [['uid', 'string (Doc ID)', 'Enlazado a MySQL users.uid'], ['id', 'int', 'MySQL user_id'], ['email / first_name / last_name', 'string', 'Perfil chat'], ['profile_image', 'string', 'URL imagen']] },
+      fs_contact: { engine: 'Cloud Firestore', pk: 'doc(contactUid)', notes: 'Subcolección users/{uid}/contact/{contactUid} para la lista de chats recientes.', cols: [['uid', 'string', 'UID del contacto'], ['addedOn / lastMessageTime', 'timestamp', 'Ordenamiento de bandeja'], ['isOnline', 'int', '0=Online, 1=Offline']] },
+      fs_messages: { engine: 'Cloud Firestore', pk: 'doc(messageId)', notes: 'Colección espejo messages/{senderId}/{receiverId} y messages/{receiverId}/{senderId}.', cols: [['uid', 'string', 'ID del mensaje'], ['senderId / receiverId', 'string', 'UIDs Firebase'], ['message / messageType', 'string', 'TEXT | IMAGE | VIDEO | AUDIO | Files'], ['photoUrl', 'string', 'URL en Firebase Storage'], ['isMessageRead', 'boolean', 'Control de no leídos'], ['createdAt', 'timestamp', '']] },
+      fs_storage: { engine: 'Firebase Storage', pk: 'chat_files/*', notes: 'Bucket de Firebase Storage para archivos multimedia del chat (máx 5 MB).', cols: [['chat_files/{file}', 'blob', 'jpg, png, webp, pdf, txt, mp4, mp3']] }
+    };
+
+    let currentDomain = 'core';
+    let selectedTable = 'users';
+
+    function selectDomain(domId) {
+      currentDomain = domId;
+      document.querySelectorAll('.dom-btn').forEach(b => {
+        b.className = 'dom-btn px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] transition';
+      });
+      document.getElementById('dom-' + domId).className = 'dom-btn dom-btn-active px-3.5 py-2 rounded-lg text-xs font-semibold border border-[var(--border)] transition';
+
+      const dom = DOMAINS[domId];
+      if (!dom.tables.includes(selectedTable)) {
+        selectedTable = dom.tables[0];
+      }
+      renderSchema();
+      renderInspector();
+    }
+
+    function selectTable(tName) {
+      selectedTable = tName;
+      renderSchema();
+      renderInspector();
+    }
+
+    function renderSchema() {
+      const dom = DOMAINS[currentDomain];
+      document.getElementById('dom-title').textContent = dom.title;
+      const q = document.getElementById('er-search').value.trim().toLowerCase();
+
+      const colsCount = dom.tables.length <= 4 ? 2 : 3;
+      const boxW = 230;
+      const boxH = 82;
+      const gapX = 36;
+      const gapY = 44;
+      const startX = 28;
+      const startY = 26;
+      const rows = Math.ceil(dom.tables.length / colsCount);
+      const svgW = startX * 2 + colsCount * boxW + (colsCount - 1) * gapX;
+      const svgH = startY * 2 + rows * boxH + (rows - 1) * gapY;
+
+      const coords = {};
+      dom.tables.forEach((t, idx) => {
+        const c = idx % colsCount;
+        const r = Math.floor(idx / colsCount);
+        coords[t] = {
+          x: startX + c * (boxW + gapX),
+          y: startY + r * (boxH + gapY),
+          cx: startX + c * (boxW + gapX) + boxW / 2,
+          cy: startY + r * (boxH + gapY) + boxH / 2
+        };
+      });
+
+      let edgesSvg = '';
+      dom.edges.forEach(e => {
+        const a = coords[e.from];
+        const b = coords[e.to];
+        if (!a || !b) return;
+        const isRel = selectedTable === e.from || selectedTable === e.to;
+        const color = e.type === 'sql' ? '#00C6A3' : '#f59e0b';
+        const dash = e.type === 'sql' ? '' : 'stroke-dasharray="5 4"';
+        const mx = (a.cx + b.cx) / 2;
+        const my = (a.cy + b.cy) / 2;
+        edgesSvg += `
+          <line x1="${a.cx}" y1="${a.cy}" x2="${b.cx}" y2="${b.cy}" stroke="${color}" stroke-width="${isRel ? 2.5 : 1.4}" ${dash} opacity="${isRel ? 0.95 : 0.35}" />
+          ${isRel ? `<rect x="${mx - 28}" y="${my - 10}" width="56" height="18" rx="4" fill="var(--card)" stroke="${color}" stroke-width="1" /><text x="${mx}" y="${my + 3}" text-anchor="middle" fill="${color}" font-size="12" font-weight="600">${e.label}</text>` : ''}
+        `;
+      });
+
+      let boxesSvg = '';
+      dom.tables.forEach(tName => {
+        const t = TABLES[tName];
+        const p = coords[tName];
+        const isSel = tName === selectedTable;
+        const match = !q || tName.toLowerCase().includes(q) || t.cols.some(c => c[0].toLowerCase().includes(q) || c[1].toLowerCase().includes(q));
+        const previewCols = t.cols.slice(0, 3).map(c => c[0]).join(', ');
+
+        boxesSvg += `
+          <g onclick="selectTable('${tName}')" class="er-box ${isSel ? 'er-box-selected' : ''}" opacity="${match ? 1 : 0.2}">
+            <rect x="${p.x}" y="${p.y}" width="${boxW}" height="${boxH}" rx="10" fill="var(--background)" stroke="var(--border)" stroke-width="1.6" />
+            <rect x="${p.x}" y="${p.y}" width="${boxW}" height="26" rx="10" fill="var(--secondary)" />
+            <text x="${p.x + 10}" y="${p.y + 17}" fill="var(--foreground)" font-size="12" font-weight="700">${tName}</text>
+            <text x="${p.x + 10}" y="${p.y + 44}" fill="var(--primary)" font-size="12" font-weight="600">PK: ${t.pk} • ${t.cols.length} campos</text>
+            <text x="${p.x + 10}" y="${p.y + 64}" fill="var(--muted-foreground)" font-size="12">${previewCols.length > 31 ? previewCols.slice(0, 29) + '…' : previewCols}</text>
+          </g>
+        `;
+      });
+
+      document.getElementById('er-svg-container').innerHTML = `
+        <svg viewBox="0 0 ${svgW} ${svgH}" class="w-full h-auto block">
+          ${edgesSvg}
+          ${boxesSvg}
+        </svg>
+      `;
+
+      document.getElementById('table-pills').innerHTML = dom.tables.map(tName => `
+        <button onclick="selectTable('${tName}')" class="px-2 py-1 rounded text-xs border transition ${tName === selectedTable ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]' : 'bg-[var(--background)] border-[var(--border)] text-[var(--foreground)]'}">${tName}</button>
+      `).join('');
+    }
+
+    function renderInspector() {
+      const t = TABLES[selectedTable];
+      if (!t) return;
+      const related = DOMAINS[currentDomain].edges.filter(e => e.from === selectedTable || e.to === selectedTable);
+
+      document.getElementById('table-inspector').innerHTML = `
+        <div class="flex items-center justify-between gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--primary)] text-[var(--primary-foreground)]">${t.engine}</span>
+          <span class="text-xs text-[var(--muted-foreground)]">PK: <code>${t.pk}</code></span>
+        </div>
+        <h2 class="text-lg font-bold text-[var(--foreground)]">${selectedTable}</h2>
+        <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">${t.notes}</p>
+
+        <div class="space-y-1.5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Columnas / Campos clave</div>
+          <div class="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+            ${t.cols.map(([col, type, desc]) => `
+              <div class="p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] text-xs">
+                <div class="flex items-center justify-between gap-2">
+                  <code class="font-bold text-[var(--foreground)]">${col}</code>
+                  <span class="text-[var(--primary)] font-medium">${type}</span>
+                </div>
+                ${desc ? `<div class="text-[var(--muted-foreground)] mt-0.5">${desc}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        ${related.length ? `
+          <div class="space-y-1">
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Relaciones en este dominio</div>
+            <div class="space-y-1 text-xs">
+              ${related.map(r => {
+                const other = r.from === selectedTable ? r.to : r.from;
+                return `<div class="flex items-center justify-between p-1.5 rounded bg-[var(--background)] border border-[var(--border)]">
+                  <span><code>${r.from}</code> → <code>${r.to}</code></span>
+                  <button onclick="selectTable('${other}')" class="text-[var(--primary)] font-semibold underline">${r.label}</button>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    selectDomain('core');
+  </script>
+  </div>
+
+  <script>
+    function getSystemScheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function toggleColorScheme() {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const current = meta.content === 'dark' || meta.content === 'light' ? meta.content : getSystemScheme();
+      const target = current === 'dark' ? 'light' : 'dark';
+      const system = getSystemScheme();
+      try {
+        if (target === system) {
+          localStorage.removeItem('color-scheme');
+          meta.content = 'light dark';
+        } else {
+          localStorage.setItem('color-scheme', target);
+          meta.content = target;
+        }
+      } catch (e) {
+        meta.content = target;
+      }
+    }
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme') {
+        document.querySelector('meta[name="color-scheme"]').content = e.newValue ?? 'light dark';
+      }
+    });
+  </script>
+
+</body>
+</html>
