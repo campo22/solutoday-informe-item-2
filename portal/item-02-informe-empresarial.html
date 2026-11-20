@@ -9,10 +9,10 @@
       document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
     } catch (e) {}
   </script>
-  <title>Solutoday — Informe Empresarial del Ítem 2 (Seguridad Web y Backend Unificado)</title>
+  <title>Solutoday — Informe Empresarial · Ítem 2 (Seguridad Web y Backend Unificado)</title>
   <link rel="stylesheet" href="./portal.css" />
   <style>
-    /* Extensiones específicas del Informe Empresarial Ítem 2 sobre el sistema de diseño portal.css */
+    /* Extensiones editoriales del Informe Empresarial Ítem 2 sobre portal.css */
     .ba-grid {
       display: grid;
       grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -23,11 +23,11 @@
       .ba-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     .ba-box {
-      padding: 0.72rem 0.85rem;
+      padding: 0.75rem 0.9rem;
       border-radius: 0.65rem;
       border: 1px solid var(--border);
-      font-size: 0.78rem;
-      line-height: 1.5;
+      font-size: 0.79rem;
+      line-height: 1.52;
     }
     .ba-before {
       background: color-mix(in oklab, var(--accent-rose) 6%, var(--card));
@@ -49,15 +49,15 @@
     .ba-after .ba-tag { color: var(--accent-emerald); }
 
     .solution-card {
-      padding: 1.15rem 1.2rem;
-      border-radius: 0.9rem;
+      padding: 1.2rem 1.25rem;
+      border-radius: 0.95rem;
       border: 1px solid var(--border);
       border-inline-start: 4px solid var(--accent-teal);
       background: var(--card);
       box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.5rem;
       transition: border-color 0.16s ease, box-shadow 0.16s ease;
     }
     .solution-card[data-cat="ciber"] { border-inline-start-color: var(--accent-rose); }
@@ -69,6 +69,57 @@
       .solution-card:hover { translate: 0 -2px; }
     }
 
+    .flow-steps-box {
+      margin-top: 0.2rem;
+      padding: 0.75rem 0.95rem;
+      border-radius: 0.65rem;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+    }
+    .flow-steps-title {
+      font-size: 0.69rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-indigo);
+      margin-bottom: 0.35rem;
+    }
+    .flow-steps-list {
+      margin: 0;
+      padding-left: 1.15rem;
+      list-style: decimal;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      color: var(--muted-foreground);
+    }
+    .flow-steps-list strong { color: var(--foreground); }
+    .solution-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+      margin-top: auto;
+      border-top: 1px dashed var(--border);
+    }
+    .archify-open-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.34rem 0.78rem;
+      border-radius: 0.5rem;
+      color: #ffffff;
+      background: linear-gradient(135deg var(--in-oklch), #0f766e, #4338ca);
+      border: 1px solid #0f766e;
+    }
+    .archify-open-pill:hover { opacity: 0.92; }
+
     .pr-link-pill {
       display: inline-flex;
       align-items: center;
@@ -76,7 +127,7 @@
       font-size: 0.72rem;
       font-weight: 700;
       text-decoration: none;
-      padding: 0.18rem 0.6rem;
+      padding: 0.2rem 0.62rem;
       border-radius: 999px;
       color: var(--accent-indigo);
       background: color-mix(in oklab, var(--accent-indigo) 11%, var(--card));
@@ -137,6 +188,54 @@
     .math-box.math-total .math-val { color: var(--primary); }
     .math-lbl { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 0.18rem; font-weight: 600; }
 
+    /* Pipeline visual de 5 pasos para migración de BD */
+    .db-pipeline {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .db-pipeline { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+    .db-step {
+      padding: 0.95rem 0.9rem;
+      border-radius: 0.85rem;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent-teal);
+      background: color-mix(in oklab, var(--accent-teal) 4%, var(--card));
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .db-step:nth-child(2) { border-top-color: var(--accent-indigo); background: color-mix(in oklab, var(--accent-indigo) 4%, var(--card)); }
+    .db-step:nth-child(3) { border-top-color: var(--accent-violet); background: color-mix(in oklab, var(--accent-violet) 4%, var(--card)); }
+    .db-step:nth-child(4) { border-top-color: var(--accent-emerald); background: color-mix(in oklab, var(--accent-emerald) 4%, var(--card)); }
+    .db-step:nth-child(5) { border-top-color: var(--accent-amber); background: color-mix(in oklab, var(--accent-amber) 4%, var(--card)); }
+    .db-step-num {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-indigo);
+    }
+    .db-step-title { font-size: 0.85rem; font-weight: 800; color: var(--foreground); }
+    .db-step-desc { font-size: 0.75rem; color: var(--muted-foreground); line-height: 1.45; }
+
+    .cmd-block {
+      background: #0b1220;
+      color: #e2e8f0;
+      border: 1px solid #1e293b;
+      border-radius: 0.8rem;
+      padding: 1rem 1.15rem;
+      font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.65;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .cmd-comment { color: #94a3b8; }
+    .cmd-kw { color: #5eead4; font-weight: 600; }
+
     /* Barras de garantía de calidad */
     .qa-bar-track {
       height: 10px;
@@ -185,7 +284,7 @@
       gap: 0.2rem;
     }
 
-    /* Banner informativo / aviso fuera de alcance */
+    /* Banner informativo */
     .notice-banner {
       padding: 1rem 1.15rem;
       border-radius: 0.85rem;
@@ -200,19 +299,26 @@
       border-inline-start-color: var(--accent-teal);
       background: color-mix(in oklab, var(--accent-teal) 7%, var(--card));
     }
+    .notice-banner-rose {
+      border-color: color-mix(in oklab, var(--accent-rose) 32%, var(--border));
+      border-inline-start-color: var(--accent-rose);
+      background: color-mix(in oklab, var(--accent-rose) 6%, var(--card));
+    }
 
     /* Etiquetas responsivas por tabla usando CSS variables (modern-web-guidance: responsive-table) */
     .table-pr { --label-2: "Corte"; --label-3: "Qué resuelve para Solutoday"; --label-4: "Evidencia / Commit"; }
+    .table-db { --label-2: "PR"; --label-3: "Propósito en la operación"; --label-4: "Tipo"; }
     .table-apps { --label-2: "Estado actual"; --label-3: "Qué necesita actualizar la app"; }
-    .table-script { --label-2: "Qué explicar y mostrar"; }
 
     @container (width < 600px) {
       .table-pr td:nth-child(2)::before { content: var(--label-2) ": "; }
       .table-pr td:nth-child(3)::before { content: var(--label-3) ": "; }
       .table-pr td:nth-child(4)::before { content: var(--label-4) ": "; }
+      .table-db td:nth-child(2)::before { content: var(--label-2) ": "; }
+      .table-db td:nth-child(3)::before { content: var(--label-3) ": "; }
+      .table-db td:nth-child(4)::before { content: var(--label-4) ": "; }
       .table-apps td:nth-child(2)::before { content: var(--label-2) ": "; }
       .table-apps td:nth-child(3)::before { content: var(--label-3) ": "; }
-      .table-script td:nth-child(2)::before { content: var(--label-2) ": "; }
     }
 
     /* Modal nativo <dialog> (modern-web-guidance: dialog) */
@@ -262,10 +368,11 @@
     }
     .dialog-foot {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 1.2rem;
+      gap: 0.75rem;
+      padding: 0.8rem 1.2rem;
       border-top: 1px solid var(--border);
       font-size: 0.8rem;
       color: var(--muted-foreground);
@@ -274,20 +381,15 @@
     /* Utilidades locales */
     .grid-2 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
-    .grid-4 { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; }
     @media (min-width: 768px) {
       .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (min-width: 1024px) {
-      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
     .section-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 1rem;
-      padding: 1.4rem;
+      padding: 1.45rem;
       box-shadow: var(--shadow-card);
     }
     .section-kicker {
@@ -298,16 +400,16 @@
       color: var(--accent-teal);
     }
     .section-title {
-      font-size: 1.15rem;
+      font-size: 1.18rem;
       font-weight: 800;
       color: var(--foreground);
       margin-top: 0.15rem;
     }
     .section-lead {
-      font-size: 0.86rem;
+      font-size: 0.87rem;
       color: var(--muted-foreground);
       margin-top: 0.35rem;
-      max-width: 58rem;
+      max-width: 60rem;
     }
     .stack-sm { display: flex; flex-direction: column; gap: 0.65rem; }
     .stack-md { display: flex; flex-direction: column; gap: 1rem; }
@@ -325,7 +427,7 @@
 <body class="min-h-screen">
   <header class="site-header no-print">
     <div class="header-inner">
-      <a href="./index.html" class="portal-brand">
+      <a href="./item-02-informe-empresarial.html" class="portal-brand">
         <span class="portal-brand-mark" aria-hidden="true">S</span>
         <span class="portal-brand-title">Solutoday</span>
         <span class="portal-brand-ver">Ítem 2 · develop@cd7cf7d</span>
@@ -339,10 +441,11 @@
           <li><a href="./index.html" class="portal-link">Acta Base</a></li>
           <li><a href="./item-02-informe-empresarial.html" class="portal-link" aria-current="page">Informe Ítem 2</a></li>
           <li><a href="#soluciones" class="portal-link">Antes vs. Después</a></li>
-          <li><a href="#diagramas-archify" class="portal-link archify-nav-badge">Diagramas</a></li>
+          <li><a href="#diagramas-archify" class="portal-link archify-nav-badge">Diagramas (10)</a></li>
+          <li><a href="#control-db" class="portal-link">Base de Datos</a></li>
           <li><a href="#prs" class="portal-link">PRs (8)</a></li>
+          <li><a href="#calidad" class="portal-link">Calidad</a></li>
           <li><a href="#apps-moviles" class="portal-link">Apps Móviles</a></li>
-          <li><a href="#calidad" class="portal-link">Calidad &amp; Tests</a></li>
         </ul>
       </nav>
 
@@ -357,33 +460,33 @@
   </header>
 
   <main class="max-w-7xl mx-auto p-4 md:p-6 stack-lg" style="padding: 1.5rem;">
-    <!-- HERO EMPRESARIAL -->
+    <!-- HERO EJECUTIVO -->
     <header class="hero-section">
       <div class="eyebrow">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Informe Empresarial · Ítem 2 · Seguridad Web y Backend Unificado</span>
+        <span>Informe Ejecutivo de Entrega · Ítem 2 · Seguridad Web y Backend Unificado</span>
       </div>
-      <h1 class="hero-title">Seguridad Web, Control de Acceso y <span class="hero-highlight">Blindaje Financiero</span></h1>
+      <h1 class="hero-title">Seguridad Web, Gobierno de Base de Datos y <span class="hero-highlight">Blindaje Financiero</span></h1>
       <p class="hero-subtitle">
-        Resumen ejecutivo preparado para que <strong>Yoider</strong> presente a <strong>Solutoday</strong> qué riesgos críticos existían en el código base, cómo se resolvieron de forma segura y responsable en <code>web-v2</code>, qué pruebas garantizan la calidad del trabajo y qué ajustes requieren las aplicaciones móviles fuera de este alcance.
+        Documentación empresarial consolidada para <strong>Solutoday</strong> sobre las mejoras de ciberseguridad, cierre de rutas expuestas, control de migraciones MySQL, protección de cuentas y permisos, cálculo de reservas y pagos atómicos implementadas e integradas en <code>web-v2</code>.
       </p>
 
       <div class="meta-strip">
         <div>
-          <div class="meta-label">Alcance Contratado (Ítem 2)</div>
+          <div class="meta-label">Alcance del Ítem 2</div>
           <div class="meta-value">Web, Panel y Backend API (<code>web-v2</code>)</div>
         </div>
         <div>
-          <div class="meta-label">Estado del Código</div>
-          <div class="meta-value" style="color: var(--accent-emerald);">Fusionado en <code>develop</code> (<code>cd7cf7d</code>)</div>
+          <div class="meta-label">Versión Integrada</div>
+          <div class="meta-value" style="color: var(--accent-emerald);"><code>origin/develop @ cd7cf7d</code></div>
         </div>
         <div>
           <div class="meta-label">Estado de Despliegue</div>
-          <div class="meta-value" style="color: var(--accent-amber);">Sin desplegar · pendiente QA y aceptación</div>
+          <div class="meta-value" style="color: var(--accent-amber);">En <code>develop</code> · aún sin desplegar</div>
         </div>
         <div>
           <div class="meta-label">Fecha de Corte</div>
-          <div class="meta-value">19 de noviembre de 2026</div>
+          <div class="meta-value">20 de noviembre de 2026</div>
         </div>
       </div>
     </header>
@@ -399,60 +502,60 @@
         <div class="kpi-desc">Pruebas automatizadas y aserciones aprobadas (0 fallos, 0 errores)</div>
       </div>
       <div class="kpi-cell">
-        <div class="kpi-num">1 Débito</div>
-        <div class="kpi-desc">Pago de <strong>$85.250</strong> verificado en Chrome + MySQL tras reintento por corte de red</div>
+        <div class="kpi-num">5 Migraciones</div>
+        <div class="kpi-desc">Esquemas incrementales en MySQL sin operaciones destructivas</div>
       </div>
       <div class="kpi-cell">
-        <div class="kpi-num">0 Incidentes</div>
-        <div class="kpi-desc">Riesgos identificados y cerrados en código (sin afirmar incidentes en producción)</div>
+        <div class="kpi-num">1 Débito</div>
+        <div class="kpi-desc">Pago de <strong>$85.250</strong> verificado tras reintento por corte de red</div>
       </div>
     </section>
 
-    <!-- RESUMEN EJECUTIVO PARA DIRECCIÓN -->
-    <section class="section-card stack-md print-card" aria-label="Resumen para dirección">
+    <!-- 01 · RESUMEN EJECUTIVO -->
+    <section class="section-card stack-md print-card" aria-label="Resumen ejecutivo">
       <div>
-        <div class="section-kicker">01 · Resumen para Solutoday</div>
-        <h2 class="section-title">¿Por qué era urgente esta intervención y qué gana la empresa?</h2>
+        <div class="section-kicker">01 · Resumen Ejecutivo</div>
+        <h2 class="section-title">¿Por qué se realizó esta intervención y qué protege hoy en Solutoday?</h2>
         <p class="section-lead">
-          Antes del Ítem 2, el sistema confiaba demasiado en lo que enviaba el teléfono o el navegador del usuario (roles, precios, estados de cuenta y credenciales de terceros) y conservaba rutas de mantenimiento peligrosas. Hoy, las decisiones críticas las toma y verifica el servidor de Solutoday.
+          La revisión inicial de la línea base detectó riesgos críticos en código (sin afirmar incidentes previos en producción): rutas de mantenimiento abiertas, credenciales de terceros enviadas a los dispositivos, confianza excesiva en datos del cliente (roles, precios, estados) y falta de protección contra cobros duplicados. El Ítem 2 trasladó todas esas decisiones críticas al servidor.
         </p>
       </div>
       <div class="grid-3">
         <div class="phase-card phase-0">
-          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">LO CRÍTICO QUE HABÍA</div>
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">LO CRÍTICO ENCONTRADO</div>
           <p style="font-size: 0.82rem; color: var(--muted-foreground);">
-            Rutas capaces de reiniciar la base de datos, credenciales de chat e IA expuestas al cliente, registros que aceptaban roles/estados sin control, acceso cruzado a reservas ajenas y pagos vulnerables a montos alterados o cobros duplicados.
+            Rutas capaces de reiniciar la base de datos, credenciales de chat e IA entregadas al cliente, registros que aceptaban roles sin control, acceso cruzado a reservas ajenas y pagos vulnerables a montos alterados o dobles débitos.
           </p>
         </div>
         <div class="phase-card phase-1">
           <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">SOLUCIÓN RESPONSABLE</div>
           <p style="font-size: 0.82rem; color: var(--muted-foreground);">
-            Se cerraron las rutas peligrosas, las claves quedaron privadas en el servidor, se protegió cada operación por rol y pertenencia, se calculan los totales desde catálogo en el backend y los pagos corren en transacciones MySQL idempotentes.
+            Se eliminaron las rutas peligrosas, se estableció control de BD por migraciones CLI, las claves quedaron en el servidor, se protegió cada operación por rol y titularidad, y los pagos corren en transacciones MySQL idempotentes.
           </p>
         </div>
         <div class="phase-card phase-2">
-          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">TRABAJO GARANTIZADO</div>
+          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">CALIDAD VERIFICADA</div>
           <p style="font-size: 0.82rem; color: var(--muted-foreground);">
-            Cada cambio fue protegido con pruebas automatizadas sobre MySQL aislado (<strong>123 pruebas / 703 aserciones</strong>), recorridos reales en navegador Chrome y emulador Android, y documentación trazable por Pull Request.
+            Todo el paquete integrado superó <strong>123 pruebas automatizadas y 703 aserciones sin fallos</strong> sobre MySQL aislado, además de recorridos reales en navegador Chrome y emulador Android, con evidencia por Pull Request.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- ANTES VS DESPUÉS (INTERACTIVO CON FILTROS) -->
+    <!-- 02 · COMPARATIVO ANTES VS DESPUÉS (9 SOLUCIONES CON FLUJO Y DIAGRAMA) -->
     <section id="soluciones" class="section-card stack-md print-card" aria-label="Soluciones implementadas antes y después">
       <div class="row-between">
         <div>
-          <div class="section-kicker">02 · Comparativo Antes vs. Después</div>
-          <h2 class="section-title">Qué había, qué afectaba y cómo quedó resuelto</h2>
+          <div class="section-kicker">02 · Soluciones Implementadas (Antes vs. Después)</div>
+          <h2 class="section-title">Qué había antes, qué afectaba y cómo funciona la solución paso a paso</h2>
           <p class="section-lead">
-            Filtra por área para revisar cada riesgo encontrado en el código original, su impacto potencial para la operación y la solución implementada con su PR de evidencia.
+            Cada solución incluye su motivación de negocio, la comparación clara entre el riesgo anterior y el estado actual, el flujo paso a paso y su acceso directo al diagrama interactivo Archify y Pull Request en GitHub.
           </p>
         </div>
         <div class="row-wrap no-print" role="group" aria-label="Filtrar soluciones">
-          <button type="button" onclick="filterSolutions('all')" data-sf="all" class="sf-btn portal-action-btn portal-action-primary">Todas (7)</button>
-          <button type="button" onclick="filterSolutions('ciber')" data-sf="ciber" class="sf-btn portal-action-btn">Ciberseguridad (3)</button>
-          <button type="button" onclick="filterSolutions('identidad')" data-sf="identidad" class="sf-btn portal-action-btn">Identidad y Permisos (2)</button>
+          <button type="button" onclick="filterSolutions('all')" data-sf="all" class="sf-btn portal-action-btn portal-action-primary">Todas (9)</button>
+          <button type="button" onclick="filterSolutions('ciber')" data-sf="ciber" class="sf-btn portal-action-btn">Ciberseguridad (4)</button>
+          <button type="button" onclick="filterSolutions('identidad')" data-sf="identidad" class="sf-btn portal-action-btn">Identidad y Permisos (3)</button>
           <button type="button" onclick="filterSolutions('finanzas')" data-sf="finanzas" class="sf-btn portal-action-btn">Reservas y Pagos (2)</button>
         </div>
       </div>
@@ -460,20 +563,20 @@
       <div id="solutions-grid" class="grid-2"></div>
     </section>
 
-    <!-- DEMOSTRACIÓN VISUAL DE RESERVA Y PAGO -->
-    <section class="section-card stack-md print-card" aria-label="Demostración financiera en vivo">
+    <!-- 03 · DEMOSTRACIÓN FINANCIERA COMPROBADA -->
+    <section class="section-card stack-md print-card" aria-label="Demostración financiera comprobada">
       <div>
         <div class="section-kicker">03 · Demostración Financiera Comprobada</div>
-        <h2 class="section-title">Cálculo de reserva en el servidor y pago sin doble cobro</h2>
+        <h2 class="section-title">Cálculo oficial de reserva en servidor y pago inmune a reintentos</h2>
         <p class="section-lead">
-          En la prueba real con navegador Chrome, Laravel y MySQL sobre el commit final <code>cd7cf7d</code>, verificamos que el total se calcula desde el catálogo y que una caída de internet durante el pago nunca duplica el débito.
+          En la comprobación real con navegador Chrome, Laravel y MySQL sobre el commit final <code>cd7cf7d</code>, el total se determinó íntegramente en el servidor y una caída de conexión durante el cobro no duplicó el movimiento.
         </p>
       </div>
 
       <div class="math-strip">
         <div class="math-box">
           <div class="math-val">$145.000</div>
-          <div class="math-lbl">Tarifa base del servicio</div>
+          <div class="math-lbl">Tarifa base catálogo</div>
         </div>
         <div class="math-box">
           <div class="math-val" style="color: var(--accent-rose);">−$10.000</div>
@@ -489,59 +592,87 @@
         </div>
         <div class="math-box math-total">
           <div class="math-val">$170.500</div>
-          <div class="math-lbl">Total fijado por servidor</div>
+          <div class="math-lbl">Total oficial en servidor</div>
         </div>
       </div>
 
       <div class="grid-2">
         <div class="notice-banner notice-banner-teal">
-          <strong>Escenario 1 · Reintento tras pérdida de conexión:</strong> Una billetera de <strong>$500.000</strong> pagó el anticipo de <strong>$85.250</strong>. Se cortó la respuesta al navegador después de que el servidor procesó el pago y el usuario reintentó con la misma referencia. <strong>Resultado en MySQL:</strong> 1 solo pago, 1 solo débito y saldo exacto de <strong>$414.750</strong>.
+          <strong>Escenario 1 · Reintento tras corte de red:</strong> Una billetera con <strong>$500.000</strong> pagó el anticipo de <strong>$85.250</strong>. Se interrumpió la respuesta al navegador después de que Laravel procesó el primer pago y el cliente reintentó con la misma referencia. <strong>Resultado en MySQL:</strong> 1 solo pago, 1 solo débito y saldo exacto de <strong>$414.750</strong>.
         </div>
         <div class="notice-banner">
-          <strong>Escenario 2 · Cuenta con saldo insuficiente:</strong> Una segunda cuenta con <strong>$50.000</strong> intentó pagar el mismo anticipo de <strong>$85.250</strong>. <strong>Resultado:</strong> el sistema mostró el aviso de saldo insuficiente, no registró ningún movimiento y la billetera conservó sus <strong>$50.000</strong> intactos.
+          <strong>Escenario 2 · Saldo insuficiente:</strong> Una segunda cuenta con <strong>$50.000</strong> intentó cubrir el mismo anticipo de <strong>$85.250</strong>. <strong>Resultado:</strong> el sistema mostró el aviso correspondiente, no ejecutó solicitud de cobro y la billetera conservó sus <strong>$50.000</strong> intactos.
         </div>
       </div>
     </section>
 
-    <!-- SUITE DE DIAGRAMAS INTERACTIVOS ARCHIFY + GALERÍA POR PR -->
-    <section id="diagramas-archify" class="archify-showcase stack-md print-card" aria-label="Diagramas interactivos y visuales">
+    <!-- 04 · SUITE DE 10 DIAGRAMAS INTERACTIVOS ARCHIFY + GALERÍA POR PR -->
+    <section id="diagramas-archify" class="archify-showcase stack-md print-card" aria-label="Diagramas interactivos y galería visual">
       <div class="row-between">
         <div>
-          <span class="archify-chip">ARCHIFY 3.2 · VISORES INTERACTIVOS + DIAGRAMAS POR PR</span>
-          <h2 class="section-title" style="margin-top: 0.45rem;">Diagramas para explicar el antes y el después sin tecnicismos</h2>
+          <span class="archify-chip">ARCHIFY 3.2 · 10 VISORES INTERACTIVOS (ANTES / DESPUÉS SEPARADOS)</span>
+          <h2 class="section-title" style="margin-top: 0.45rem;">Diagramas interactivos de cada solución y del control de base de datos</h2>
           <p class="section-lead">
-            Abre los <strong>4 visores interactivos Archify</strong> para explorar el flujo en pantalla completa (con zoom, modo claro/oscuro y exportación), o haz clic en cualquiera de las <strong>9 figuras por PR</strong> para ampliarlas aquí mismo.
+            Cada diagrama separa claramente en dos bandas horizontales el <strong>Antes (riesgo original)</strong> y el <strong>Después (solución integrada)</strong>, con botones de vista guiada, modo claro/oscuro, zoom y exportación SVG/PNG/WebM.
           </p>
         </div>
       </div>
 
-      <!-- 4 Tarjetas Archify Interactivas -->
-      <div class="grid-4 no-print">
-        <a href="../entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+      <!-- 10 Tarjetas Archify Interactivas -->
+      <div class="grid-3 no-print">
+        <a href="./archify/item-02/pr-01-rutas-mantenimiento.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-rose">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #1 · ANTES / DESPUÉS</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">1. Cierre de Instalador y Reinicio</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Banda superior con rutas/cron expuestos vs. banda inferior bloqueada (HTTP 404).</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="./archify/item-02/pr-02-avisos-chat-firebase.html" class="card-destination" target="_blank" rel="noopener">
           <article class="module-card card-teal">
             <div class="stack-sm">
               <div class="row-between">
-                <span class="module-index">ARCHIFY · PR #3</span>
+                <span class="module-index">ARCHIFY · PR #2 · ANTES / DESPUÉS</span>
                 <span class="module-arrow" aria-hidden="true">→</span>
               </div>
-              <h3 style="font-size: 0.92rem; font-weight: 700;">Ciberseguridad &amp; Proxy IA</h3>
-              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Cómo dejó de viajar la clave de IA hacia los dispositivos y pasó al servidor autenticado.</p>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">2. Avisos de Chat desde Servidor</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Token OAuth2 público retirado vs. envío autenticado validando Firestore, bloqueos y límite.</p>
             </div>
-            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="../entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-indigo">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #3 · ANTES / DESPUÉS</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">3. Proxy Autenticado de IA</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Clave privada de IA retirada de respuestas API y centralizada en Laravel con control de cuota.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
           </article>
         </a>
 
         <a href="../entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
-          <article class="module-card card-indigo">
+          <article class="module-card card-violet">
             <div class="stack-sm">
               <div class="row-between">
-                <span class="module-index">ARCHIFY · PR #4</span>
+                <span class="module-index">ARCHIFY · PR #4 · ANTES / DESPUÉS</span>
                 <span class="module-arrow" aria-hidden="true">→</span>
               </div>
-              <h3 style="font-size: 0.92rem; font-weight: 700;">Identidad, Roles y Técnicos</h3>
-              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Verificación de cuentas en servidor, alta segura con cupo bloqueado y aprobación en panel.</p>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">4. Identidad, Roles y Técnicos</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Verificación de cuentas en servidor, enlaces firmados de correo, cupo bloqueado y aprobación en panel.</p>
             </div>
-            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
           </article>
         </a>
 
@@ -549,53 +680,248 @@
           <article class="module-card card-amber">
             <div class="stack-sm">
               <div class="row-between">
-                <span class="module-index">ARCHIFY · PR #5</span>
+                <span class="module-index">ARCHIFY · PR #5 · ANTES / DESPUÉS</span>
                 <span class="module-arrow" aria-hidden="true">→</span>
               </div>
-              <h3 style="font-size: 0.92rem; font-weight: 700;">Permisos y Pertenencia</h3>
-              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Control estricto por dueño en reservas, ofertas, GPS, evidencias y cuentas bancarias.</p>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">5. Permisos, Ofertas y Evidencias</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Control estricto por dueño en reservas, ofertas, GPS, bancos y enlaces temporales de evidencia.</p>
             </div>
-            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="./archify/item-02/pr-06-calculo-reservas.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-emerald">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #6 · ANTES / DESPUÉS</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">6. Cálculo Oficial de Reservas</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Precio editable desde interfaz vs. cálculo oficial en servidor ($170.500 desde catálogo/oferta).</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
           </article>
         </a>
 
         <a href="../entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-teal">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #6 · TRANSACCIÓN</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">7. Pagos y Reintento Seguro</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Pago confirmado, reintento sin doble débito ($85.250), reversión atómica y cobros pendientes.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="./archify/item-02/pr-07-transporte-https-logs.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-indigo">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · PR #7 · ANTES / DESPUÉS</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">8. Transporte HTTPS y Logs</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Tráfico HTTP abierto vs. rechazo sin sesión detrás de proxy confiable y logs saneados.</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="./archify/item-02/pr-08-firebase-credenciales.html" class="card-destination" target="_blank" rel="noopener">
           <article class="module-card card-violet">
             <div class="stack-sm">
               <div class="row-between">
-                <span class="module-index">ARCHIFY · PR #6</span>
+                <span class="module-index">ARCHIFY · PR #8 · ANTES / DESPUÉS</span>
                 <span class="module-arrow" aria-hidden="true">→</span>
               </div>
-              <h3 style="font-size: 0.92rem; font-weight: 700;">Pagos y Reintento Seguro</h3>
-              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Flujo financiero atómico: confirmación, reintento sin doble débito y cobros pendientes.</p>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">9. Credenciales Firebase Unificadas</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Resolución compartida entre Chat e Identidad desde cualquier directorio y error controlado.</p>
             </div>
-            <p style="padding-top: 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir visor interactivo</p>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
+          </article>
+        </a>
+
+        <a href="./archify/item-02/pr-db-migraciones-control.html" class="card-destination" target="_blank" rel="noopener">
+          <article class="module-card card-emerald">
+            <div class="stack-sm">
+              <div class="row-between">
+                <span class="module-index">ARCHIFY · MYSQL · GOBIERNO BD</span>
+                <span class="module-arrow" aria-hidden="true">→</span>
+              </div>
+              <h3 style="font-size: 0.92rem; font-weight: 700;">10. Migración y Control de BD</h3>
+              <p style="font-size: 0.78rem; color: var(--muted-foreground);">Eliminación de resets web/cron vs. protocolo CLI incremental (backup, pretend y migrate --force).</p>
+            </div>
+            <p style="padding-top: 0.7rem; font-size: 0.78rem; font-weight: 700; color: var(--card-accent);">Abrir diagrama interactivo</p>
           </article>
         </a>
       </div>
 
-      <!-- Galería de las 9 figuras por PR -->
+      <!-- Galería de las 9 figuras ejecutivas por PR -->
       <div>
         <h3 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); margin-bottom: 0.75rem;">
-          Galería visual por cada Pull Request (haz clic para ampliar)
+          Galería de figuras ejecutivas por Pull Request (clic para ampliar o abrir el visor interactivo)
         </h3>
         <div id="diagram-gallery" class="grid-3"></div>
       </div>
     </section>
 
-    <!-- EVIDENCIA POR CADA PULL REQUEST (#1 al #8) -->
+    <!-- 05 · NUEVA SECCIÓN: CONTROL Y MIGRACIÓN SEGURA DE BASE DE DATOS (MYSQL) -->
+    <section id="control-db" class="section-card stack-md print-card" aria-label="Control y migración de la base de datos">
+      <div class="row-between">
+        <div>
+          <div class="section-kicker">05 · Gobierno y Control de Base de Datos (MySQL)</div>
+          <h2 class="section-title">Cómo se administran y ejecutan las migraciones de la BD ahora</h2>
+          <p class="section-lead">
+            Tras eliminar las rutas peligrosas del instalador y el reinicio automático (PR #1), la evolución de MySQL pasa a un <strong>esquema estrictamente versionado, incremental y ejecutado únicamente por línea de comandos (CLI)</strong> bajo control operativo.
+          </p>
+        </div>
+        <a href="./archify/item-02/pr-db-migraciones-control.html" target="_blank" rel="noopener" class="archify-open-pill no-print">Ver diagrama de Control de BD →</a>
+      </div>
+
+      <div class="grid-2">
+        <div class="notice-banner notice-banner-rose">
+          <strong>Qué dejó de existir (PR #1):</strong> Se eliminaron las rutas web del instalador (<code>/install/*</code>), los endpoints capaces de disparar <code>migrate:fresh</code> / <code>migrate:refresh</code> y la tarea programada en <code>Console/Kernel.php</code>. Tampoco el contenedor (<code>Dockerfile</code>) ni el workflow actual ejecutan migraciones destructivas al arrancar.
+        </div>
+        <div class="notice-banner notice-banner-teal">
+          <strong>Principio de operación segura:</strong> En QA y Producción <strong>jamás</strong> se ejecutan comandos destructivos (<code>migrate:fresh</code> / <code>migrate:refresh</code>). Todo cambio se aplica mediante migraciones incrementales nuevas, precedidas siempre de respaldo y simulación sin escritura (<code>--pretend</code>).
+        </div>
+      </div>
+
+      <!-- Flujo visual de 5 pasos -->
+      <div>
+        <h3 style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); margin-bottom: 0.65rem;">
+          Protocolo de 5 pasos para aplicar migraciones en QA o Producción
+        </h3>
+        <div class="db-pipeline">
+          <div class="db-step">
+            <div class="db-step-num">Paso 1 · Respaldo</div>
+            <div class="db-step-title">Backup previo obligatorio</div>
+            <div class="db-step-desc">Generar respaldo completo de MySQL (<code>mysqldump</code>) y verificar que sea restaurable antes de cualquier cambio.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 2 · Diagnóstico</div>
+            <div class="db-step-title">Consultar pendientes</div>
+            <div class="db-step-desc">Ejecutar <code>migrate:status</code> en modo solo lectura para confirmar exactamente qué archivos faltan por aplicar.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 3 · Simulación</div>
+            <div class="db-step-title">Revisar SQL sin escribir</div>
+            <div class="db-step-desc">Ejecutar <code>migrate --pretend</code> para inspeccionar el SQL exacto antes de tocar las tablas.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 4 · Aplicación</div>
+            <div class="db-step-title">Migrar solo deltas</div>
+            <div class="db-step-desc">Ejecutar <code>migrate --force</code> para aplicar únicamente las migraciones nuevas sin alterar datos existentes.</div>
+          </div>
+          <div class="db-step">
+            <div class="db-step-num">Paso 5 · Caché</div>
+            <div class="db-step-title">Refrescar permisos</div>
+            <div class="db-step-desc">Ejecutar <code>permission:cache-reset</code> para activar inmediatamente los nuevos permisos Spatie en memoria.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comandos de referencia y ambiente local -->
+      <div class="grid-2">
+        <div class="stack-sm">
+          <h3 style="font-size: 0.85rem; font-weight: 800; color: var(--foreground);">Secuencia oficial por CLI (QA / Producción)</h3>
+          <pre class="cmd-block"><span class="cmd-comment"># 1. Respaldo previo obligatorio (mysqldump) antes de iniciar</span>
+<span class="cmd-comment"># 2. Verificar migraciones pendientes (solo lectura)</span>
+<span class="cmd-kw">php artisan migrate:status</span>
+
+<span class="cmd-comment"># 3. Simular el SQL exacto sin modificar la base de datos</span>
+<span class="cmd-kw">php artisan migrate --pretend</span>
+
+<span class="cmd-comment"># 4. Aplicar únicamente las migraciones incrementales nuevas</span>
+<span class="cmd-kw">php artisan migrate --force</span>
+
+<span class="cmd-comment"># 5. Refrescar caché de permisos Spatie (postjob assign)</span>
+<span class="cmd-kw">php artisan permission:cache-reset</span></pre>
+        </div>
+
+        <div class="stack-sm">
+          <h3 style="font-size: 0.85rem; font-weight: 800; color: var(--foreground);">Desarrollo local y nota operativa del pipeline</h3>
+          <div class="phase-card phase-1" style="flex: 1;">
+            <div class="phase-kicker" style="font-size: 0.72rem; font-weight: 800;">ENTORNO LOCAL AISLADO (LOCAL-DEV)</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground);">
+              En desarrollo local se utiliza siempre un contenedor MySQL desechable, aplicando las migraciones de la rama y cargando únicamente datos ficticios (<code>local-dev/fixtures/dev-data.sql</code>). Nunca se usan volcados ni credenciales reales.
+            </p>
+          </div>
+          <div class="phase-card phase-0" style="flex: 1;">
+            <div class="phase-kicker" style="font-size: 0.72rem; font-weight: 800;">NOTA SOBRE DEPLOY-DEV.YML</div>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground);">
+              El workflow actual (<code>.github/workflows/deploy-dev.yml</code>) construye la imagen Docker, la publica en ECR y ejecuta <code>docker stack deploy</code>, pero <strong>no corre migraciones automáticamente</strong>. Al autorizar un despliegue futuro, el equipo debe ejecutar el respaldo y <code>php artisan migrate --force</code> dentro del contenedor en esa misma ventana.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de las 5 migraciones del Ítem 2 -->
+      <div tabindex="0" role="region" aria-labelledby="db-migrations-caption" class="table-wrapper">
+        <table class="doc-table table-db">
+          <caption id="db-migrations-caption">Las 5 migraciones incrementales incorporadas en origin/develop (cd7cf7d) dentro de web-v2/database/migrations/.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Archivo de migración</th>
+              <th scope="col">PR</th>
+              <th scope="col">Propósito en la operación de Solutoday</th>
+              <th scope="col">Naturaleza</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><code>2026_11_13_000001_create_firebase_chat_notification_attempts_table.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></td>
+              <td>Registra intentos de aviso de chat para deduplicar envíos repetidos y controlar abuso de notificaciones.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_17_000001_create_firebase_identity_tables.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener">PR #4 ↗</a></td>
+              <td>Crea <code>firebase_identities</code> y <code>firebase_identity_link_challenges</code> separando identidad de acceso del chat y asegurando vinculación única.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000001_reconcile_service_proof_author_type.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></td>
+              <td>Normaliza y concilia la autoría en evidencias de servicio para reforzar el control de pertenencia por rol.</td>
+              <td><span class="status-pill status-ok">Incremental</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000002_define_post_job_assignment_permission.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></td>
+              <td>Registra formalmente el permiso <code>postjob assign</code> en Spatie para controlar asignaciones de solicitudes.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><code>2026_11_18_000003_create_financial_operations_table.php</code></th>
+              <td><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/6" target="_blank" rel="noopener">PR #6 ↗</a></td>
+              <td>Crea la tabla de control transaccional e idempotencia financiera para evitar dobles débitos ante reintentos.</td>
+              <td><span class="status-pill status-ok">Aditiva</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 · EVIDENCIA POR CADA PULL REQUEST (#1 al #8) -->
     <section id="prs" class="section-card stack-md print-card" aria-label="Evidencia por Pull Request">
       <div>
-        <div class="section-kicker">04 · Trazabilidad Completa en GitHub</div>
+        <div class="section-kicker">06 · Trazabilidad en GitHub</div>
         <h2 class="section-title">Los 8 Pull Requests fusionados en <code>develop</code> como evidencia auditable</h2>
         <p class="section-lead">
-          Cada mejora del Ítem 2 fue entregada, revisada y fusionada de forma ordenada en <code>web-v2</code> hasta el commit final <a href="https://github.com/Solutoday/web-v2/commit/cd7cf7d08bffd91a9f06a3554b96fe24aafed4f7" target="_blank" rel="noopener" class="pr-link-pill"><code>cd7cf7d</code> ↗</a>.
+          Cada cambio fue entregado, revisado y fusionado ordenadamente en <code>web-v2</code> hasta el commit final <a href="https://github.com/Solutoday/web-v2/commit/cd7cf7d08bffd91a9f06a3554b96fe24aafed4f7" target="_blank" rel="noopener" class="pr-link-pill"><code>cd7cf7d</code> ↗</a>.
         </p>
       </div>
 
       <div tabindex="0" role="region" aria-labelledby="prs-table-caption" class="table-wrapper">
         <table class="doc-table table-pr">
-          <caption id="prs-table-caption">Listado oficial de los 8 Pull Requests integrados en origin/develop de web-v2 (19 de noviembre de 2026).</caption>
+          <caption id="prs-table-caption">Listado oficial de los 8 Pull Requests integrados en origin/develop de web-v2.</caption>
           <thead>
             <tr>
               <th scope="col">Pull Request</th>
@@ -608,31 +934,31 @@
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/1" target="_blank" rel="noopener">PR #1 ↗</a></th>
               <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
-              <td>Retira el instalador web, las rutas de reinicialización y la tarea que podía reiniciar tablas en MySQL.</td>
+              <td>Retira el instalador web, las rutas de reinicialización y la tarea programada de reinicio de tablas en MySQL.</td>
               <td><code>e28d716</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></th>
               <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
-              <td>Centraliza los avisos de chat Firebase en Laravel bajo sesión verificada, sin exponer tokens al cliente.</td>
+              <td>Centraliza los avisos de chat Firebase en Laravel bajo sesión verificada, sin entregar credenciales al cliente.</td>
               <td><code>c4ba4f6</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/3" target="_blank" rel="noopener">PR #3 ↗</a></th>
               <td><span class="repo-chip repo-chip-indigo">BG-02.01</span></td>
-              <td>Elimina la clave de IA de respuestas públicas y crea un proxy autenticado con límite de frecuencia.</td>
+              <td>Elimina la clave de IA de respuestas públicas y habilita un proxy autenticado con límite de frecuencia.</td>
               <td><code>d5a4c7e</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/4" target="_blank" rel="noopener">PR #4 ↗</a></th>
               <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
-              <td>Fija roles y estados en servidor, verifica identidad Firebase, firma verificación de correo y blinda alta/aprobación de técnicos.</td>
+              <td>Fija roles y estados en servidor, verifica identidad Firebase, firma correos y blinda el alta/aprobación de técnicos.</td>
               <td><code>ea7f822</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/5" target="_blank" rel="noopener">PR #5 ↗</a></th>
               <td><span class="repo-chip repo-chip-violet">BG-02.03</span></td>
-              <td>Valida rol y pertenencia en reservas, solicitudes, ofertas, GPS, evidencias temporales, bancos y billetera.</td>
+              <td>Valida rol y titularidad en reservas, solicitudes, ofertas, GPS, evidencias temporales, bancos y billetera.</td>
               <td><code>813f99d</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
@@ -644,13 +970,13 @@
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/7" target="_blank" rel="noopener">PR #7 ↗</a></th>
               <td><span class="repo-chip repo-chip-indigo">BG-02.05</span></td>
-              <td>Habilita exigencia configurable de HTTPS detrás de proxy confiable y sanea registros operativos de correo/avisos.</td>
+              <td>Habilita exigencia configurable de HTTPS detrás de proxy confiable y sanea registros operativos de correo y avisos.</td>
               <td><code>ae75eaf</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
             <tr>
               <th scope="row"><a class="pr-link-pill" href="https://github.com/Solutoday/web-v2/pull/8" target="_blank" rel="noopener">PR #8 ↗</a></th>
               <td><span class="repo-chip repo-chip-teal">BG-02.02</span></td>
-              <td>Unifica la resolución segura de rutas de credenciales Firebase compartida entre los módulos de chat e identidad.</td>
+              <td>Unifica la resolución segura de rutas de credenciales Firebase compartida entre chat e identidad.</td>
               <td><code>cd7cf7d</code> · <span class="status-pill status-ok">Integrado</span></td>
             </tr>
           </tbody>
@@ -658,13 +984,13 @@
       </div>
     </section>
 
-    <!-- GARANTÍA DE CALIDAD Y PRUEBAS AUTOMATIZADAS -->
+    <!-- 07 · GARANTÍA DE CALIDAD Y PRUEBAS AUTOMATIZADAS -->
     <section id="calidad" class="section-card stack-md print-card" aria-label="Garantía de calidad y pruebas">
       <div>
-        <div class="section-kicker">05 · Garantía de Calidad</div>
+        <div class="section-kicker">07 · Garantía de Calidad</div>
         <h2 class="section-title">Pruebas automatizadas y verificaciones reales que respaldan el trabajo</h2>
         <p class="section-lead">
-          Para entregar un trabajo serio y confiable, cada regla crítica se respaldó con <strong>pruebas automatizadas</strong> que se pueden volver a ejecutar en cualquier momento para evitar que futuros cambios reabran brechas de seguridad o errores de cobro.
+          Para garantizar un trabajo responsable y sostenible, cada corrección quedó protegida mediante <strong>pruebas automatizadas repetibles</strong> que detectan de inmediato cualquier regresión en seguridad, permisos o pagos.
         </p>
       </div>
 
@@ -685,7 +1011,7 @@
           <div>
             <span class="module-index">SUITE FINANCIERA · MYSQL AISLADO</span>
             <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-indigo); margin-top: 0.45rem;">8 pruebas</div>
-            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>51 aserciones</strong> aprobadas (0 fallos). Valida pagos atómicos, reintentos por referencia, saldo insuficiente y reversión en error.</p>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>51 aserciones</strong> aprobadas (0 fallos). Valida transacciones atómicas, reintentos por referencia, saldo insuficiente y reversión.</p>
           </div>
           <div>
             <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
@@ -697,7 +1023,7 @@
           <div>
             <span class="module-index">RECORRIDOS REALES · WEB &amp; ANDROID</span>
             <div style="font-size: 1.55rem; font-weight: 800; color: var(--accent-emerald); margin-top: 0.45rem;">E2E Reales</div>
-            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>Chrome + MySQL:</strong> anticipo con corte de red y 1 solo débito. <strong>Emulador Android + Panel:</strong> alta pendiente de técnico, aprobación y activación.</p>
+            <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 0.25rem;"><strong>Chrome + MySQL:</strong> anticipo con corte de red y 1 solo débito. <strong>Android + Panel:</strong> alta pendiente de técnico, aprobación y activación.</p>
           </div>
           <div>
             <div class="qa-bar-track"><div class="qa-bar-fill" style="width: 100%;"></div></div>
@@ -707,17 +1033,17 @@
       </div>
 
       <div class="notice-banner notice-banner-teal">
-        <strong>Transparencia técnica:</strong> Las pruebas locales se ejecutaron con datos ficticios y servicios externos simulados (Firebase, OpenAI y pasarelas de pago). Las pruebas con servicios reales y el piloto con las apps distribuidas se ejecutarán cuando Solutoday habilite un ambiente QA, antes de pasar a producción.
+        <strong>Transparencia de pruebas:</strong> Las pruebas locales emplearon datos ficticios y servicios externos simulados (Firebase, OpenAI y pasarelas de pago). La verificación con servicios externos reales y las versiones móviles distribuidas se realiza en ambiente QA antes de pasar a producción.
       </div>
     </section>
 
-    <!-- SECCIÓN CLAVE: QUÉ NECESITAN LAS APPS MÓVILES (FUERA DEL ALCANCE DEL ÍTEM 2) -->
+    <!-- 08 · QUÉ NECESITAN LAS APPS MÓVILES (FUERA DEL ALCANCE DEL ÍTEM 2) -->
     <section id="apps-moviles" class="section-card stack-md print-card" aria-label="Requisitos de actualización para aplicaciones móviles">
       <div>
-        <div class="section-kicker" style="color: var(--accent-amber);">06 · Importante · Aplicaciones Móviles (Fuera del Alcance del Ítem 2)</div>
-        <h2 class="section-title">Qué necesitan actualizar <code>clientes-v2</code> y <code>proveedor-v2</code> para adoptar estos cambios</h2>
+        <div class="section-kicker" style="color: var(--accent-amber);">08 · Aplicaciones Móviles (Trabajo Fuera del Alcance del Ítem 2)</div>
+        <h2 class="section-title">Qué necesitan incorporar <code>clientes-v2</code> y <code>proveedor-v2</code> para adoptar estos cambios</h2>
         <p class="section-lead">
-          El Ítem 2 cubre exclusivamente <strong>Seguridad web y backend unificado (<code>web-v2</code>)</strong>. La actualización, compilación y publicación en tiendas de las aplicaciones móviles <strong>no fue cotizada dentro del Ítem 2</strong>. Sin embargo, para cuidar la operación de Solutoday, dejamos documentado exactamente qué requiere cada app antes de activar los controles más estrictos en producción:
+          El Ítem 2 comprende exclusivamente <strong>Seguridad web y backend unificado (<code>web-v2</code>)</strong>. Las actualizaciones, compilaciones y publicación en tiendas de las aplicaciones móviles <strong>no fueron cotizadas dentro de este ítem</strong>. A continuación se detalla qué requiere cada app para aprovechar las nuevas protecciones sin afectar a los usuarios actuales:
         </p>
       </div>
 
@@ -727,25 +1053,25 @@
           <thead>
             <tr>
               <th scope="col">App y Flujo</th>
-              <th scope="col">¿Funciona sin actualizar?</th>
-              <th scope="col">Qué debe hacer la app para incorporar los cambios</th>
+              <th scope="col">¿Funciona hoy sin actualizar?</th>
+              <th scope="col">Qué debe incorporar la app en su actualización</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Acceso Google, Apple y OTP</th>
               <td><span class="status-pill status-req">Requiere actualizar</span></td>
-              <td>Obtener y enviar <code>firebase_id_token</code> real por HTTPS en login/registro social y OTP, y mostrar en pantalla la instrucción de vinculación de cuentas previas. Probar Google/OTP en Android y Apple en iOS.</td>
+              <td>Obtener y enviar <code>firebase_id_token</code> real por HTTPS en login/registro social y OTP, y mostrar la instrucción de vinculación de cuentas previas. Probar Google/OTP en Android y Apple en iOS.</td>
             </tr>
             <tr>
               <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> · Registro y login por correo</th>
               <td><span class="status-pill status-ok">Compatible hoy</span></td>
-              <td>Conserva el contrato actual (<code>POST /api/register</code> y <code>/api/login</code>). Solo requiere validación de rutina en el piloto QA.</td>
+              <td>Conserva el contrato actual (<code>POST /api/register</code> y <code>/api/login</code>). Solo requiere verificación de rutina en el piloto QA.</td>
             </tr>
             <tr>
               <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Chat</th>
               <td><span class="status-pill status-req">Requiere actualizar</span></td>
-              <td>Solicitar los avisos de chat al nuevo endpoint autenticado del backend en lugar de depender de la ruta antigua que entregaba el token de servicio Firebase.</td>
+              <td>Solicitar avisos de chat al nuevo endpoint autenticado del backend en lugar de depender de la ruta antigua que entregaba el token de servicio Firebase.</td>
             </tr>
             <tr>
               <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Generación IA</th>
@@ -759,7 +1085,7 @@
             </tr>
             <tr>
               <th scope="row"><span class="repo-chip repo-chip-teal">Clientes</span> y <span class="repo-chip repo-chip-violet">Prestadores</span> · Reservas y pagos</th>
-              <td><span class="status-pill status-warn">Verificar en piloto QA</span></td>
+              <td><span class="status-pill status-warn">Verificar en QA</span></td>
               <td>Confirmar con los binarios distribuidos la lectura del total calculado en servidor, anticipos, saldo insuficiente, cobros pendientes y reintentos sin doble débito.</td>
             </tr>
             <tr>
@@ -772,76 +1098,16 @@
       </div>
 
       <div class="notice-banner">
-        <strong>Apoyo técnico ya adelantado:</strong> Aunque la actualización móvil está fuera de la cotización del Ítem 2, nuestro equipo dejó preparadas propuestas técnicas locales de compatibilidad en <code>clientes-v2</code> y <code>proveedor-v2</code> (sin fusionar ni desplegar) para agilizar el trabajo en caso de que Solutoday decida contratar o coordinar esa fase móvil.
-      </div>
-    </section>
-
-    <!-- GUION DE 5 MINUTOS PARA YOIDER + PRÓXIMOS PASOS + ACTA DE CIERRE -->
-    <section class="section-card stack-md print-card" aria-label="Guion para Yoider y cierre">
-      <div>
-        <div class="section-kicker">07 · Presentación y Continuidad</div>
-        <h2 class="section-title">Guion de 5 minutos para Yoider y decisiones antes de desplegar</h2>
-        <p class="section-lead">
-          El código permanece en <code>develop</code> sin afectar producción. Esta guía facilita la presentación ante Solutoday y ordena los acuerdos pendientes para pasar a QA.
-        </p>
-      </div>
-
-      <div tabindex="0" role="region" aria-labelledby="script-table-caption" class="table-wrapper">
-        <table class="doc-table table-script">
-          <caption id="script-table-caption">Guía sugerida de 5 minutos para que Yoider presente el Ítem 2 usando esta misma página web.</caption>
-          <thead>
-            <tr>
-              <th scope="col">Tiempo</th>
-              <th scope="col">Qué explicar y mostrar en pantalla</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">0:00 – 0:45</th>
-              <td><strong>Portada y KPIs:</strong> “El Ítem 2 reforzó quién puede entrar al sistema, qué valor se cobra en cada reserva y cómo se protege cada pago. Los 8 PRs están integrados en <code>develop</code> y probados en local; aún no se despliega a producción”.</td>
-            </tr>
-            <tr>
-              <th scope="row">0:45 – 2:00</th>
-              <td><strong>Sección 02 y Diagramas Archify:</strong> Mostrar qué rutas peligrosas se eliminaron, cómo quedaron protegidas las claves en el servidor y cómo se valida identidad, técnicos y pertenencia por rol.</td>
-            </tr>
-            <tr>
-              <th scope="row">2:00 – 3:15</th>
-              <td><strong>Sección 03 (Reservas y Pagos):</strong> Explicar el ejemplo comprobado de <strong>$170.500</strong> y el anticipo de <strong>$85.250</strong> con corte de red: un solo pago, un solo débito y billetera de <strong>$50.000</strong> intacta ante saldo insuficiente.</td>
-            </tr>
-            <tr>
-              <th scope="row">3:15 – 4:10</th>
-              <td><strong>Secciones 04 y 05 (PRs y Pruebas):</strong> Mostrar los 8 PRs auditables en GitHub y las <strong>123 pruebas / 703 aserciones sin fallos</strong>, aclarando con transparencia que los servicios externos se simularon en laboratorio.</td>
-            </tr>
-            <tr>
-              <th scope="row">4:10 – 5:00</th>
-              <td><strong>Sección 06 y Próximos Pasos:</strong> Explicar qué requieren las apps móviles (fuera de la cotización del Ítem 2), acordar habilitación de ambiente QA, rotación de credenciales heredadas y aceptación formal.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="grid-3">
-        <div class="phase-card phase-0">
-          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 1 · SEGURIDAD OPERATIVA</div>
-          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Asignar responsable en Solutoday para retirar material sensible heredado, verificar credenciales activas y programar su rotación segura.</p>
-        </div>
-        <div class="phase-card phase-1">
-          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 2 · AMBIENTE QA</div>
-          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Habilitar ambiente QA con Firebase, OpenAI, SMTP y pasarelas en modo prueba (Wompi corresponde al Ítem 7) antes de autorizar cualquier despliegue.</p>
-        </div>
-        <div class="phase-card phase-2">
-          <div class="phase-kicker" style="font-size: 0.74rem; font-weight: 800;">PASO 3 · PILOTO MÓVIL Y ACEPTACIÓN</div>
-          <p style="font-size: 0.8rem; color: var(--muted-foreground);">Acordar alcance y calendario para las actualizaciones de <code>clientes-v2</code> y <code>proveedor-v2</code>, y registrar por separado revisión de Yoider y aceptación de Solutoday.</p>
-        </div>
+        <strong>Propuestas técnicas adelantadas como apoyo:</strong> Aunque la actualización móvil no está incluida en la cotización del Ítem 2, se prepararon propuestas locales de compatibilidad en <code>clientes-v2</code> y <code>proveedor-v2</code> (sin fusionar ni publicar) para facilitar una futura etapa de actualización móvil coordinada con Solutoday.
       </div>
 
       <div class="signature-grid">
         <div>
           <div style="font-size: 0.78rem; font-weight: 700;">Entrega Técnica · Ítem 2 (<code>web-v2 @ cd7cf7d</code>)</div>
-          <div class="signature-line">Diver — Revisión consolidada en <code>develop</code> · 2026-11-19</div>
+          <div class="signature-line">Arquitectura e Ingeniería Solutoday — 20 de noviembre de 2026</div>
         </div>
         <div>
-          <div style="font-size: 0.78rem; font-weight: 700;">Revisión de Yoider / Aceptación Solutoday</div>
+          <div style="font-size: 0.78rem; font-weight: 700;">Conformidad y Aceptación · Solutoday</div>
           <div class="signature-line">Nombre y firma — Fecha: ____ / ____ / ______</div>
         </div>
       </div>
@@ -864,7 +1130,10 @@
     </div>
     <div class="dialog-foot">
       <span id="diagram-modal-desc"></span>
-      <a id="diagram-modal-pr" href="#" target="_blank" rel="noopener" class="pr-link-pill">Ver Pull Request en GitHub ↗</a>
+      <div class="row-wrap">
+        <a id="diagram-modal-archify" href="#" target="_blank" rel="noopener" class="archify-open-pill">Abrir diagrama interactivo Archify →</a>
+        <a id="diagram-modal-pr" href="#" target="_blank" rel="noopener" class="pr-link-pill">Ver Pull Request ↗</a>
+      </div>
     </div>
   </dialog>
 
@@ -878,85 +1147,159 @@
       {
         cat: "ciber",
         badge: "PR #1 · Ciberseguridad Crítica",
-        title: "Cierre de rutas de instalación y reinicio de datos",
+        title: "1. Cierre de rutas de instalación y reinicio de datos",
         why: "Evitar que una llamada web o tarea automática pudiera reconstruir tablas y borrar información operativa.",
-        before: "El código exponía rutas del instalador web, rutas de reinicialización y una tarea programada capaz de ejecutar reinicio de tablas.",
-        after: "Se retiraron por completo las entradas del instalador, las rutas de reinicio y la tarea programada. En laboratorio las 4 rutas devuelven 404.",
+        before: "El código exponía rutas del instalador web, rutas de reinicialización y una tarea programada capaz de ejecutar migrate:refresh.",
+        after: "Se retiraron por completo las entradas del instalador, las rutas de reinicio y la tarea programada. Las 4 rutas devuelven HTTP 404.",
+        steps: [
+          "<strong>Entrada bloqueada:</strong> cualquier solicitud a /install o reset es rechazada inmediatamente por el router de Laravel con HTTP 404.",
+          "<strong>Programador limpio:</strong> el scheduler (Console/Kernel) ya no contiene ninguna tarea de reinicio periódico.",
+          "<strong>Base protegida:</strong> MySQL evoluciona únicamente mediante migraciones CLI controladas."
+        ],
+        archifyUrl: "./archify/item-02/pr-01-rutas-mantenimiento.html",
         prNum: "#1",
         prUrl: "https://github.com/Solutoday/web-v2/pull/1"
       },
       {
         cat: "ciber",
-        badge: "PR #2 · PR #3 · PR #8 · Secretos",
-        title: "Claves de Chat Firebase e IA protegidas en el servidor",
-        why: "Impedir que terceros extraigan credenciales privadas de la empresa para enviar notificaciones falsas o consumir saldo de IA.",
-        before: "El backend entregaba material de acceso de Firebase y podía exponer la clave privada de ChatGPT en la configuración hacia las apps.",
-        after: "Laravel envía avisos de chat validando participantes y ofrece un proxy autenticado para IA con límite de uso. Chat e identidad comparten validación segura de credenciales.",
-        prNum: "#2, #3 y #8",
+        badge: "PR #2 · Avisos de Chat Firebase",
+        title: "2. Notificaciones de chat enviadas desde el servidor",
+        why: "Impedir que terceros obtengan tokens de servicio Firebase para enviar notificaciones falsas o suplantar avisos.",
+        before: "Una ruta pública podía entregar un token OAuth2 de Firebase directamente al dispositivo del usuario.",
+        after: "La ruta antigua quedó desactivada por defecto. Laravel recibe la petición autenticada, valida el chat y envía el aviso desde el servidor.",
+        steps: [
+          "<strong>Sesión verificada:</strong> la app solicita el aviso con su token Sanctum (límite 30 solicitudes por minuto).",
+          "<strong>Validación real:</strong> Laravel comprueba en Firestore que el mensaje exista y corresponda a sus participantes, y revisa bloqueos mutuos.",
+          "<strong>Envío sin duplicados:</strong> registra el intento en MySQL para deduplicar y envía el push vía Firebase FCM usando la clave privada del servidor."
+        ],
+        archifyUrl: "./archify/item-02/pr-02-avisos-chat-firebase.html",
+        prNum: "#2",
         prUrl: "https://github.com/Solutoday/web-v2/pull/2"
       },
       {
         cat: "ciber",
+        badge: "PR #3 · Protección de Clave IA",
+        title: "3. Proxy autenticado para generación de texto con IA",
+        why: "Evitar que la clave privada de IA de Solutoday viaje en respuestas API y sea extraída para generar costos externos.",
+        before: "La configuración enviada a las apps podía incluir la clave privada de ChatGPT (chat_gpt_key) en texto plano.",
+        after: "La clave dejó de exponerse en respuestas y formularios. Laravel ofrece un endpoint autenticado (POST /api/ai/text) con validación y cuota.",
+        steps: [
+          "<strong>Solicitud autenticada:</strong> solo usuarios activos con sesión Sanctum pueden invocar la generación de texto.",
+          "<strong>Validación y límite:</strong> el servidor valida el prompt de forma uniforme y aplica control de frecuencia.",
+          "<strong>Clave privada en servidor:</strong> Laravel consulta al proveedor de IA desde el backend y devuelve únicamente el texto generado."
+        ],
+        archifyUrl: "../entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html",
+        prNum: "#3",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/3"
+      },
+      {
+        cat: "ciber",
         badge: "PR #7 · Transporte y Registros",
-        title: "Control configurable de HTTPS y registros saneados",
-        why: "Proteger las sesiones en tránsito y evitar que correos o avisos filtren detalles internos en los archivos de log.",
-        before: "No existía un control central para rechazar tráfico HTTP inseguro detrás de proxy y los logs podían registrar contenido excesivo.",
-        after: "Se agregó exigencia configurable de HTTPS detrás de proxy autorizado (verificado en laboratorio) y se depuraron los registros operativos.",
+        title: "4. Control configurable de HTTPS y registros saneados",
+        why: "Proteger las sesiones en tránsito detrás del proxy y evitar que los logs filtren tokens o datos sensibles.",
+        before: "No había control configurable para rechazar HTTP inseguro detrás de proxy y los logs de avisos/correo guardaban detalles excesivos.",
+        after: "Se añadió exigencia configurable de HTTPS detrás de proxy confiable y se depuraron los registros operativos.",
+        steps: [
+          "<strong>Inspección de protocolo:</strong> detrás del proxy confiable, el middleware verifica si la petición llega por HTTPS.",
+          "<strong>Rechazo temprano:</strong> con HTTPS obligatorio activo, las solicitudes HTTP son rechazadas sin iniciar sesión.",
+          "<strong>Logs limpios:</strong> el sistema registra solo el resultado operativo necesario para soporte, sin exponer secretos."
+        ],
+        archifyUrl: "./archify/item-02/pr-07-transporte-https-logs.html",
         prNum: "#7",
         prUrl: "https://github.com/Solutoday/web-v2/pull/7"
       },
       {
         cat: "identidad",
-        badge: "PR #4 · Identidad y Técnicos",
-        title: "Control de roles, verificación de cuentas y alta de técnicos",
-        why: "Impedir que un usuario se asigne privilegios indebidos, suplante cuentas sociales o cree técnicos bajo otro prestador.",
-        before: "El registro aceptaba roles/estados enviados por el cliente, el login social confiaba en campos sin firma, la verificación de correo no validaba firma y el alta de técnicos usaba la ruta pública.",
-        after: "Laravel fija roles y estados, verifica tokens Firebase, firma y caduca enlaces de verificación (30 min), bloquea cupos de técnicos y exige aprobación autorizada por POST en panel.",
+        badge: "PR #4 · Identidad, Roles y Técnicos",
+        title: "5. Control de registro, verificación firmada y alta de técnicos",
+        why: "Impedir que alguien se asigne privilegios de administrador, suplante cuentas sociales o cree técnicos bajo otro prestador.",
+        before: "El registro aceptaba rol/estado del cliente, el login social no validaba firma, /verify no exigía firma y los técnicos se creaban en ruta pública.",
+        after: "Laravel fija roles/estados, verifica ID tokens Firebase, firma y expira enlaces de correo (30 min), bloquea cupos y exige aprobación en panel por POST.",
+        steps: [
+          "<strong>Identidad verificada:</strong> Google, Apple y OTP se validan contra claims firmados; vincular una cuenta previa exige desafío de un solo uso por correo.",
+          "<strong>Alta segura con cupo:</strong> el prestador activo crea técnicos bajo sesión Sanctum con bloqueo de fila en MySQL, dejándolos pendientes (status=0).",
+          "<strong>Aprobación auditada:</strong> el panel web aprueba por POST con CSRF y permiso; recién entonces el técnico aparece activo en la app."
+        ],
+        archifyUrl: "../entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html",
         prNum: "#4",
         prUrl: "https://github.com/Solutoday/web-v2/pull/4"
       },
       {
         cat: "identidad",
         badge: "PR #5 · Permisos y Pertenencia",
-        title: "Aislamiento estricto en reservas, ofertas, GPS y bancos",
-        why: "Garantizar que clientes, prestadores y técnicos solo vean y operen su propia información y servicios asignados.",
-        before: "Múltiples operaciones de reservas, evidencias, GPS, ofertas y datos bancarios carecían de validación por dueño o dejaban acceso a técnicos reasignados.",
-        after: "Cada endpoint valida rol y titularidad; al reasignar un técnico se corta su acceso previo y las evidencias se entregan mediante enlaces con vencimiento.",
+        title: "6. Aislamiento por dueño en reservas, ofertas, GPS y bancos",
+        why: "Garantizar que cada cliente, prestador y técnico opere únicamente sus propios registros y pierda acceso al ser reasignado.",
+        before: "Varias operaciones de reservas, evidencias, GPS, ofertas y cuentas bancarias no validaban pertenencia o dejaban acceso tras reasignar técnico.",
+        after: "Cada operación exige permiso y titularidad verificada; al reasignar se revoca el acceso previo y las evidencias se entregan con enlaces temporales.",
+        steps: [
+          "<strong>Filtro por rol y titular:</strong> antes de leer o modificar una reserva, oferta o cuenta bancaria, Laravel comprueba que pertenezca al usuario autenticado.",
+          "<strong>Reasignación limpia:</strong> cuando una reserva cambia de técnico, el técnico anterior pierde de inmediato acceso al detalle y al GPS.",
+          "<strong>Evidencias protegidas:</strong> las imágenes y archivos de evidencia se sirven mediante URLs con vencimiento."
+        ],
+        archifyUrl: "../entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html",
         prNum: "#5",
         prUrl: "https://github.com/Solutoday/web-v2/pull/5"
       },
       {
+        cat: "identidad",
+        badge: "PR #8 · Configuración Firebase Compartida",
+        title: "7. Resolución unificada y segura de credenciales Firebase",
+        why: "Evitar fallos silenciosos o diferencias entre procesos web, colas y consola al cargar las credenciales de Firebase.",
+        before: "Los módulos de chat (PR #2) e identidad (PR #4) resolvían rutas de credenciales por separado y podían fallar según el directorio de arranque.",
+        after: "Una clase compartida (FirebaseCredentialPath) resuelve rutas relativas de forma uniforme y responde con error controlado si el archivo es inválido.",
+        steps: [
+          "<strong>Punto único de carga:</strong> tanto el servicio de chat FCM como el verificador de identidad consultan el mismo resolvedor.",
+          "<strong>Independiente del arranque:</strong> las rutas relativas funcionan igual desde Nginx/FPM, workers de cola o comandos CLI.",
+          "<strong>Fallo seguro:</strong> si falta el archivo o está dañado, el sistema informa error controlado sin exponer trazas internas."
+        ],
+        archifyUrl: "./archify/item-02/pr-08-firebase-credenciales.html",
+        prNum: "#8",
+        prUrl: "https://github.com/Solutoday/web-v2/pull/8"
+      },
+      {
         cat: "finanzas",
         badge: "PR #6 · Valor de la Reserva",
-        title: "Cálculo oficial de precios y totales en el servidor",
+        title: "8. Cálculo oficial de precios y totales en el servidor",
         why: "Asegurar que el monto cobrado coincida siempre con el catálogo, cupones, complementos, ofertas e impuestos autorizados.",
-        before: "El backend podía aceptar y persistir totales calculados o enviados desde la interfaz del usuario.",
-        after: "El servidor calcula el importe oficial desde catálogo/oferta y rechaza selecciones ajenas o tiempos duplicados. Comprobado en $170.500 exactos.",
+        before: "El backend podía aceptar y persistir totales enviados desde el navegador o la app, y repetir una transición podía duplicar duraciones.",
+        after: "Laravel ignora montos enviados por el cliente, calcula el total oficial desde catálogo u oferta asignada y bloquea selecciones ajenas.",
+        steps: [
+          "<strong>Validación de selección:</strong> el servidor recibe solo los IDs del servicio, cupón y complementos, rechazando elementos ajenos o inactivos.",
+          "<strong>Cálculo en servidor:</strong> suma tarifa oficial, descuento, extras e impuestos (verificado en $170.500 exactos en vista previa, API y MySQL).",
+          "<strong>Protección de tiempo:</strong> controla transiciones repetidas en servicios por hora para no sumar duración doble."
+        ],
+        archifyUrl: "./archify/item-02/pr-06-calculo-reservas.html",
         prNum: "#6",
         prUrl: "https://github.com/Solutoday/web-v2/pull/6"
       },
       {
         cat: "finanzas",
         badge: "PR #6 · Pagos y MySQL",
-        title: "Pagos transaccionales e idempotentes sin cobros dobles",
-        why: "Evitar cobros duplicados ante fallos de internet y proteger saldos de billetera frente a escrituras incompletas.",
-        before: "Un reintento tras corte de red podía duplicar un cobro o acreditar recargas sin verificación previa; un error intermedio dejaba datos inconsistentes.",
-        after: "Reserva, pago, saldo e historial se guardan en una sola transacción MySQL; la referencia única evita dobles débitos y los cobros no verificados quedan pendientes.",
+        title: "9. Pagos transaccionales e idempotentes sin cobros dobles",
+        why: "Evitar dobles débitos cuando falla internet durante un pago y garantizar consistencia total entre reserva, pago y billetera.",
+        before: "Un reintento tras pérdida de conexión podía duplicar el cobro, acreditar recargas sin verificar o dejar saldos desfasados ante un error intermedio.",
+        after: "Reserva, pago, saldo e historial corren en una transacción MySQL atómica; los reintentos por referencia devuelven el resultado previo sin cobrar de nuevo.",
+        steps: [
+          "<strong>Bloqueo y validación:</strong> Laravel bloquea la reserva, verifica que el monto coincida con el total persistido y valida el saldo disponible.",
+          "<strong>Escritura atómica:</strong> guarda pago, débito de billetera e historial en una sola transacción; si algo falla, se revierte todo.",
+          "<strong>Reintento seguro:</strong> si se corta la red y el usuario reintenta con la misma referencia, devuelve el pago ya aplicado con 1 solo débito ($85.250)."
+        ],
+        archifyUrl: "../entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html",
         prNum: "#6",
         prUrl: "https://github.com/Solutoday/web-v2/pull/6"
       }
     ];
 
     const DIAGRAMS = [
-      { pr: "PR #1", title: "Rutas y mantenimiento", desc: "Cierre del instalador web y eliminación del reinicio automático de base de datos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-01-rutas-y-mantenimiento.png", url: "https://github.com/Solutoday/web-v2/pull/1" },
-      { pr: "PR #2", title: "Avisos de chat Firebase", desc: "Notificaciones enviadas desde Laravel con validación de participantes y sin exponer credenciales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-02-avisos-de-chat.png", url: "https://github.com/Solutoday/web-v2/pull/2" },
-      { pr: "PR #3", title: "Generación de texto IA", desc: "Proxy autenticado en backend con límite de frecuencia y clave privada fuera de las apps.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-03-generacion-de-texto.png", url: "https://github.com/Solutoday/web-v2/pull/3" },
-      { pr: "PR #4", title: "Identidad, roles y técnicos", desc: "Control de registro en servidor, verificación Firebase, enlaces firmados y alta segura de técnicos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-04-identidad.png", url: "https://github.com/Solutoday/web-v2/pull/4" },
-      { pr: "PR #5", title: "Permisos y ofertas", desc: "Validación de titularidad en solicitudes, ofertas, reservas, GPS y evidencias temporales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-05-permisos-y-ofertas.png", url: "https://github.com/Solutoday/web-v2/pull/5" },
-      { pr: "PR #6", title: "Cálculo de reservas", desc: "Origen oficial del importe calculado en servidor desde catálogo, cupones e impuestos ($170.500).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-calculo-de-reservas.png", url: "https://github.com/Solutoday/web-v2/pull/6" },
-      { pr: "PR #6", title: "Reintento seguro de pago", desc: "Flujo comprobado en Chrome: pérdida de conexión, reintento con misma referencia y 1 solo débito ($85.250).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-reintento-de-pago.png", url: "https://github.com/Solutoday/web-v2/pull/6" },
-      { pr: "PR #7", title: "Transporte HTTPS y registros", desc: "Rechazo configurable de HTTP inseguro detrás de proxy y saneamiento de logs operativos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-07-transporte-y-registros.png", url: "https://github.com/Solutoday/web-v2/pull/7" },
-      { pr: "PR #8", title: "Configuración Firebase compartida", desc: "Resolución segura y unificada de credenciales Firebase para los servicios de chat e identidad.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-08-configuracion-firebase.png", url: "https://github.com/Solutoday/web-v2/pull/8" }
+      { pr: "PR #1", title: "Rutas y mantenimiento", desc: "Cierre del instalador web y eliminación del reinicio automático de base de datos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-01-rutas-y-mantenimiento.png", archify: "./archify/item-02/pr-01-rutas-mantenimiento.html", url: "https://github.com/Solutoday/web-v2/pull/1" },
+      { pr: "PR #2", title: "Avisos de chat Firebase", desc: "Notificaciones enviadas desde Laravel con validación de participantes y sin exponer credenciales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-02-avisos-de-chat.png", archify: "./archify/item-02/pr-02-avisos-chat-firebase.html", url: "https://github.com/Solutoday/web-v2/pull/2" },
+      { pr: "PR #3", title: "Generación de texto IA", desc: "Proxy autenticado en backend con límite de frecuencia y clave privada fuera de las apps.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-03-generacion-de-texto.png", archify: "../entregas/BG-02.01-ia-revision-2026-11-17/diagramas/ia-antes-despues.html", url: "https://github.com/Solutoday/web-v2/pull/3" },
+      { pr: "PR #4", title: "Identidad, roles y técnicos", desc: "Control de registro en servidor, verificación Firebase, enlaces firmados y alta segura de técnicos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-04-identidad.png", archify: "../entregas/BG-02.02-identidad-privilegios/diagramas/identidad-antes-despues.html", url: "https://github.com/Solutoday/web-v2/pull/4" },
+      { pr: "PR #5", title: "Permisos y ofertas", desc: "Validación de titularidad en solicitudes, ofertas, reservas, GPS y evidencias temporales.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-05-permisos-y-ofertas.png", archify: "../entregas/BG-02.03-rol-pertenencia/diagramas/autorizacion-antes-despues.html", url: "https://github.com/Solutoday/web-v2/pull/5" },
+      { pr: "PR #6", title: "Cálculo de reservas", desc: "Origen oficial del importe calculado en servidor desde catálogo, cupones e impuestos ($170.500).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-calculo-de-reservas.png", archify: "./archify/item-02/pr-06-calculo-reservas.html", url: "https://github.com/Solutoday/web-v2/pull/6" },
+      { pr: "PR #6", title: "Reintento seguro de pago", desc: "Flujo comprobado en Chrome: pérdida de conexión, reintento con misma referencia y 1 solo débito ($85.250).", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-06-reintento-de-pago.png", archify: "../entregas/BG-02.04-escrituras-financieras/diagramas/pagos-antes-despues.html", url: "https://github.com/Solutoday/web-v2/pull/6" },
+      { pr: "PR #7", title: "Transporte HTTPS y registros", desc: "Rechazo configurable de HTTP inseguro detrás de proxy y saneamiento de logs operativos.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-07-transporte-y-registros.png", archify: "./archify/item-02/pr-07-transporte-https-logs.html", url: "https://github.com/Solutoday/web-v2/pull/7" },
+      { pr: "PR #8", title: "Configuración Firebase compartida", desc: "Resolución segura y unificada de credenciales Firebase para los servicios de chat e identidad.", img: "../entregas/ITEM-02/informe-empresarial/diagramas/PR-08-configuracion-firebase.png", archify: "./archify/item-02/pr-08-firebase-credenciales.html", url: "https://github.com/Solutoday/web-v2/pull/8" }
     ];
 
     function filterSolutions(cat) {
@@ -982,6 +1325,16 @@
               <div>${s.after}</div>
             </div>
           </div>
+          <div class="flow-steps-box">
+            <div class="flow-steps-title">Cómo funciona el flujo paso a paso</div>
+            <ol class="flow-steps-list">
+              ${s.steps.map(st => `<li>${st}</li>`).join('')}
+            </ol>
+          </div>
+          <div class="solution-actions no-print">
+            <a href="${s.archifyUrl}" target="_blank" rel="noopener" class="archify-open-pill">Ver diagrama interactivo Archify →</a>
+            <a href="${s.prUrl}" target="_blank" rel="noopener" class="pr-link-pill">Abrir PR ${s.prNum} en GitHub ↗</a>
+          </div>
         </article>
       `).join('');
     }
@@ -992,6 +1345,7 @@
     const modalImg = document.getElementById('diagram-modal-img');
     const modalDesc = document.getElementById('diagram-modal-desc');
     const modalPr = document.getElementById('diagram-modal-pr');
+    const modalArchify = document.getElementById('diagram-modal-archify');
 
     function openDiagram(idx) {
       const d = DIAGRAMS[idx];
@@ -1001,6 +1355,7 @@
       modalImg.alt = `${d.pr}: ${d.title}`;
       modalDesc.textContent = d.desc;
       modalPr.href = d.url;
+      modalArchify.href = d.archify;
       modal.showModal();
     }
 
